@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'ListEntry.dart';
+import 'Category.dart';
 
 void main() => runApp(new TodoApp());
 
@@ -11,7 +12,10 @@ class TodoApp extends StatelessWidget {
 
     return new MaterialApp(
       title: 'Todo Yourself', //title which appear when we minimize the app
-      home: new TodoList() //actual app stuff
+      home: new TodoList(), //actual app stuff
+      routes: <String, WidgetBuilder> {
+        
+      }
     );
   }
 }
@@ -25,7 +29,7 @@ class TodoList extends StatefulWidget {
 
 //describe states of todoList
 class TodoListState extends State<TodoList> {
-
+  
   //actual todoList entrys, made of ListEntry classes
   List<ListEntry> _todoItems = [];
 
@@ -64,9 +68,66 @@ class TodoListState extends State<TodoList> {
     );
   }
 
+Future<String> ifAddPressed(BuildContext context){
+    
+  TextEditingController customController = TextEditingController();
+    
+    return showDialog(context: context, builder: (context){
+      return AlertDialog(
+        title: Text('Submit category name'),
+        content: TextField(
+          controller: customController,
+        ),
+        actions: <Widget>[
+          MaterialButton(
+            elevation: 4.0,
+            child: new Text('Submit'),
+            onPressed: (){
+              Navigator.of(context).pop(customController.text.toString());
+              setState(() {
+              });
+            }
+          )
+        ],
+      );
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    
+    var children;
+    
+    var DHeader = new DrawerHeader(
+      child: new Text('Categories')
+    );
+    
+    var AddCat = new ListTile(
+      leading: Icon(Icons.add),
+      title: Text('Add category'),
+      onTap: (){
+        ifAddPressed(context).then((onValue){
+            children.add(new ListTile(
+              title: Text('$onValue'),
+              onTap: (){}
+            ));
+          }
+        );}
+      );  
+
+      children = [DHeader,AddCat];
+
+
+    
+
     return new Scaffold(
+      //slide bar
+      drawer: new Drawer(
+          child: new ListView(
+            children: children
+          )
+      ),
       //top bar
       appBar: new AppBar(
           title: new Text('Todo List')
