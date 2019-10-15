@@ -7,12 +7,15 @@ class ListEntry {
   String _description="";
   BuildContext context;
 
+  //global list with all the ListEntries
+  List<ListEntry> list;
+
   //disposed when task is deleted
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
   //prompt for crating a entry
-  ListEntry(this.context){
+  ListEntry(this.context, this.list){
 
     ListEntryEdit('Create Task');
   }
@@ -89,7 +92,18 @@ class ListEntry {
               children: <Widget>[
                 Text(_title),
                 Divider(),
-                Text(_description)
+                Text(_description),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    titleController.dispose();
+                    descriptionController.dispose();
+
+                    list.remove(this);
+
+                    Navigator.pop(context);
+                  }
+                )
               ]
             )
           )

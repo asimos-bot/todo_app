@@ -38,7 +38,7 @@ class TodoListState extends State<TodoList> {
     setState((){
 
       int index = _todoItems.length;
-      _todoItems.add(new ListEntry(context));
+      _todoItems.add(new ListEntry(context, _todoItems));
     });
   }
 
@@ -81,9 +81,6 @@ class TodoListState extends State<TodoList> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Expanded(
-              child: IconButton(icon: Icon(Icons.home))
-            ),
             Expanded(
               child: IconButton(icon: Icon(Icons.add), onPressed: _addTodoItem)
             )
