@@ -3,45 +3,55 @@ import 'Tag.dart';
 
 class ListEntry {
 
-  String _text;
-  int index;
+  String _title="";
+  String _description="";
+  BuildContext context;
 
-  ListEntry(this._text, this.index);
+  //prompt for crating a entry
+  ListEntry(this.context){
 
-  Widget toListTile(){
+    ListEntryEdit('Create Task');
+  }
 
-    return ListTile(
-      title: new Text(_text, overflow: TextOverflow.ellipsis)
+  //return this entry in widget form
+  Widget toWidget(){
+
+    return new SizedBox(
+      child: new Card(
+        child: new ListTile(
+          title: new Text(_title, overflow: TextOverflow.ellipsis),
+          subtitle: new Text(_description, overflow: TextOverflow.ellipsis),
+          onTap: () => ListEntryView(),
+        )
+      )
     );
   }
 
-  Widget toWidget(){
+  //edit ListEntry
+  Widget ListEntryEdit(String appBarTitle){
 
-    return LongPressDraggable<ListEntry>(
-
-        data: this,
-
-        //make so we only drag in the vertical
-        axis: Axis.vertical,
-
-        //what is there when we are not dragging
-        maxSimultaneousDrags: 1,
-        child: toListTile(),
-
-        //what we leave behind
-        childWhenDragging: Opacity(
-          opacity: 0.5,
-          child: toListTile(),
-        ),
-
-        //what we drag
-        feedback: Material(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 200, maxHeight: 50),
-            child: toListTile()
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+              title: Text(appBarTitle)
           ),
-          elevation: 4.0,
+          body: Form(
+            child: Column(
+              children: <Widget>[
+                TextFormField(),
+                Divider(),
+                TextFormField()
+              ]
+            )
+          )
         )
-      );
+      )
+    );
+  }
+
+  //view ListEntry content, has a button to go to ListEntryEdit
+  void ListEntryView(){
+
   }
 }
