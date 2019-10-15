@@ -68,9 +68,9 @@ class TodoListState extends State<TodoList> {
     );
   }
 
-Future<String> ifAddPressed(BuildContext context){
+  Future<String> ifAddPressed(BuildContext context){
     
-  TextEditingController customController = TextEditingController();
+    TextEditingController customController = TextEditingController();
     
     return showDialog(context: context, builder: (context){
       return AlertDialog(
@@ -84,8 +84,6 @@ Future<String> ifAddPressed(BuildContext context){
             child: new Text('Submit'),
             onPressed: (){
               Navigator.of(context).pop(customController.text.toString());
-              setState(() {
-              });
             }
           )
         ],
@@ -93,12 +91,17 @@ Future<String> ifAddPressed(BuildContext context){
     });
   }
 
+  newWidgetList(List<Widget> children){
+        print(children);
+        return children;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
     
     var children;
-    
     var DHeader = new DrawerHeader(
       child: new Text('Categories')
     );
@@ -110,22 +113,24 @@ Future<String> ifAddPressed(BuildContext context){
         ifAddPressed(context).then((onValue){
             children.add(new ListTile(
               title: Text('$onValue'),
-              onTap: (){}
+              onTap: (){},
             ));
+            print(children);
+            setState(() {});
           }
         );}
       );  
-
-      children = [DHeader,AddCat];
+    
+    children = <Widget>[DHeader,AddCat];
 
 
     
-
+    
     return new Scaffold(
       //slide bar
       drawer: new Drawer(
           child: new ListView(
-            children: children
+            children: newWidgetList(children)
           )
       ),
       //top bar

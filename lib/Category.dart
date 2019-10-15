@@ -10,9 +10,13 @@ class Category extends StatelessWidget{
     return new MaterialApp();
   }
 
-  void addCategory(){
-    
-
+  addCategory(List<Widget> category, Text text){
+    var cat = <Widget>[];
+    for(var i = 0; i <= category.length;i++){
+      cat.add(category[i]);
+    }
+    cat.add(new ListTile(title: text, onTap: (){},));
+    return cat;
   }
 
 }
