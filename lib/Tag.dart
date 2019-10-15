@@ -6,7 +6,7 @@ class Tag{
   double weight;
   String name;
 
-  Tag(this.color, this.weight, this.  name);
+  Tag(this.color, this.weight, this.name);
 
   Widget toWidget(){
 
