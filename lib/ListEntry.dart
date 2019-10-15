@@ -96,12 +96,36 @@ class ListEntry {
                 IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
-                    titleController.dispose();
-                    descriptionController.dispose();
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(
+                              'Are you sure you want to delete this task?'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('Yes'),
+                              onPressed: () {
+                                titleController.dispose();
+                                descriptionController.dispose();
 
-                    list.remove(this);
+                                list.remove(this);
 
-                    Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              }
+                            ),
+                            FlatButton(
+                              child: Text('No'),
+                              onPressed: () {
+
+                                Navigator.pop(context);
+                              }
+                            )
+                          ]
+                        );
+                      }
+                    );
                   }
                 )
               ]
