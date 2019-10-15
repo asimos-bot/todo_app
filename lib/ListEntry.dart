@@ -1,4 +1,5 @@
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'Tag.dart';
 
 class ListEntry {
 
@@ -16,7 +17,12 @@ class ListEntry {
 
   Widget toWidget(){
 
-    return Draggable(
+    return LongPressDraggable<ListEntry>(
+
+        data: this,
+
+        //make so we only drag in the vertical
+        axis: Axis.vertical,
 
         //what is there when we are not dragging
         maxSimultaneousDrags: 1,

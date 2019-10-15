@@ -37,7 +37,7 @@ class TodoListState extends State<TodoList> {
     setState((){
 
       int index = _todoItems.length;
-      _todoItems.add(new ListEntry('Item: ' + index.toString(), index));
+      _todoItems.insert(0, new ListEntry('Item: ' + index.toString(), index));
     });
   }
 
@@ -49,7 +49,16 @@ class TodoListState extends State<TodoList> {
         // list to fill up its available space, which is most likely more than the
         // number of todoitems we have. So, we need to check the index is OK.
         if(index < _todoItems.length) {
-          return _todoItems[index].toWidget();
+          return DragTarget(
+              builder: (context, List<Widget> candidateData, rejectedData){
+
+                return _todoItems[index].toWidget();
+              },
+              onWillAccept: (data) {
+
+                return true;
+              }
+          );
         }
       },
     );
