@@ -7,6 +7,10 @@ class ListEntry {
   String _description="";
   BuildContext context;
 
+  //disposed when task is deleted
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+
   //prompt for crating a entry
   ListEntry(this.context){
 
@@ -28,20 +32,36 @@ class ListEntry {
   }
 
   //edit ListEntry
-  Widget ListEntryEdit(String appBarTitle){
+  void ListEntryEdit(String appBarTitle){
 
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => Scaffold(
           appBar: AppBar(
-              title: Text(appBarTitle)
+              title: Text(appBarTitle),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.done),
+                  onPressed: (){
+
+                    _title = titleController.text;
+                    _description = descriptionController.text;
+
+                    Navigator.pop(context);
+                  }
+                )
+              ]
           ),
           body: Form(
             child: Column(
               children: <Widget>[
-                TextFormField(),
+                TextFormField(
+                  controller: titleController,
+                ),
                 Divider(),
-                TextFormField()
+                TextFormField(
+                  controller: descriptionController
+                )
               ]
             )
           )
@@ -53,5 +73,28 @@ class ListEntry {
   //view ListEntry content, has a button to go to ListEntryEdit
   void ListEntryView(){
 
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () => ListEntryEdit('Edit')
+              )
+            ]
+          ),
+          body: Container(
+            child: Column(
+              children: <Widget>[
+                Text(_title),
+                Divider(),
+                Text(_description)
+              ]
+            )
+          )
+        )
+      )
+    );
   }
 }
