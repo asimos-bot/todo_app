@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'Tag.dart';
+import 'TaskList.dart';
 
-class ListEntry {
+class Task {
 
-  String _title="";
-  String _description="";
+  int id=-1;
+  String title="";
+  String description="";
+
   BuildContext context;
 
   //global list with all the ListEntries
-  List<ListEntry> list;
+  TaskList list;
 
   //disposed when task is deleted
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  //prompt for crating a entry
-  ListEntry(this.context, this.list){
 
-    ListEntryEdit('Create Task');
-  }
+  //prompt for crating a entry
+  Task(this.context, this.list);
 
   //return this entry in widget form
   Widget toWidget(){
@@ -26,29 +27,29 @@ class ListEntry {
     return new SizedBox(
       child: new Card(
         child: new ListTile(
-          title: new Text(_title, overflow: TextOverflow.ellipsis),
-          subtitle: new Text(_description, overflow: TextOverflow.ellipsis),
-          onTap: () => ListEntryView(),
+          title: new Text(title, overflow: TextOverflow.ellipsis),
+          subtitle: new Text(description, overflow: TextOverflow.ellipsis),
+          onTap: () => taskView(),
         )
       )
     );
   }
 
   //edit ListEntry
-  void ListEntryEdit(String appBarTitle){
+  void taskEdit(){
 
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => Scaffold(
           appBar: AppBar(
-              title: Text(appBarTitle),
+              title: Text('Edit'),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.done),
                   onPressed: (){
 
-                    _title = titleController.text;
-                    _description = descriptionController.text;
+                    title = titleController.text;
+                    description = descriptionController.text;
 
                     Navigator.pop(context);
                   }
@@ -59,10 +60,15 @@ class ListEntry {
             child: Column(
               children: <Widget>[
                 TextFormField(
+
+                  decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
+                  style: TextStyle(color: Colors.black),
                   controller: titleController,
                 ),
                 Divider(),
                 TextFormField(
+                  decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
+                  style: TextStyle(color: Colors.black),
                   controller: descriptionController
                 )
               ]
@@ -74,34 +80,44 @@ class ListEntry {
   }
 
   //view ListEntry content, has a button to go to ListEntryEdit
-  void ListEntryView(){
+  void taskView(){
 
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => Scaffold(
           appBar: AppBar(
+            title: Text("Task description"),
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.edit),
-                onPressed: () => ListEntryEdit('Edit')
+                onPressed: () => taskEdit()
               )
             ]
           ),
           body: Container(
+            padding: EdgeInsets.all(30.0),
             child: Column(
               children: <Widget>[
-                Text(_title),
+
+                Text(title,style: TextStyle(color: Colors.white)),
                 Divider(),
-                Text(_description),
-                IconButton(
+                Text(description,style: TextStyle(color: Colors.white)),
+                Container(padding: EdgeInsets.all(300.0)),
+                ClipOval(
+                  child:Container(
+                    padding: EdgeInsets.all(4.0),color: Color(0xFF6A1B9A),child:IconButton(
+                  hoverColor: Colors.white ,
+                  highlightColor:Colors.white ,
+                  focusColor: Colors.white,
+                  color: Colors.white,
+
                   icon: Icon(Icons.delete),
                   onPressed: () {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text(
-                              'Are you sure you want to delete this task?'),
+                          title: Text('Are you sure you want to delete this task?'),
                           actions: <Widget>[
                             FlatButton(
                               child: Text('Yes'),
@@ -127,7 +143,7 @@ class ListEntry {
                       }
                     );
                   }
-                )
+                )))
               ]
             )
           )
