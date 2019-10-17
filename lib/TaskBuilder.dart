@@ -1,50 +1,38 @@
 import 'package:flutter/material.dart';
+import 'Task.dart';
 
-class Tag {
-
-  Colors color;
-  double weight;
-  String title="";
-  String _description="";
+class TaskBuilder {
 
   BuildContext context;
+  List<Task> list;
 
-  //global list with all the tags
-  List<Tag> list;
-
-  //dispose when task is deleted
+  //disposed when task is deleted
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  Tag(this.context, this.list){
+  TaskBuilder(this.context, this.list);
 
-    TagEdit('Create Tag');
-  }
-
-  Widget toWidget(){
-
-    return Card(
-      child:ListTile(
-        title: Text(title),
-        subtitle: Text(_description)
-      )
-    );
-  }
-
-  void TagEdit(String appBarTitle){
+  void createTask(){
 
     Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => Scaffold(
                 appBar: AppBar(
-                    title: Text(appBarTitle),
+                    title: Text('Create Task'),
                     actions: <Widget>[
                       IconButton(
                           icon: Icon(Icons.done),
                           onPressed: (){
 
-                            title = titleController.text;
-                            _description = descriptionController.text;
+                            var title = titleController.text;
+                            var _description = descriptionController.text;
+
+                            var task = Task(context, list);
+
+                            task.title = title;
+                            task.description = _description;
+
+                            list.add(task);
 
                             Navigator.pop(context);
                           }
@@ -55,7 +43,7 @@ class Tag {
                     child: Column(
                         children: <Widget>[
                           TextFormField(
-                            controller: titleController,
+                              controller: titleController
                           ),
                           Divider(),
                           TextFormField(
