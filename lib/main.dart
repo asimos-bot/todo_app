@@ -7,13 +7,16 @@ void main() => runApp(new TodoApp());
 
 //Main widget
 class TodoApp extends StatelessWidget {
+  var Purple = const Color(0xFF6A1B9A);
+  var Black = const Color(0xDD000000);
 
   @override
   Widget build(BuildContext context){
 
     return new MaterialApp(
-      title: 'Todo Yourself', //title which appear when we minimize the app
+      title: 'ToDo Yourself', //title which appear when we minimize the app
       home: new TodoList(), //actual app stuff
+      theme: ThemeData(primaryColor: Purple, scaffoldBackgroundColor: Black),
       routes: <String, WidgetBuilder> {
 
       }
@@ -75,11 +78,11 @@ class TodoListState extends State<TodoList> {
       child: new Column(
         children: <Widget> [
           DrawerHeader(
-            child: Text('Tag Menu')
+            child: Text('Categories Menu')
           ),
           ListTile(
             leading: Icon(Icons.add),
-            title: Text("Add Tag"),
+            title: Text("Add category"),
             onTap: () => _addTag(),
           ),
           Container(
@@ -113,14 +116,14 @@ class TodoListState extends State<TodoList> {
       drawer: _buildDrawer(),
       //top bar
       appBar: new AppBar(
-          title: new Text('Todo List')
+          title: new Text('Your tasks')
       ),
       //content in the middle of the screen
       body: _buildTodoList(),
       //bottom bar
       bottomNavigationBar: new BottomAppBar(
         //background color
-        color: Colors.blue,
+        color: Color(0xFF6A1B9A),
         shape: CircularNotchedRectangle(),
         //here we say we want a row to be inside the bottom bar (because the icons are in a row, just think about it)
         child: new Row(
@@ -128,7 +131,7 @@ class TodoListState extends State<TodoList> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Expanded(
-              child: IconButton(icon: Icon(Icons.add), onPressed: _addTodoItem)
+              child: IconButton(icon: Icon(Icons.add), onPressed: _addTodoItem, color: Colors.white)
             )
           ]
         )
