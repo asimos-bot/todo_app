@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'Tag.dart';
 
-class ListEntry {
+class Task {
 
   String _title="";
   String _description="";
+
   BuildContext context;
 
   //global list with all the ListEntries
-  List<ListEntry> list;
+  List<Task> list;
 
   //disposed when task is deleted
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
   //prompt for crating a entry
-  ListEntry(this.context, this.list){
+  Task(this.context, this.list){
 
-    ListEntryEdit('Create Task');
+    TaskEdit('Create Task');
   }
 
   //return this entry in widget form
@@ -28,14 +29,14 @@ class ListEntry {
         child: new ListTile(
           title: new Text(_title, overflow: TextOverflow.ellipsis),
           subtitle: new Text(_description, overflow: TextOverflow.ellipsis),
-          onTap: () => ListEntryView(),
+          onTap: () => TaskView(),
         )
       )
     );
   }
 
   //edit ListEntry
-  void ListEntryEdit(String appBarTitle){
+  void TaskEdit(String appBarTitle){
 
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -74,7 +75,7 @@ class ListEntry {
   }
 
   //view ListEntry content, has a button to go to ListEntryEdit
-  void ListEntryView(){
+  void TaskView(){
 
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -83,7 +84,7 @@ class ListEntry {
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.edit),
-                onPressed: () => ListEntryEdit('Edit')
+                onPressed: () => TaskEdit('Edit')
               )
             ]
           ),
@@ -100,8 +101,7 @@ class ListEntry {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text(
-                              'Are you sure you want to delete this task?'),
+                          title: Text('Are you sure you want to delete this task?'),
                           actions: <Widget>[
                             FlatButton(
                               child: Text('Yes'),

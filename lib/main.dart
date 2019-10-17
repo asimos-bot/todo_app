@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_list_drag_and_drop/drag_and_drop_list.dart';
-import 'ListEntry.dart';
-import 'Category.dart';
+import 'Task.dart';
+import 'Tag.dart';
 
 void main() => runApp(new TodoApp());
 
@@ -15,7 +15,7 @@ class TodoApp extends StatelessWidget {
       title: 'Todo Yourself', //title which appear when we minimize the app
       home: new TodoList(), //actual app stuff
       routes: <String, WidgetBuilder> {
-        
+
       }
     );
   }
@@ -32,7 +32,10 @@ class TodoList extends StatefulWidget {
 class TodoListState extends State<TodoList> {
   
   //actual todoList entrys, made of ListEntry classes
-  List<ListEntry> _todoItems = [];
+  List<Task> _todoItems = [];
+
+  //list of categories
+  List<Tag> _tags = [];
 
   //will be called every time the button to add a list entry is pressed
   void _addTodoItem(){
@@ -41,24 +44,25 @@ class TodoListState extends State<TodoList> {
     // it will automatically re-render the list
     setState((){
 
-      int index = _todoItems.length;
-      _todoItems.add(new ListEntry(context, _todoItems));
+      _todoItems.add(new Task(context, _todoItems));
+    });
+  }
+
+  void _addTag(){
+
+    setState((){
+
+      _tags.add(Tag(context, _tags));
     });
   }
 
   //build whole list of todoitems
   Widget _buildTodoList() {
-    return new DragAndDropList<ListEntry>(
+    return new DragAndDropList<Task>(
       _todoItems,
-      itemBuilder: (BuildContext context, item) {
-        // itemBuilder will be automatically be called as many times as it takes for the
-        // list to fill up its available space, which is most likely more than the
-        // number of todoitems we have. So, we need to check the index is OK.
-        return item.toWidget();
-      },
+      itemBuilder: (BuildContext context, item) => item.toWidget(),
       onDragFinish: (before, after) {
-
-        _todoItems.insert(after, _todoItems.removeAt(before));
+        //_todoItems.insert(after, _todoItems.removeAt(before));
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
@@ -66,71 +70,47 @@ class TodoListState extends State<TodoList> {
     );
   }
 
-  Future<String> ifAddPressed(BuildContext context){
-    
-    TextEditingController customController = TextEditingController();
-    
-    return showDialog(context: context, builder: (context){
-      return AlertDialog(
-        title: Text('Submit category name'),
-        content: TextField(
-          controller: customController,
-        ),
-        actions: <Widget>[
-          MaterialButton(
-            elevation: 4.0,
-            child: new Text('Submit'),
-            onPressed: (){
-              Navigator.of(context).pop(customController.text.toString());
-            }
+  Widget _buildDrawer() {
+    return new Drawer(
+      child: new Column(
+        children: <Widget> [
+          DrawerHeader(
+            child: Text('Tag Menu')
+          ),
+          ListTile(
+            leading: Icon(Icons.add),
+            title: Text("Add Tag"),
+            onTap: () => _addTag(),
+          ),
+          Container(
+            child: Expanded(
+              child: DragAndDropList<Tag>(
+                _tags,
+                itemBuilder: (BuildContext context, item) {
+
+                  return item.toWidget();
+                },
+                onDragFinish: (before, after) {
+
+                  _tags.insert(after, _tags.removeAt(before));
+                },
+                canBeDraggedTo: (one, two) => true,
+                dragElevation: 8.0,
+                tilt: 0.01
+              )
+            )
           )
-        ],
-      );
-    });
+        ]
+      )
+    );
   }
-
-  newWidgetList(List<Widget> children){
-        print(children);
-        return children;
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
-    
-    var children;
-    var DHeader = new DrawerHeader(
-      child: new Text('Categories')
-    );
-    
-    var AddCat = new ListTile(
-      leading: Icon(Icons.add),
-      title: Text('Add category'),
-      onTap: (){
-        ifAddPressed(context).then((onValue){
-            children.add(new ListTile(
-              title: Text('$onValue'),
-              onTap: (){},
-            ));
-            print(children);
-            setState(() {});
-          }
-        );}
-      );  
-    
-    children = <Widget>[DHeader,AddCat];
 
-
-    
-    
     return new Scaffold(
       //slide bar
-      drawer: new Drawer(
-          child: new ListView(
-            children: newWidgetList(children)
-          )
-      ),
+      drawer: _buildDrawer(),
       //top bar
       appBar: new AppBar(
           title: new Text('Todo List')
@@ -155,4 +135,5 @@ class TodoListState extends State<TodoList> {
       ),
     );
   }
+
 }
