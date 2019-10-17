@@ -13,7 +13,6 @@ class TagBuilder {
   TagBuilder(this.context, this.list);
 
   void createTag(){
-
     Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => Scaffold(
@@ -43,10 +42,14 @@ class TagBuilder {
                     child: Column(
                         children: <Widget>[
                           TextFormField(
-                              controller: titleController
+                            decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
+                            style: TextStyle(color: Colors.black),
+                            controller: titleController,
                           ),
                           Divider(),
                           TextFormField(
+                              decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
+                              style: TextStyle(color: Colors.black),
                               controller: descriptionController
                           )
                         ]

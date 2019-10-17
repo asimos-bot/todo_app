@@ -99,9 +99,9 @@ class Task {
             child: Column(
               children: <Widget>[
 
-                Text(_title,style: TextStyle(color: Colors.white)),
+                Text(title,style: TextStyle(color: Colors.white)),
                 Divider(),
-                Text(_description,style: TextStyle(color: Colors.white)),
+                Text(description,style: TextStyle(color: Colors.white)),
                 Container(padding: EdgeInsets.all(300.0)),
                 ClipOval(
                   child:Container(

@@ -25,7 +25,6 @@ class TaskBuilder {
                       IconButton(
                           icon: Icon(Icons.done),
                           onPressed: (){
-
                             var title = titleController.text;
                             var _description = descriptionController.text;
 
@@ -45,10 +44,15 @@ class TaskBuilder {
                     child: Column(
                         children: <Widget>[
                           TextFormField(
-                              controller: titleController
+
+                            decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
+                            style: TextStyle(color: Colors.black),
+                            controller: titleController,
                           ),
                           Divider(),
                           TextFormField(
+                              decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
+                              style: TextStyle(color: Colors.black),
                               controller: descriptionController
                           )
                         ]
