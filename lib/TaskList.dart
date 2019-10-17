@@ -64,11 +64,15 @@ class TaskList {
   }
 
   //update database
-  void set(int index, Task task){
+  void updateAt(int index){
 
     if( index >= list.length || index < 0 ) throw("Index out of bounds in TaskList");
-    list[index] = task;
 
-    //TODO: update database
+    db.update('tasks', {'title': list[index].title, 'description': list[index].description}, where: 'id = ?', whereArgs: [list[index].id]);
+  }
+
+  void update(Task task){
+
+    updateAt( list.indexOf(task) );
   }
 }

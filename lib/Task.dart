@@ -51,6 +51,8 @@ class Task {
                     title = titleController.text;
                     description = descriptionController.text;
 
+                    list.update(this);
+
                     Navigator.pop(context);
                   }
                 )
