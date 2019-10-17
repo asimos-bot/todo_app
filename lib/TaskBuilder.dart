@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'Task.dart';
+import 'Tag.dart';
+import 'TaskList.dart';
 
 class TaskBuilder {
 
   BuildContext context;
-  List<Task> list;
+  TaskList list;
 
   //disposed when task is deleted
   final titleController = TextEditingController();

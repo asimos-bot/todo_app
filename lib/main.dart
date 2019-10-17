@@ -5,6 +5,8 @@ import 'dart:async';
 import 'Task.dart';
 import 'Tag.dart';
 import 'TaskBuilder.dart';
+import 'TagBuilder.dart';
+import 'TaskList.dart';
 
 void main() => runApp(new TodoApp());
 
@@ -34,14 +36,17 @@ class TodoList extends StatefulWidget {
 //describe states of todoList
 class TodoListState extends State<TodoList> {
 
-  //actual todoList entrys, made of ListEntry classes
-  List<Task> todoItems = [];
+  TaskList todoItems = TaskList();
 
   //list of categories
   List<Tag> tags = [];
 
-  //task builder
+  //builders
   var taskBuilder;
+  var tagBuilder;
+
+  //database
+  Database db;
 
   //will be called every time the button to add a list entry is pressed
   void _addTodoItem(){
@@ -58,7 +63,7 @@ class TodoListState extends State<TodoList> {
 
     setState((){
 
-      tags.add(Tag(context, tags));
+      tagBuilder.createTag();
     });
   }
 
@@ -66,10 +71,10 @@ class TodoListState extends State<TodoList> {
   Widget _buildTodoList() {
 
     return new DragAndDropList<Task>(
-      todoItems,
+      todoItems.list,
       itemBuilder: (BuildContext context, item) => item.toWidget(),
       onDragFinish: (before, after) {
-        todoItems.insert(after, todoItems.removeAt(before));
+        todoItems.list.insert(after, todoItems.list.removeAt(before));
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
@@ -122,7 +127,7 @@ class TodoListState extends State<TodoList> {
   //populate _todoItems with database
   Future<void> _dbGetTodoItems() async {
 
-    var db = await openDatabase('database.db',
+    db = await openDatabase('database.db',
       //in case the database was nonexistent, create it right now
       version: 1,
       onCreate: (Database db, version) => _createDatabase(db, version),
@@ -130,9 +135,8 @@ class TodoListState extends State<TodoList> {
 
         List<Map> rawTasks = await db.rawQuery('SELECT * FROM tasks');
         print(rawTasks);
+        setState(() => todoItems.create(context, db, rawTasks));
       });
-
-    await db.close();
   }
 
   @override
@@ -140,10 +144,20 @@ class TodoListState extends State<TodoList> {
   void initState(){
 
     taskBuilder = new TaskBuilder(context, todoItems);
+    tagBuilder = new TagBuilder(context, tags);
 
     _dbGetTodoItems();
 
     super.initState();
+  }
+
+  @override
+  @mustCallSuper
+  void dispose(){
+
+    () async => await db.close();
+
+    super.dispose();
   }
 
   @override

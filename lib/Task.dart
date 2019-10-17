@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'Tag.dart';
+import 'TaskList.dart';
 
 class Task {
 
+  int id=-1;
   String title="";
   String description="";
 
   BuildContext context;
 
   //global list with all the ListEntries
-  List<Task> list;
+  TaskList list;
 
   //disposed when task is deleted
   final titleController = TextEditingController();
