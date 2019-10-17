@@ -100,7 +100,10 @@ class Task {
                 Text(_title,style: TextStyle(color: Colors.white)),
                 Divider(),
                 Text(_description,style: TextStyle(color: Colors.white)),
-                ClipOval(child:Container(padding: EdgeInsets.all(4.0),color: Color(0xFF6A1B9A),child:IconButton(
+                Container(padding: EdgeInsets.all(300.0)),
+                ClipOval(
+                  child:Container(
+                    padding: EdgeInsets.all(4.0),color: Color(0xFF6A1B9A),child:IconButton(
                   hoverColor: Colors.white ,
                   highlightColor:Colors.white ,
                   focusColor: Colors.white,

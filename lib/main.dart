@@ -75,9 +75,11 @@ class TodoListState extends State<TodoList> {
 
   Widget _buildDrawer() {
     return new Drawer(
-      child: new Column(
+      child: new Column(  //ListView
+        //padding: EdgeInsets.zero,
         children: <Widget> [
           DrawerHeader(
+            //decoration: BoxDecoration(color: Color(0xFF6A1B9A)),
             child: Text('Categories Menu')
           ),
           ListTile(
