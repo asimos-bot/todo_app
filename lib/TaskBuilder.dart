@@ -5,16 +5,15 @@ import 'TaskList.dart';
 
 class TaskBuilder {
 
-  BuildContext context;
   TaskList list;
 
   //disposed when task is deleted
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  TaskBuilder(this.context, this.list);
+  TaskBuilder(this.list);
 
-  void createTask(){
+  void createTask(context){
 
     Navigator.of(context).push(
         MaterialPageRoute(
@@ -25,13 +24,11 @@ class TaskBuilder {
                       IconButton(
                           icon: Icon(Icons.done),
                           onPressed: (){
-                            var title = titleController.text;
-                            var _description = descriptionController.text;
 
-                            var task = Task(context, list);
+                            var task = Task(list);
 
-                            task.title = title;
-                            task.description = _description;
+                            task.title = titleController.text;
+                            task.description = descriptionController.text;
 
                             list.add(task);
 
@@ -61,5 +58,11 @@ class TaskBuilder {
             )
         )
     );
+  }
+
+  void close(){
+
+    titleController.dispose();
+    descriptionController.dispose();
   }
 }

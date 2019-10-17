@@ -3,16 +3,15 @@ import 'Tag.dart';
 
 class TagBuilder {
 
-  BuildContext context;
   List<Tag> list;
 
   //disposed when tag is deleted
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  TagBuilder(this.context, this.list);
+  TagBuilder(this.list);
 
-  void createTag(){
+  void createTag(context){
     Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => Scaffold(
@@ -26,7 +25,7 @@ class TagBuilder {
                             var title = titleController.text;
                             var _description = descriptionController.text;
 
-                            var tag = Tag(context, list);
+                            var tag = Tag(list);
 
                             tag.title = title;
                             tag.description = _description;

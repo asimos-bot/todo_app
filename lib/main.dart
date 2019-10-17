@@ -58,7 +58,7 @@ class TodoListState extends State<TodoList> {
     // it will automatically re-render the list
     setState((){
 
-      taskBuilder.createTask();
+      taskBuilder.createTask(context);
     });
   }
 
@@ -66,7 +66,7 @@ class TodoListState extends State<TodoList> {
 
     setState((){
 
-      tagBuilder.createTag();
+      tagBuilder.createTag(context);
     });
   }
 
@@ -75,7 +75,7 @@ class TodoListState extends State<TodoList> {
 
     return new DragAndDropList<Task>(
       todoItems.list,
-      itemBuilder: (BuildContext context, item) => item.toWidget(),
+      itemBuilder: (BuildContext context, item) => item.toWidget(context),
       onDragFinish: (before, after) {
         todoItems.list.insert(after, todoItems.list.removeAt(before));
       },
@@ -105,7 +105,7 @@ class TodoListState extends State<TodoList> {
                 tags,
                 itemBuilder: (BuildContext context, item) {
 
-                  return item.toWidget();
+                  return item.toWidget(context);
                 },
                 onDragFinish: (before, after) {
 
@@ -148,8 +148,8 @@ class TodoListState extends State<TodoList> {
   @mustCallSuper
   void initState(){
 
-    taskBuilder = new TaskBuilder(context, todoItems);
-    tagBuilder = new TagBuilder(context, tags);
+    taskBuilder = new TaskBuilder(todoItems);
+    tagBuilder = new TagBuilder(tags);
 
     _dbGetTodoItems();
 
@@ -161,6 +161,8 @@ class TodoListState extends State<TodoList> {
   void dispose(){
 
     () async => await db.close();
+
+    taskBuilder.close();
 
     super.dispose();
   }

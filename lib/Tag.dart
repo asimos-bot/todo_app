@@ -7,8 +7,6 @@ class Tag {
   String title="";
   String description="";
 
-  BuildContext context;
-
   //global list with all the tags
   List<Tag> list;
 
@@ -16,9 +14,9 @@ class Tag {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  Tag(this.context, this.list);
+  Tag(this.list);
 
-  Widget toWidget(){
+  Widget toWidget(context){
 
     return Card(
       child:ListTile(
@@ -28,7 +26,7 @@ class Tag {
     );
   }
 
-  void tagEdit(){
+  void tagEdit(context){
 
     Navigator.of(context).push(
         MaterialPageRoute(

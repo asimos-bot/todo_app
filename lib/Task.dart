@@ -8,8 +8,6 @@ class Task {
   String title="";
   String description="";
 
-  BuildContext context;
-
   //global list with all the ListEntries
   TaskList list;
 
@@ -17,26 +15,28 @@ class Task {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
-
   //prompt for crating a entry
-  Task(this.context, this.list);
+  Task(this.list);
 
   //return this entry in widget form
-  Widget toWidget(){
+  Widget toWidget(context){
 
     return new SizedBox(
       child: new Card(
         child: new ListTile(
           title: new Text(title, overflow: TextOverflow.ellipsis),
           subtitle: new Text(description, overflow: TextOverflow.ellipsis),
-          onTap: () => taskView(),
+          onTap: () => taskView(context),
         )
       )
     );
   }
 
   //edit ListEntry
-  void taskEdit(){
+  void taskEdit(context){
+
+    titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: title)).value;
+    descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: description)).value;
 
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -80,7 +80,7 @@ class Task {
   }
 
   //view ListEntry content, has a button to go to ListEntryEdit
-  void taskView(){
+  void taskView(context){
 
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -90,7 +90,7 @@ class Task {
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.edit),
-                onPressed: () => taskEdit()
+                onPressed: () => taskEdit(context)
               )
             ]
           ),
@@ -102,48 +102,55 @@ class Task {
                 Text(title,style: TextStyle(color: Colors.white)),
                 Divider(),
                 Text(description,style: TextStyle(color: Colors.white)),
-                Container(padding: EdgeInsets.all(300.0)),
-                ClipOval(
-                  child:Container(
-                    padding: EdgeInsets.all(4.0),color: Color(0xFF6A1B9A),child:IconButton(
-                  hoverColor: Colors.white ,
-                  highlightColor:Colors.white ,
-                  focusColor: Colors.white,
-                  color: Colors.white,
+                Expanded(
+                  child: Center(
+                    child: ClipOval(
+                      child:Container(
+                        padding: EdgeInsets.all(4.0),
+                        color: Color(0xFF6A1B9A),
+                        child:IconButton(
+                          hoverColor: Colors.white ,
+                          highlightColor:Colors.white ,
+                          focusColor: Colors.white,
+                          color: Colors.white,
 
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Are you sure you want to delete this task?'),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text('Yes'),
-                              onPressed: () {
-                                titleController.dispose();
-                                descriptionController.dispose();
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Are you sure you want to delete this task?'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text('Yes'),
+                                      onPressed: () {
+                                        titleController.dispose();
+                                        descriptionController.dispose();
 
-                                list.remove(this);
+                                        list.remove(this);
 
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              }
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      }
                             ),
-                            FlatButton(
-                              child: Text('No'),
-                              onPressed: () {
+                                    FlatButton(
+                                      child: Text('No'),
+                                      onPressed: () {
 
-                                Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      }
+                                    )
+                                  ]
+                                );
                               }
-                            )
-                          ]
-                        );
-                      }
-                    );
-                  }
-                )))
+                            );
+                          }
+                        )
+                      )
+                    )
+                  )
+                )
               ]
             )
           )

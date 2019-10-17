@@ -18,7 +18,7 @@ class TaskList {
     for(int i=0; i < queryResult.length; i++){
 
       Map taskMap = queryResult[i];
-      Task task = Task(context, this);
+      Task task = Task(this);
 
       task.title = taskMap['title'];
       task.description = taskMap['description'];
@@ -59,6 +59,8 @@ class TaskList {
 
       db.delete('tasks', where: 'id = ?', whereArgs: [task.id]);
     }
+
+    return task;
   }
 
   //update database
