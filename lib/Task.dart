@@ -17,6 +17,7 @@ class Task {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
+
   //prompt for crating a entry
   Task(this.context, this.list);
 
@@ -59,10 +60,15 @@ class Task {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  controller: titleController
+
+                  decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
+                  style: TextStyle(color: Colors.black),
+                  controller: titleController,
                 ),
                 Divider(),
                 TextFormField(
+                  decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
+                  style: TextStyle(color: Colors.black),
                   controller: descriptionController
                 )
               ]
@@ -80,6 +86,7 @@ class Task {
       MaterialPageRoute(
         builder: (context) => Scaffold(
           appBar: AppBar(
+            title: Text("Task description"),
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.edit),
@@ -88,12 +95,22 @@ class Task {
             ]
           ),
           body: Container(
+            padding: EdgeInsets.all(30.0),
             child: Column(
               children: <Widget>[
-                Text(title),
+
+                Text(_title,style: TextStyle(color: Colors.white)),
                 Divider(),
-                Text(description),
-                IconButton(
+                Text(_description,style: TextStyle(color: Colors.white)),
+                Container(padding: EdgeInsets.all(300.0)),
+                ClipOval(
+                  child:Container(
+                    padding: EdgeInsets.all(4.0),color: Color(0xFF6A1B9A),child:IconButton(
+                  hoverColor: Colors.white ,
+                  highlightColor:Colors.white ,
+                  focusColor: Colors.white,
+                  color: Colors.white,
+
                   icon: Icon(Icons.delete),
                   onPressed: () {
                     showDialog(
@@ -126,7 +143,7 @@ class Task {
                       }
                     );
                   }
-                )
+                )))
               ]
             )
           )

@@ -52,11 +52,15 @@ class Tag {
                     child: Column(
                         children: <Widget>[
                           TextFormField(
+                            decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
+                            style: TextStyle(color: Colors.black),
                             controller: titleController,
                           ),
                           Divider(),
                           TextFormField(
-                              controller: descriptionController
+                            decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
+                            style: TextStyle(color: Colors.black),
+                            controller: descriptionController
                           )
                         ]
                     )
