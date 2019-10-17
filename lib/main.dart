@@ -75,16 +75,16 @@ class TodoListState extends State<TodoList> {
 
   Widget _buildDrawer() {
     return new Drawer(
-      child: new Column(  //ListView
+      child: Container(decoration: BoxDecoration(color: Color(0xFF6A1B9A)),child: new Column(  //Column
         //padding: EdgeInsets.zero,
         children: <Widget> [
           DrawerHeader(
-            //decoration: BoxDecoration(color: Color(0xFF6A1B9A)),
-            child: Text('Categories Menu')
+            decoration: BoxDecoration(color: Color(0xFF6A1B9A)),
+            child: Text('Categories Menu',style: TextStyle(color: Colors.white),)
           ),
           ListTile(
-            leading: Icon(Icons.add),
-            title: Text("Add category"),
+            leading: Icon(Icons.add,color: Colors.white,),
+            title: Text("Add category",style: TextStyle(color: Colors.white),),
             onTap: () => _addTag(),
           ),
           Container(
@@ -107,7 +107,7 @@ class TodoListState extends State<TodoList> {
           )
         ]
       )
-    );
+    ));
   }
 
   @override
