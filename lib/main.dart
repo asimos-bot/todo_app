@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_list_drag_and_drop/drag_and_drop_list.dart';
+import 'package:sqflite/sqflite.dart';
+import 'dart:async';
 import 'Task.dart';
 import 'Tag.dart';
+import 'TaskBuilder.dart';
+import 'TagBuilder.dart';
+import 'TaskList.dart';
 
 void main() => runApp(new TodoApp());
 
@@ -33,12 +38,18 @@ class TodoList extends StatefulWidget {
 
 //describe states of todoList
 class TodoListState extends State<TodoList> {
-  
-  //actual todoList entrys, made of ListEntry classes
-  List<Task> _todoItems = [];
+
+  TaskList todoItems = TaskList();
 
   //list of categories
-  List<Tag> _tags = [];
+  List<Tag> tags = [];
+
+  //builders
+  var taskBuilder;
+  var tagBuilder;
+
+  //database
+  Database db;
 
   //will be called every time the button to add a list entry is pressed
   void _addTodoItem(){
@@ -47,7 +58,7 @@ class TodoListState extends State<TodoList> {
     // it will automatically re-render the list
     setState((){
 
-      _todoItems.add(new Task(context, _todoItems));
+      taskBuilder.createTask();
     });
   }
 
@@ -55,17 +66,18 @@ class TodoListState extends State<TodoList> {
 
     setState((){
 
-      _tags.add(Tag(context, _tags));
+      tagBuilder.createTag();
     });
   }
 
   //build whole list of todoitems
   Widget _buildTodoList() {
+
     return new DragAndDropList<Task>(
-      _todoItems,
+      todoItems.list,
       itemBuilder: (BuildContext context, item) => item.toWidget(),
       onDragFinish: (before, after) {
-        //_todoItems.insert(after, _todoItems.removeAt(before));
+        todoItems.list.insert(after, todoItems.list.removeAt(before));
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
@@ -90,14 +102,14 @@ class TodoListState extends State<TodoList> {
           Container(
             child: Expanded(
               child: DragAndDropList<Tag>(
-                _tags,
+                tags,
                 itemBuilder: (BuildContext context, item) {
 
                   return item.toWidget();
                 },
                 onDragFinish: (before, after) {
 
-                  _tags.insert(after, _tags.removeAt(before));
+                  tags.insert(after, tags.removeAt(before));
                 },
                 canBeDraggedTo: (one, two) => true,
                 dragElevation: 8.0,
@@ -108,6 +120,49 @@ class TodoListState extends State<TodoList> {
         ]
       )
     ));
+  }
+
+  //create database
+  Future<void> _createDatabase(Database db, int version) async {
+
+    await db.execute('CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, description TEXT)');
+    await db.execute('CREATE TABLE tags (id INTEGER PRIMARY KEY, title TEXT, description TEXT)');
+  }
+
+  //populate _todoItems with database
+  Future<void> _dbGetTodoItems() async {
+
+    db = await openDatabase('database.db',
+      //in case the database was nonexistent, create it right now
+      version: 1,
+      onCreate: (Database db, version) => _createDatabase(db, version),
+      onOpen: (Database db) async {
+
+        List<Map> rawTasks = await db.rawQuery('SELECT * FROM tasks');
+        print(rawTasks);
+        setState(() => todoItems.create(context, db, rawTasks));
+      });
+  }
+
+  @override
+  @mustCallSuper
+  void initState(){
+
+    taskBuilder = new TaskBuilder(context, todoItems);
+    tagBuilder = new TagBuilder(context, tags);
+
+    _dbGetTodoItems();
+
+    super.initState();
+  }
+
+  @override
+  @mustCallSuper
+  void dispose(){
+
+    () async => await db.close();
+
+    super.dispose();
   }
 
   @override
@@ -140,5 +195,4 @@ class TodoListState extends State<TodoList> {
       ),
     );
   }
-
 }

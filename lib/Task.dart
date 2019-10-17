@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'Tag.dart';
+import 'TaskList.dart';
 
 class Task {
 
-  String _title="";
-  String _description="";
+  int id=-1;
+  String title="";
+  String description="";
 
   BuildContext context;
 
   //global list with all the ListEntries
-  List<Task> list;
+  TaskList list;
 
   //disposed when task is deleted
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  //prompt for creating an entry
-  Task(this.context, this.list){
 
-    TaskEdit('Create Task');
-  }
+  //prompt for crating a entry
+  Task(this.context, this.list);
 
   //return this entry in widget form
   Widget toWidget(){
@@ -27,29 +27,29 @@ class Task {
     return new SizedBox(
       child: new Card(
         child: new ListTile(
-          title: new Text(_title, overflow: TextOverflow.ellipsis),
-          subtitle: new Text(_description, overflow: TextOverflow.ellipsis),
-          onTap: () => TaskView(),
+          title: new Text(title, overflow: TextOverflow.ellipsis),
+          subtitle: new Text(description, overflow: TextOverflow.ellipsis),
+          onTap: () => taskView(),
         )
       )
     );
   }
 
   //edit ListEntry
-  void TaskEdit(String appBarTitle){
+  void taskEdit(){
 
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => Scaffold(
           appBar: AppBar(
-              title: Text(appBarTitle),
+              title: Text('Edit'),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.done),
                   onPressed: (){
 
-                    _title = titleController.text;
-                    _description = descriptionController.text;
+                    title = titleController.text;
+                    description = descriptionController.text;
 
                     Navigator.pop(context);
                   }
@@ -60,6 +60,7 @@ class Task {
             child: Column(
               children: <Widget>[
                 TextFormField(
+
                   decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
                   style: TextStyle(color: Colors.black),
                   controller: titleController,
@@ -79,7 +80,7 @@ class Task {
   }
 
   //view ListEntry content, has a button to go to ListEntryEdit
-  void TaskView(){
+  void taskView(){
 
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -89,7 +90,7 @@ class Task {
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.edit),
-                onPressed: () => TaskEdit('Edit')
+                onPressed: () => taskEdit()
               )
             ]
           ),
@@ -97,6 +98,7 @@ class Task {
             padding: EdgeInsets.all(30.0),
             child: Column(
               children: <Widget>[
+
                 Text(_title,style: TextStyle(color: Colors.white)),
                 Divider(),
                 Text(_description,style: TextStyle(color: Colors.white)),
@@ -108,6 +110,7 @@ class Task {
                   highlightColor:Colors.white ,
                   focusColor: Colors.white,
                   color: Colors.white,
+
                   icon: Icon(Icons.delete),
                   onPressed: () {
                     showDialog(

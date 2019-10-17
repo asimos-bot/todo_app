@@ -1,47 +1,38 @@
 import 'package:flutter/material.dart';
+import 'Tag.dart';
 
-class Tag {
-
-  Colors color;
-  double weight;
-  String title="";
-  String description="";
+class TagBuilder {
 
   BuildContext context;
-
-  //global list with all the tags
   List<Tag> list;
 
-  //dispose when task is deleted
+  //disposed when tag is deleted
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  Tag(this.context, this.list);
+  TagBuilder(this.context, this.list);
 
-  Widget toWidget(){
-
-    return Card(
-      child:ListTile(
-        title: Text(title),
-        subtitle: Text(description)
-      )
-    );
-  }
-
-  void tagEdit(){
+  void createTag(){
 
     Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => Scaffold(
                 appBar: AppBar(
-                    title: Text('Edit Tag'),
+                    title: Text('Create Tag'),
                     actions: <Widget>[
                       IconButton(
                           icon: Icon(Icons.done),
                           onPressed: (){
 
-                            title = titleController.text;
-                            description = descriptionController.text;
+                            var title = titleController.text;
+                            var _description = descriptionController.text;
+
+                            var tag = Tag(context, list);
+
+                            tag.title = title;
+                            tag.description = _description;
+
+                            list.add(tag);
 
                             Navigator.pop(context);
                           }
@@ -52,15 +43,11 @@ class Tag {
                     child: Column(
                         children: <Widget>[
                           TextFormField(
-                            decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
-                            style: TextStyle(color: Colors.black),
-                            controller: titleController,
+                              controller: titleController
                           ),
                           Divider(),
                           TextFormField(
-                            decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
-                            style: TextStyle(color: Colors.black),
-                            controller: descriptionController
+                              controller: descriptionController
                           )
                         ]
                     )
