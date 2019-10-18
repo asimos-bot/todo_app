@@ -7,6 +7,7 @@ import 'Tag.dart';
 import 'TaskBuilder.dart';
 import 'TagBuilder.dart';
 import 'TaskList.dart';
+import 'TagList.dart';
 
 void main() => runApp(new TodoApp());
 
@@ -39,10 +40,10 @@ class TodoList extends StatefulWidget {
 //describe states of todoList
 class TodoListState extends State<TodoList> {
 
-  TaskList todoItems = TaskList();
+  TaskList tasks = TaskList();
 
   //list of categories
-  List<Tag> tags = [];
+  TagList tags = TagList();
 
   //builders
   var taskBuilder;
@@ -58,7 +59,7 @@ class TodoListState extends State<TodoList> {
     // it will automatically re-render the list
     setState((){
 
-      taskBuilder.createTask();
+      taskBuilder.createTask(context);
     });
   }
 
@@ -66,23 +67,23 @@ class TodoListState extends State<TodoList> {
 
     setState((){
 
-      tagBuilder.createTag();
+      tagBuilder.createTag(context);
     });
   }
 
   //build whole list of todoitems
   Widget _buildTodoList() {
 
-    return new DragAndDropList<Task>(
-      todoItems.list,
-      itemBuilder: (BuildContext context, item) => item.toWidget(),
+    return tasks.list.length > 1 ? DragAndDropList<Task>(
+      tasks.list,
+      itemBuilder: (BuildContext context, item) => item.toWidget(context),
       onDragFinish: (before, after) {
-        todoItems.list.insert(after, todoItems.list.removeAt(before));
+        tasks.list.insert(after, tasks.list.removeAt(before));
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
-      tilt: 0.01
-    );
+      tilt: 0.01,
+    ) : ListView.builder(itemCount: tasks.list.length, itemBuilder: (context, index) => tasks.get(index).toWidget(context));
   }
 
   Widget _buildDrawer() {
@@ -101,20 +102,21 @@ class TodoListState extends State<TodoList> {
           ),
           Container(
             child: Expanded(
-              child: DragAndDropList<Tag>(
-                tags,
+              child: tags.list.length > 1 ? DragAndDropList<Tag>(
+                tags.list,
                 itemBuilder: (BuildContext context, item) {
 
-                  return item.toWidget();
+                  return item.toWidget(context);
                 },
                 onDragFinish: (before, after) {
 
-                  tags.insert(after, tags.removeAt(before));
+                  tags.list.insert(after, tags.list.removeAt(before));
                 },
                 canBeDraggedTo: (one, two) => true,
                 dragElevation: 8.0,
                 tilt: 0.01
-              )
+                //if one or none tag is present
+              ) : ListView.builder(itemCount: tags.list.length, itemBuilder: (context, index) => tags.get(index).toWidget(context) )
             )
           )
         ]
@@ -139,8 +141,13 @@ class TodoListState extends State<TodoList> {
       onOpen: (Database db) async {
 
         List<Map> rawTasks = await db.rawQuery('SELECT * FROM tasks');
+        List<Map> rawTags = await db.rawQuery('SELECT * FROM tags');
         print(rawTasks);
-        setState(() => todoItems.create(context, db, rawTasks));
+        print(rawTags);
+        setState(() {
+          tasks.create(context, db, rawTasks);
+          tags.create(context, db, rawTags);
+        });
       });
   }
 
@@ -148,8 +155,8 @@ class TodoListState extends State<TodoList> {
   @mustCallSuper
   void initState(){
 
-    taskBuilder = new TaskBuilder(context, todoItems);
-    tagBuilder = new TagBuilder(context, tags);
+    taskBuilder = new TaskBuilder(tasks);
+    tagBuilder = new TagBuilder(tags);
 
     _dbGetTodoItems();
 
@@ -161,6 +168,9 @@ class TodoListState extends State<TodoList> {
   void dispose(){
 
     () async => await db.close();
+
+    taskBuilder.close();
+    tagBuilder.close();
 
     super.dispose();
   }
