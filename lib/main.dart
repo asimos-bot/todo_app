@@ -40,7 +40,7 @@ class TodoList extends StatefulWidget {
 //describe states of todoList
 class TodoListState extends State<TodoList> {
 
-  TaskList todoItems = TaskList();
+  TaskList tasks = TaskList();
 
   //list of categories
   TagList tags = TagList();
@@ -74,16 +74,16 @@ class TodoListState extends State<TodoList> {
   //build whole list of todoitems
   Widget _buildTodoList() {
 
-    return new DragAndDropList<Task>(
-      todoItems.list,
+    return tasks.list.length > 1 ? DragAndDropList<Task>(
+      tasks.list,
       itemBuilder: (BuildContext context, item) => item.toWidget(context),
       onDragFinish: (before, after) {
-        todoItems.list.insert(after, todoItems.list.removeAt(before));
+        tasks.list.insert(after, tasks.list.removeAt(before));
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
       tilt: 0.01,
-    );
+    ) : ListView.builder(itemCount: tasks.list.length, itemBuilder: (context, index) => tasks.get(index).toWidget(context));
   }
 
   Widget _buildDrawer() {
@@ -102,7 +102,7 @@ class TodoListState extends State<TodoList> {
           ),
           Container(
             child: Expanded(
-              child: DragAndDropList<Tag>(
+              child: tags.list.length > 1 ? DragAndDropList<Tag>(
                 tags.list,
                 itemBuilder: (BuildContext context, item) {
 
@@ -115,7 +115,8 @@ class TodoListState extends State<TodoList> {
                 canBeDraggedTo: (one, two) => true,
                 dragElevation: 8.0,
                 tilt: 0.01
-              )
+                //if one or none tag is present
+              ) : ListView.builder(itemCount: tags.list.length, itemBuilder: (context, index) => tags.get(index).toWidget(context) )
             )
           )
         ]
@@ -144,7 +145,7 @@ class TodoListState extends State<TodoList> {
         print(rawTasks);
         print(rawTags);
         setState(() {
-          todoItems.create(context, db, rawTasks);
+          tasks.create(context, db, rawTasks);
           tags.create(context, db, rawTags);
         });
       });
@@ -154,7 +155,7 @@ class TodoListState extends State<TodoList> {
   @mustCallSuper
   void initState(){
 
-    taskBuilder = new TaskBuilder(todoItems);
+    taskBuilder = new TaskBuilder(tasks);
     tagBuilder = new TagBuilder(tags);
 
     _dbGetTodoItems();

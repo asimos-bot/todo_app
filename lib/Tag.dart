@@ -22,7 +22,7 @@ class Tag {
   Widget toWidget(context){
 
     return Card(
-      child:ListTile(
+      child: ListTile(
         title: Text(title),
         subtitle: Text(description, overflow: TextOverflow.ellipsis),
         onTap: () => tagView(context),
