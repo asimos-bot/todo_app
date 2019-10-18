@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'Tag.dart';
+import 'TagList.dart';
 
 class TagBuilder {
 
-  List<Tag> list;
+  TagList list;
 
   //disposed when tag is deleted
   final titleController = TextEditingController();
@@ -12,6 +13,7 @@ class TagBuilder {
   TagBuilder(this.list);
 
   void createTag(context){
+
     Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => Scaffold(
@@ -22,13 +24,10 @@ class TagBuilder {
                           icon: Icon(Icons.done),
                           onPressed: (){
 
-                            var title = titleController.text;
-                            var _description = descriptionController.text;
-
                             var tag = Tag(list);
 
-                            tag.title = title;
-                            tag.description = _description;
+                            tag.title = titleController.text;
+                            tag.description = descriptionController.text;
 
                             list.add(tag);
 

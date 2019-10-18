@@ -7,6 +7,7 @@ import 'Tag.dart';
 import 'TaskBuilder.dart';
 import 'TagBuilder.dart';
 import 'TaskList.dart';
+import 'TagList.dart';
 
 void main() => runApp(new TodoApp());
 
@@ -42,7 +43,7 @@ class TodoListState extends State<TodoList> {
   TaskList todoItems = TaskList();
 
   //list of categories
-  List<Tag> tags = [];
+  TagList tags = TagList();
 
   //builders
   var taskBuilder;
@@ -81,7 +82,7 @@ class TodoListState extends State<TodoList> {
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
-      tilt: 0.01
+      tilt: 0.01,
     );
   }
 
@@ -102,14 +103,14 @@ class TodoListState extends State<TodoList> {
           Container(
             child: Expanded(
               child: DragAndDropList<Tag>(
-                tags,
+                tags.list,
                 itemBuilder: (BuildContext context, item) {
 
                   return item.toWidget(context);
                 },
                 onDragFinish: (before, after) {
 
-                  tags.insert(after, tags.removeAt(before));
+                  tags.list.insert(after, tags.list.removeAt(before));
                 },
                 canBeDraggedTo: (one, two) => true,
                 dragElevation: 8.0,
@@ -139,8 +140,13 @@ class TodoListState extends State<TodoList> {
       onOpen: (Database db) async {
 
         List<Map> rawTasks = await db.rawQuery('SELECT * FROM tasks');
+        List<Map> rawTags = await db.rawQuery('SELECT * FROM tags');
         print(rawTasks);
-        setState(() => todoItems.create(context, db, rawTasks));
+        print(rawTags);
+        setState(() {
+          todoItems.create(context, db, rawTasks);
+          tags.create(context, db, rawTags);
+        });
       });
   }
 
@@ -163,6 +169,7 @@ class TodoListState extends State<TodoList> {
     () async => await db.close();
 
     taskBuilder.close();
+    tagBuilder.close();
 
     super.dispose();
   }
