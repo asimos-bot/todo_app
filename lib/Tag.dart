@@ -5,7 +5,7 @@ class Tag {
 
   int id = -1;
 
-  Colors color;
+  Color color;
   double weight;
   String title="";
   String description="";

@@ -9,12 +9,24 @@ import 'TagBuilder.dart';
 import 'TaskList.dart';
 import 'TagList.dart';
 
+TaskList tasks = TaskList();
+
+//list of categories
+TagList tags = TagList();
+
+//builders
+var taskBuilder;
+var tagBuilder;
+
+//database
+Database db;
+
 void main() => runApp(new TodoApp());
 
 //Main widget
 class TodoApp extends StatelessWidget {
-  var Purple = const Color(0xFF6A1B9A);
-  var Black = const Color(0xDD000000);
+  final purple = const Color(0xFF6A1B9A);
+  final black = const Color(0xDD000000);
 
   @override
   Widget build(BuildContext context){
@@ -22,7 +34,7 @@ class TodoApp extends StatelessWidget {
     return new MaterialApp(
       title: 'ToDo Yourself', //title which appear when we minimize the app
       home: new TodoList(), //actual app stuff
-      theme: ThemeData(primaryColor: Purple, scaffoldBackgroundColor: Black),
+      theme: ThemeData(primaryColor: purple, scaffoldBackgroundColor: black),
       routes: <String, WidgetBuilder> {
 
       }
@@ -39,18 +51,6 @@ class TodoList extends StatefulWidget {
 
 //describe states of todoList
 class TodoListState extends State<TodoList> {
-
-  TaskList tasks = TaskList();
-
-  //list of categories
-  TagList tags = TagList();
-
-  //builders
-  var taskBuilder;
-  var tagBuilder;
-
-  //database
-  Database db;
 
   //will be called every time the button to add a list entry is pressed
   void _addTodoItem(){
@@ -96,7 +96,7 @@ class TodoListState extends State<TodoList> {
             child: Text('Categories Menu',style: TextStyle(color: Colors.white),)
           ),
           ListTile(
-            leading: Icon(Icons.add,color: Colors.white,),
+            leading: Icon(Icons.add,color: Colors.white),
             title: Text("Add category",style: TextStyle(color: Colors.white),),
             onTap: () => _addTag(),
           ),

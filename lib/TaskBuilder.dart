@@ -15,6 +15,10 @@ class TaskBuilder {
 
   void createTask(context){
 
+    //inital value in the text fields
+    titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
+    descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
+
     Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => Scaffold(
