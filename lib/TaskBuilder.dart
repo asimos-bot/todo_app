@@ -3,25 +3,30 @@ import 'Task.dart';
 import 'Tag.dart';
 import 'TaskList.dart';
 
-class TaskBuilder {
+class TaskBuilder extends StatefulWidget {
 
-  TaskList list;
-
-  //disposed when task is deleted
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
+  final TaskList list;
 
   TaskBuilder(this.list);
 
-  void createTask(context){
+  @override
+  createState() => TaskBuilderState(list);
+}
 
-    //inital value in the text fields
-    titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
-    descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
+class TaskBuilderState extends State<TaskBuilder> {
 
-    Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) => Scaffold(
+  TaskList list;
+
+  TaskBuilderState(this.list);
+
+  @override
+  Widget build(BuildContext context){
+
+    //disposed when task is deleted
+    final titleController = TextEditingController(text: "");
+    final descriptionController = TextEditingController(text: "");
+
+    return Scaffold(
                 appBar: AppBar(
                     title: Text('Create Task'),
                     actions: <Widget>[
@@ -59,14 +64,6 @@ class TaskBuilder {
                         ]
                     )
                 )
-            )
-        )
-    );
-  }
-
-  void close(){
-
-    titleController.dispose();
-    descriptionController.dispose();
+            );
   }
 }

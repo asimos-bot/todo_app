@@ -52,23 +52,22 @@ class TodoList extends StatefulWidget {
 //describe states of todoList
 class TodoListState extends State<TodoList> {
 
-  //will be called every time the button to add a list entry is pressed
-  void _addTodoItem(){
+  void _addTask(){
 
-    // Putting our code inside "setState" tells the app that our state has changed, and
-    // it will automatically re-render the list
-    setState((){
-
-      taskBuilder.createTask(context);
-    });
+    Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => TaskBuilder(tasks)
+        )
+    );
   }
 
   void _addTag(){
 
-    setState((){
-
-      tagBuilder.createTag(context);
-    });
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => TagBuilder(tags)
+      )
+    );
   }
 
   //build whole list of todoitems
@@ -169,9 +168,6 @@ class TodoListState extends State<TodoList> {
 
     () async => await db.close();
 
-    taskBuilder.close();
-    tagBuilder.close();
-
     super.dispose();
   }
 
@@ -198,7 +194,10 @@ class TodoListState extends State<TodoList> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Expanded(
-              child: IconButton(icon: Icon(Icons.add), onPressed: _addTodoItem, color: Colors.white)
+              child: IconButton(icon: Icon(Icons.add),
+                  onPressed: _addTask,
+                  color: Colors.white
+              )
             )
           ]
         )
