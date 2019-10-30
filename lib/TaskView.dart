@@ -29,11 +29,14 @@ class TaskViewState extends State<TaskView> {
                 actions: <Widget>[
                   IconButton(
                       icon: Icon(Icons.edit),
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => TaskEdit(task)
-                        )
-                      )
+                      onPressed: () {
+                        task.updateTextControllers();
+                        Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => TaskEdit(task)
+                            )
+                        );
+                      }
                   )
                 ]
             ),

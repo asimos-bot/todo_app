@@ -37,4 +37,9 @@ class Tag {
       )
     );
   }
+
+  void updateTextControllers(){
+    titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: title)).value;
+    descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: description)).value;
+  }
 }

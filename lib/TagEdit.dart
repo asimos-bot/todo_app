@@ -30,9 +30,6 @@ class TagEditState extends State<TagEdit> {
   @override
   Widget build(BuildContext context){
 
-    tag.titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: tag.title)).value;
-    tag.descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: tag.description)).value;
-
     return Scaffold(
         appBar: AppBar(
             title: Text('Tag Edit'),

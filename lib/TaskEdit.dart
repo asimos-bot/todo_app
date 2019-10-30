@@ -22,9 +22,6 @@ class TaskEditState extends State<TaskEdit> {
   @override
   Widget build(BuildContext context){
 
-    task.titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: task.title)).value;
-    task.descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: task.description)).value;
-
     return Scaffold(
         appBar: AppBar(
             title: Text('Task Edit'),

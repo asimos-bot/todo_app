@@ -29,11 +29,14 @@ class TagViewState extends State<TagView> {
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.edit),
-                  onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => TagEdit(tag)
-                      )
-                  )
+                  onPressed: () {
+                    tag.updateTextControllers();
+                    Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => TagEdit(tag)
+                        )
+                    );
+                  }
               )
             ]
         ),
