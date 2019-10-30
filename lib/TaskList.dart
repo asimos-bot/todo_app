@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'Task.dart';
-import 'Tag.dart';
 import 'package:sqflite/sqflite.dart';
 
 //manage database and list at the same time
 class TaskList {
 
-  List<Task> list = [];
-  Database db;
-  BuildContext context;
+  Future<Database> db;
 
   final titleController = TextEditingController(text: "");
   final descriptionController = TextEditingController(text: "");
@@ -23,10 +20,13 @@ class TaskList {
     descriptionController.dispose();
   }
 
-  void create(context, db, List<Map> queryResult){
+  TaskList(this.db);
 
-    this.db = db;
-    this.context = context;
+  Future<List<Task>> list() async {
+
+    List<Task> list = [];
+
+    List<Map> queryResult = await (await db).rawQuery('SELECT * FROM tasks');
 
     for(int i=0; i < queryResult.length; i++){
 
@@ -39,67 +39,59 @@ class TaskList {
 
       list.add(task);
     }
+
+    return list;
   }
 
-  void add(Task task){
+  Future<Task> get(int id) async {
 
-    list.add(task);
+    List<Map> query = await (await db).query('tasks', columns: ['id', 'title', 'description'], where: 'id = ?', whereArgs: [id]);
 
-    db.insert('tasks', {'title': task.title, 'description': task.description});
-  }
+    Map result = query[0];
 
-  Task get(int index){
+    Task task = Task(this);
 
-    if( index >= list.length || index < 0 ) throw("Index out of bounds in TaskList");
-
-    return list[index];
-  }
-
-  Task removeAt(int index) {
-
-    Task tmp = this.get(index);
-
-    list.removeAt(index);
-
-    db.delete('tasks', where: 'id = ?', whereArgs: [tmp.id]);
-
-    return tmp;
-  }
-
-  Task remove(Task task){
-
-    if( list.remove(task) ){
-
-      db.delete('tasks', where: 'id = ?', whereArgs: [task.id]);
-    }
+    task.id = result['id'];
+    task.title = result['title'];
+    task.description = result['description'];
 
     return task;
   }
 
-  void delete(Task task){
+  Future<void> add(Task task) async {
 
-    Task tmp = remove(task);
-
-    tmp.dispose();
+    await (await db).insert('tasks', {
+      'title': task.title,
+      'description': task.description
+    });
   }
 
-  void deleteAt(int index){
+  Future<Task> removeAt(int index, List<Task> list) async {
 
-    Task tmp = removeAt(index);
+    await (await db).delete('tasks', where: 'id = ?', whereArgs: [list[index].id]);
 
-    tmp.dispose();
+    return list.removeAt(index);
+  }
+
+  Future<void> delete(Task task) async {
+
+      await (await db).delete('tasks', where: 'id = ?', whereArgs: [task.id]);
   }
 
   //update database
-  void updateAt(int index){
+  Future<void> updateAt(int index, List<Task> list) async{
 
-    if( index >= list.length || index < 0 ) throw("Index out of bounds in TaskList");
-
-    db.update('tasks', {'title': list[index].title, 'description': list[index].description}, where: 'id = ?', whereArgs: [list[index].id]);
+    await (await db).update('tasks', {
+      'title': list[index].title,
+      'description': list[index].description
+    }, where: 'id = ?', whereArgs: [list[index].id]);
   }
 
-  void update(Task task){
+  Future<void> update(Task task) async {
 
-    updateAt( list.indexOf(task) );
+    await (await db).update('tasks', {
+      'title': task.title,
+      'description': task.description
+    }, where: 'id = ?', whereArgs: [task.id]);
   }
 }

@@ -5,9 +5,7 @@ import 'package:sqflite/sqflite.dart';
 //manage database and list at the same time
 class TagList {
 
-  List<Tag> list = [];
-  Database db;
-  BuildContext context;
+  Future<Database> db;
 
   final titleController = TextEditingController(text: "");
   final descriptionController = TextEditingController(text: "");
@@ -25,103 +23,83 @@ class TagList {
     weightController.dispose();
   }
 
-  void create(context, db, List<Map> queryResult){
+  TagList(this.db);
 
-    this.db = db;
-    this.context = context;
+  Future<List<Tag>> list() async {
+
+    List<Tag> list = [];
+
+    List<Map> queryResult = await (await db).rawQuery('SELECT * FROM tags');
 
     for(int i=0; i < queryResult.length; i++){
 
       Map tagMap = queryResult[i];
       Tag tag = Tag(this);
 
+      tag.id = tagMap['id'];
       tag.title = tagMap['title'];
       tag.description = tagMap['description'];
-      tag.id = tagMap['id'];
-      tag.color = Color(tagMap['color']);
       tag.weight = tagMap['weight'];
+      tag.color = Color(tagMap['color']);
 
       list.add(tag);
     }
+
+    return list;
   }
 
-  void add(Tag tag){
+  Future<Tag> get(int id) async {
 
-    list.add(tag);
+    List<Map> query = await (await db).query('tags', columns: ['id', 'title', 'description', 'weight', 'color'], where: 'id = ?', whereArgs: [id]);
 
-    db.insert(
-        'tags',
-        {
-          'title': tag.title,
-          'description': tag.description,
-          'color': tag.color.value,
-          'weight': tag.weight
-        }
-    );
-  }
+    Map tagMap = query[0];
 
-  Tag get(int index){
+    Tag tag = Tag(this);
 
-    if( index >= list.length || index < 0 ) throw("Index out of bounds in TaskList");
-
-    return list[index];
-  }
-
-  Tag removeAt(int index) {
-
-    Tag tmp = this.get(index);
-
-    list.removeAt(index);
-
-    db.delete('tags', where: 'id = ?', whereArgs: [tmp.id]);
-
-    return tmp;
-  }
-
-  Tag remove(Tag tag){
-
-    if( list.remove(tag) ){
-
-      db.delete('tags', where: 'id = ?', whereArgs: [tag.id]);
-    }
+    tag.id = tagMap['id'];
+    tag.title = tagMap['title'];
+    tag.description = tagMap['description'];
+    tag.weight = tagMap['weight'];
+    tag.color = Color(tagMap['color']);
 
     return tag;
   }
 
-  void delete(Tag tag){
+  Future<void> add(Tag tag) async {
 
-    Tag tmp = remove(tag);
-
-    tmp.dispose();
+    await (await db).insert('tags', {
+      'title': tag.title,
+      'description': tag.description,
+      'color': tag.color.value,
+      'weight': tag.weight
+    });
   }
 
-  void deleteAt(int index){
+  Future<Tag> removeAt(int index, List<Tag> list) async {
 
-    Tag tmp = removeAt(index);
+    await (await db).delete('tags', where: 'id = ?', whereArgs: [list[index].id]);
 
-    tmp.dispose();
+    return list.removeAt(index);
+  }
+
+  Future<void> delete(Tag tag) async {
+
+    await (await db).delete('tags', where: 'id = ?', whereArgs: [tag.id]);
+  }
+
+  Future<void> update(Tag tag) async {
+
+    await (await db).update('tags', {
+      'title': tag.title,
+      'description': tag.description,
+      'color': tag.color.value,
+      'weight': tag.weight
+    }, where: 'id = ?', whereArgs: [tag.id]);
   }
 
   //update database
-  void updateAt(int index){
+  Future<void> updateAt(int index, List<Tag> list) async{
 
-    if( index >= list.length || index < 0 ) throw("Index out of bounds in TaskList");
-
-    db.update(
-        'tags',
-        {
-          'title': list[index].title,
-          'description': list[index].description,
-          'color': list[index].color.value,
-          'weight': list[index].weight
-        },
-        where: 'id = ?',
-        whereArgs: [list[index].id]
-    );
-  }
-
-  void update(Tag tag){
-
-    updateAt( list.indexOf(tag) );
+    await update(list[index]);
   }
 }

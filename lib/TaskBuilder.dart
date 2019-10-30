@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'Task.dart';
-import 'Tag.dart';
 import 'TaskList.dart';
 
 class TaskBuilder extends StatefulWidget {

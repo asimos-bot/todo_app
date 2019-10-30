@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'Task.dart';
 import 'Tag.dart';
-import 'TaskList.dart';
 import 'package:flutter/services.dart';
 
 class TagEdit extends StatefulWidget {

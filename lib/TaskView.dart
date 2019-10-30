@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Task.dart';
 import 'TaskEdit.dart';
-import 'Tag.dart';
-import 'TaskList.dart';
 
 class TaskView extends StatefulWidget {
 
