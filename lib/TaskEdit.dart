@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Task.dart';
+import 'Tag.dart';
 
 class TaskEdit extends StatefulWidget {
 
@@ -40,19 +41,20 @@ class TaskEditState extends State<TaskEdit> {
         ),
         body: Form(
             child: Column(
-                children: <Widget>[
-                  TextFormField(
+                  children: <Widget>[
+                    TextFormField(
 
-                    decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
-                    style: TextStyle(color: Colors.black),
-                    controller: task.titleController,
-                  ),
-                  Divider(),
-                  TextFormField(
-                      decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
+                      decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
                       style: TextStyle(color: Colors.black),
-                      controller: task.descriptionController
-                  )
+                      controller: task.titleController,
+                    ),
+                    Divider(),
+                    TextFormField(
+                        decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
+                        style: TextStyle(color: Colors.black),
+                        controller: task.descriptionController
+                    ),
+                    Divider()
                 ]
             )
         )

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'Task.dart';
 import 'package:sqflite/sqflite.dart';
+import 'TagList.dart';
 
 //manage database and list at the same time
 class TaskList {
+
+  TagList tagList;
 
   Future<Database> db;
 
@@ -20,7 +23,7 @@ class TaskList {
     descriptionController.dispose();
   }
 
-  TaskList(this.db);
+  TaskList(this.db, this.tagList);
 
   Future<List<Task>> list() async {
 

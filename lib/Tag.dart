@@ -21,12 +21,20 @@ class Tag {
 
   Tag(this.list);
 
+  Widget toSearchWidget(context){
+
+    return ListTile(
+            title: Text(title)
+        );
+  }
+
   Widget toWidget(context){
 
     return Card(
       child: ListTile(
         leading: CircleAvatar(
-            backgroundColor: color
+          backgroundColor: color,
+          child: title.length >= 2 ? Text("${title[0]}${title[1]}") : null
         ),
         title: Text(title),
         subtitle: Text(description, overflow: TextOverflow.ellipsis),

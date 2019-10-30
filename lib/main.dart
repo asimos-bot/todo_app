@@ -179,8 +179,8 @@ class TodoListState extends State<TodoList> {
     taskBuilder = new TaskBuilder(tasks);
     tagBuilder = new TagBuilder(tags);
 
-    tasks = TaskList(db);
     tags = TagList(db);
+    tasks = TaskList(db, tags);
 
     super.initState();
   }
