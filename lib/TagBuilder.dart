@@ -36,7 +36,7 @@ class TagBuilderState extends State<TagBuilder> {
 
     return Scaffold(
         appBar: AppBar(
-            title: Text('Create Task'),
+            title: Text('Create Tag'),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.done),

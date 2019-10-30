@@ -22,6 +22,7 @@ class TagList {
       tag.title = tagMap['title'];
       tag.description = tagMap['description'];
       tag.id = tagMap['id'];
+      tag.color = Color(tagMap['color']);
 
       list.add(tag);
     }
@@ -31,7 +32,7 @@ class TagList {
 
     list.add(tag);
 
-    db.insert('tags', {'title': tag.title, 'description': tag.description});
+    db.insert('tags', {'title': tag.title, 'description': tag.description, 'color': tag.color.value});
   }
 
   Tag get(int index){
@@ -67,7 +68,7 @@ class TagList {
 
     if( index >= list.length || index < 0 ) throw("Index out of bounds in TaskList");
 
-    db.update('tags', {'title': list[index].title, 'description': list[index].description}, where: 'id = ?', whereArgs: [list[index].id]);
+    db.update('tags', {'title': list[index].title, 'description': list[index].description, 'color': list[index].color.value}, where: 'id = ?', whereArgs: [list[index].id]);
   }
 
   void update(Tag tag){

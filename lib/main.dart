@@ -127,7 +127,7 @@ class TodoListState extends State<TodoList> {
   Future<void> _createDatabase(Database db, int version) async {
 
     await db.execute('CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, description TEXT)');
-    await db.execute('CREATE TABLE tags (id INTEGER PRIMARY KEY, title TEXT, description TEXT)');
+    await db.execute('CREATE TABLE tags (id INTEGER PRIMARY KEY, title TEXT, description TEXT, color INT)');
   }
 
   //populate _todoItems with database

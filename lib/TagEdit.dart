@@ -21,7 +21,6 @@ class TagEditState extends State<TagEdit> {
   TagEditState(this.tag);
 
   Color pickerColor = Color(0xff443a49);
-  Color choosenColor = Color(0xffffffff);
 
   void changeColor(Color color){
 
@@ -44,7 +43,6 @@ class TagEditState extends State<TagEdit> {
 
                     tag.title = tag.titleController.text;
                     tag.description = tag.descriptionController.text;
-                    tag.color = choosenColor;
 
                     tag.list.update(tag);
 
@@ -90,9 +88,9 @@ class TagEditState extends State<TagEdit> {
                                 actions: <Widget> [
                                   FlatButton(
                                       child: Text('Got it!'),
-                                      onPressed: (){
+                                      onPressed: () {
 
-                                        choosenColor = pickerColor;
+                                        tag.color = pickerColor;
                                         Navigator.of(context).pop();
                                       }
                                   ),
