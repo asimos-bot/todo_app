@@ -45,7 +45,6 @@ class TagEditState extends State<TagEdit> {
 
                     tag.title = tag.titleController.text;
                     tag.description = tag.descriptionController.text;
-
                     tag.weight = int.parse(tag.weightController.text);
 
                     tag.list.update(tag);

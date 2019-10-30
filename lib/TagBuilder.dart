@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'Tag.dart';
 import 'TagList.dart';
+import 'package:flutter/services.dart';
 
 class TagBuilder extends StatefulWidget {
 
@@ -19,6 +20,8 @@ class TagBuilderState extends State<TagBuilder> {
 
   Color pickerColor = Color(0xff443a49);
   Color choosenColor = Color(0xffffffff);
+
+  double currentSliderValue=1;
 
   TagBuilderState(this.list);
 
@@ -43,6 +46,7 @@ class TagBuilderState extends State<TagBuilder> {
                     tag.title = list.titleController.text;
                     tag.description = list.descriptionController.text;
                     tag.color = choosenColor;
+                    tag.weight = int.parse(list.weightController.text);
 
                     list.add(tag);
 
@@ -101,6 +105,26 @@ class TagBuilderState extends State<TagBuilder> {
                         )
                       );
                     }
+                  ),
+                  Divider(),
+                  Slider(
+                      activeColor: Colors.indigoAccent,
+                      min: -50,
+                      max: 50,
+                      onChanged: (newWeight) {
+                        setState(() {
+                          currentSliderValue = newWeight;
+                          list.weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: newWeight.round().toString())).value;
+                        });
+                      },
+                      value: currentSliderValue
+                  ),
+                  Divider(),
+                  TextFormField(
+                      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(filled: true, fillColor: Colors.white),
+                      style: TextStyle(color: Colors.black),
+                      controller: list.weightController
                   )
                 ]
               )

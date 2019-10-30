@@ -11,15 +11,18 @@ class TagList {
 
   final titleController = TextEditingController(text: "");
   final descriptionController = TextEditingController(text: "");
+  final weightController = TextEditingController(text: "");
 
   void updateTextControllers(){
     titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
     descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
+    weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: "1")).value;
   }
 
   void dispose(){
     titleController.dispose();
     descriptionController.dispose();
+    weightController.dispose();
   }
 
   void create(context, db, List<Map> queryResult){

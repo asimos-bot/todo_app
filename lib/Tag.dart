@@ -15,9 +15,9 @@ class Tag {
   TagList list;
 
   //dispose when task is deleted
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final weightController = TextEditingController();
+  final titleController = TextEditingController(text: "");
+  final descriptionController = TextEditingController(text: "");
+  final weightController = TextEditingController(text: "");
 
   Tag(this.list);
 
