@@ -7,7 +7,7 @@ class Tag {
   int id = -1;
 
   Color color;
-  double weight;
+  int weight=1;
   String title="";
   String description="";
 
@@ -17,6 +17,7 @@ class Tag {
   //dispose when task is deleted
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+  final weightController = TextEditingController();
 
   Tag(this.list);
 
@@ -41,10 +42,12 @@ class Tag {
   void updateTextControllers(){
     titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: title)).value;
     descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: description)).value;
+    weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: weight.toString())).value;
   }
 
   void dispose(){
     titleController.dispose();
     descriptionController.dispose();
+    weightController.dispose();
   }
 }
