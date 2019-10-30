@@ -6,7 +6,7 @@ class Tag {
 
   int id = -1;
 
-  Colors color;
+  Color color;
   double weight;
   String title="";
   String description="";
@@ -24,6 +24,9 @@ class Tag {
 
     return Card(
       child: ListTile(
+        leading: CircleAvatar(
+            backgroundColor: color
+        ),
         title: Text(title),
         subtitle: Text(description, overflow: TextOverflow.ellipsis),
         onTap: () => Navigator.of(context).push(

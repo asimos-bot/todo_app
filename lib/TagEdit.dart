@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'Task.dart';
 import 'Tag.dart';
 import 'TaskList.dart';
@@ -19,6 +20,14 @@ class TagEditState extends State<TagEdit> {
 
   TagEditState(this.tag);
 
+  Color pickerColor = Color(0xff443a49);
+  Color choosenColor = Color(0xffffffff);
+
+  void changeColor(Color color){
+
+    setState(() => pickerColor = color);
+  }
+
   @override
   Widget build(BuildContext context){
 
@@ -31,10 +40,11 @@ class TagEditState extends State<TagEdit> {
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.done),
-                  onPressed: (){
+                  onPressed: () {
 
                     tag.title = tag.titleController.text;
                     tag.description = tag.descriptionController.text;
+                    tag.color = choosenColor;
 
                     tag.list.update(tag);
 
@@ -54,9 +64,46 @@ class TagEditState extends State<TagEdit> {
                   ),
                   Divider(),
                   TextFormField(
+
                       decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
                       style: TextStyle(color: Colors.black),
                       controller: tag.descriptionController
+                  ),
+                  Divider(),
+                  RaisedButton(
+
+                      child: Text('Choose Color'),
+                      onPressed: (){
+                        showDialog(
+                            context: context,
+                            // ignore: deprecated_member_use
+                            child: AlertDialog(
+                                title: const Text('Pick a color!'),
+                                content: SingleChildScrollView(
+                                    child: ColorPicker(
+                                      pickerColor: pickerColor,
+                                      onColorChanged: changeColor,
+                                      enableLabel: false,
+                                      pickerAreaHeightPercent: 0.8,
+                                    )
+                                ),
+                                actions: <Widget> [
+                                  FlatButton(
+                                      child: Text('Got it!'),
+                                      onPressed: (){
+
+                                        choosenColor = pickerColor;
+                                        Navigator.of(context).pop();
+                                      }
+                                  ),
+                                  FlatButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () => Navigator.of(context).pop()
+                                  )
+                                ]
+                            )
+                        );
+                      }
                   )
                 ]
             )
