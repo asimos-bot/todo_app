@@ -9,6 +9,22 @@ class TagList {
   Database db;
   BuildContext context;
 
+  final titleController = TextEditingController(text: "");
+  final descriptionController = TextEditingController(text: "");
+  final weightController = TextEditingController(text: "");
+
+  void updateTextControllers(){
+    titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
+    descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
+    weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: "1")).value;
+  }
+
+  void dispose(){
+    titleController.dispose();
+    descriptionController.dispose();
+    weightController.dispose();
+  }
+
   void create(context, db, List<Map> queryResult){
 
     this.db = db;
@@ -22,6 +38,8 @@ class TagList {
       tag.title = tagMap['title'];
       tag.description = tagMap['description'];
       tag.id = tagMap['id'];
+      tag.color = Color(tagMap['color']);
+      tag.weight = tagMap['weight'];
 
       list.add(tag);
     }
@@ -31,7 +49,15 @@ class TagList {
 
     list.add(tag);
 
-    db.insert('tags', {'title': tag.title, 'description': tag.description});
+    db.insert(
+        'tags',
+        {
+          'title': tag.title,
+          'description': tag.description,
+          'color': tag.color.value,
+          'weight': tag.weight
+        }
+    );
   }
 
   Tag get(int index){
@@ -62,12 +88,36 @@ class TagList {
     return tag;
   }
 
+  void delete(Tag tag){
+
+    Tag tmp = remove(tag);
+
+    tmp.dispose();
+  }
+
+  void deleteAt(int index){
+
+    Tag tmp = removeAt(index);
+
+    tmp.dispose();
+  }
+
   //update database
   void updateAt(int index){
 
     if( index >= list.length || index < 0 ) throw("Index out of bounds in TaskList");
 
-    db.update('tags', {'title': list[index].title, 'description': list[index].description}, where: 'id = ?', whereArgs: [list[index].id]);
+    db.update(
+        'tags',
+        {
+          'title': list[index].title,
+          'description': list[index].description,
+          'color': list[index].color.value,
+          'weight': list[index].weight
+        },
+        where: 'id = ?',
+        whereArgs: [list[index].id]
+    );
   }
 
   void update(Tag tag){

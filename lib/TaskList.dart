@@ -10,6 +10,19 @@ class TaskList {
   Database db;
   BuildContext context;
 
+  final titleController = TextEditingController(text: "");
+  final descriptionController = TextEditingController(text: "");
+
+  void updateTextControllers(){
+    titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
+    descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
+  }
+
+  void dispose(){
+    titleController.dispose();
+    descriptionController.dispose();
+  }
+
   void create(context, db, List<Map> queryResult){
 
     this.db = db;
@@ -61,6 +74,20 @@ class TaskList {
     }
 
     return task;
+  }
+
+  void delete(Task task){
+
+    Task tmp = remove(task);
+
+    tmp.dispose();
+  }
+
+  void deleteAt(int index){
+
+    Task tmp = removeAt(index);
+
+    tmp.dispose();
   }
 
   //update database

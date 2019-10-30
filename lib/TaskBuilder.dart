@@ -3,21 +3,26 @@ import 'Task.dart';
 import 'Tag.dart';
 import 'TaskList.dart';
 
-class TaskBuilder {
+class TaskBuilder extends StatefulWidget {
 
-  TaskList list;
-
-  //disposed when task is deleted
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
+  final TaskList list;
 
   TaskBuilder(this.list);
 
-  void createTask(context){
+  @override
+  createState() => TaskBuilderState(list);
+}
 
-    Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) => Scaffold(
+class TaskBuilderState extends State<TaskBuilder> {
+
+  TaskList list;
+
+  TaskBuilderState(this.list);
+
+  @override
+  Widget build(BuildContext context){
+
+    return Scaffold(
                 appBar: AppBar(
                     title: Text('Create Task'),
                     actions: <Widget>[
@@ -27,8 +32,8 @@ class TaskBuilder {
 
                             var task = Task(list);
 
-                            task.title = titleController.text;
-                            task.description = descriptionController.text;
+                            task.title = list.titleController.text;
+                            task.description = list.descriptionController.text;
 
                             list.add(task);
 
@@ -44,25 +49,17 @@ class TaskBuilder {
 
                             decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
                             style: TextStyle(color: Colors.black),
-                            controller: titleController,
+                            controller: list.titleController,
                           ),
                           Divider(),
                           TextFormField(
                               decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
                               style: TextStyle(color: Colors.black),
-                              controller: descriptionController
+                              controller: list.descriptionController
                           )
                         ]
                     )
                 )
-            )
-        )
-    );
-  }
-
-  void close(){
-
-    titleController.dispose();
-    descriptionController.dispose();
+            );
   }
 }

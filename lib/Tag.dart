@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'TagList.dart';
+import 'TagView.dart';
 
 class Tag {
 
   int id = -1;
 
-  Colors color;
-  double weight;
+  Color color;
+  int weight=1;
   String title="";
   String description="";
 
@@ -14,8 +15,9 @@ class Tag {
   TagList list;
 
   //dispose when task is deleted
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
+  final titleController = TextEditingController(text: "");
+  final descriptionController = TextEditingController(text: "");
+  final weightController = TextEditingController(text: "");
 
   Tag(this.list);
 
@@ -23,137 +25,29 @@ class Tag {
 
     return Card(
       child: ListTile(
+        leading: CircleAvatar(
+            backgroundColor: color
+        ),
         title: Text(title),
         subtitle: Text(description, overflow: TextOverflow.ellipsis),
-        onTap: () => tagView(context),
+        onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => TagView(this)
+            )
+        )
       )
     );
   }
 
-  void tagEdit(context){
-
+  void updateTextControllers(){
     titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: title)).value;
     descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: description)).value;
-
-    Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) => Scaffold(
-                appBar: AppBar(
-                    title: Text('Edit Tag'),
-                    actions: <Widget>[
-                      IconButton(
-                          icon: Icon(Icons.done),
-                          onPressed: (){
-
-                            title = titleController.text;
-                            description = descriptionController.text;
-
-                            list.update(this);
-
-                            Navigator.pop(context);
-                          }
-                      )
-                    ]
-                ),
-                body: Form(
-                    child: Column(
-                        children: <Widget>[
-                          TextFormField(
-                            decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
-                            style: TextStyle(color: Colors.black),
-                            controller: titleController,
-                          ),
-                          Divider(),
-                          TextFormField(
-                            decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
-                            style: TextStyle(color: Colors.black),
-                            controller: descriptionController
-                          )
-                        ]
-                    )
-                )
-            )
-        )
-    );
+    weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: weight.toString())).value;
   }
 
-  //view ListEntry content, has a button to go to ListEntryEdit
-  void tagView(context){
-
-    Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) => Scaffold(
-                appBar: AppBar(
-                    title: Text("Tag description"),
-                    actions: <Widget>[
-                      IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () => tagEdit(context)
-                      )
-                    ]
-                ),
-                body: Container(
-                    padding: EdgeInsets.all(30.0),
-                    child: Column(
-                        children: <Widget>[
-
-                          Text(title,style: TextStyle(color: Colors.white)),
-                          Divider(),
-                          Text(description,style: TextStyle(color: Colors.white)),
-                          Expanded(
-                              child: Center(
-                                  child: ClipOval(
-                                      child:Container(
-                                          padding: EdgeInsets.all(4.0),
-                                          color: Color(0xFF6A1B9A),
-                                          child:IconButton(
-                                              hoverColor: Colors.white ,
-                                              highlightColor:Colors.white ,
-                                              focusColor: Colors.white,
-                                              color: Colors.white,
-
-                                              icon: Icon(Icons.delete),
-                                              onPressed: () {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext context) {
-                                                      return AlertDialog(
-                                                          title: Text('Are you sure you want to delete this tag?'),
-                                                          actions: <Widget>[
-                                                            FlatButton(
-                                                                child: Text('Yes'),
-                                                                onPressed: () {
-                                                                  titleController.dispose();
-                                                                  descriptionController.dispose();
-
-                                                                  list.remove(this);
-
-                                                                  Navigator.pop(context);
-                                                                  Navigator.pop(context);
-                                                                }
-                                                            ),
-                                                            FlatButton(
-                                                                child: Text('No'),
-                                                                onPressed: () {
-
-                                                                  Navigator.pop(context);
-                                                                }
-                                                            )
-                                                          ]
-                                                      );
-                                                    }
-                                                );
-                                              }
-                                          )
-                                      )
-                                  )
-                              )
-                          )
-                        ]
-                    )
-                )
-            )
-        )
-    );
+  void dispose(){
+    titleController.dispose();
+    descriptionController.dispose();
+    weightController.dispose();
   }
 }

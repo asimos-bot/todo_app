@@ -9,12 +9,24 @@ import 'TagBuilder.dart';
 import 'TaskList.dart';
 import 'TagList.dart';
 
+TaskList tasks = TaskList();
+
+//list of categories
+TagList tags = TagList();
+
+//builders
+var taskBuilder;
+var tagBuilder;
+
+//database
+Database db;
+
 void main() => runApp(new TodoApp());
 
 //Main widget
 class TodoApp extends StatelessWidget {
-  var Purple = const Color(0xFF6A1B9A);
-  var Black = const Color(0xDD000000);
+  final purple = const Color(0xFF6A1B9A);
+  final black = const Color(0xDD000000);
 
   @override
   Widget build(BuildContext context){
@@ -22,7 +34,7 @@ class TodoApp extends StatelessWidget {
     return new MaterialApp(
       title: 'ToDo Yourself', //title which appear when we minimize the app
       home: new TodoList(), //actual app stuff
-      theme: ThemeData(primaryColor: Purple, scaffoldBackgroundColor: Black),
+      theme: ThemeData(primaryColor: purple, scaffoldBackgroundColor: black),
       routes: <String, WidgetBuilder> {
 
       }
@@ -40,35 +52,26 @@ class TodoList extends StatefulWidget {
 //describe states of todoList
 class TodoListState extends State<TodoList> {
 
-  TaskList tasks = TaskList();
+  void _addTask(){
 
-  //list of categories
-  TagList tags = TagList();
+    tasks.updateTextControllers();
 
-  //builders
-  var taskBuilder;
-  var tagBuilder;
-
-  //database
-  Database db;
-
-  //will be called every time the button to add a list entry is pressed
-  void _addTodoItem(){
-
-    // Putting our code inside "setState" tells the app that our state has changed, and
-    // it will automatically re-render the list
-    setState((){
-
-      taskBuilder.createTask(context);
-    });
+    Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => TaskBuilder(tasks)
+        )
+    );
   }
 
   void _addTag(){
 
-    setState((){
+    tags.updateTextControllers();
 
-      tagBuilder.createTag(context);
-    });
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => TagBuilder(tags)
+      )
+    );
   }
 
   //build whole list of todoitems
@@ -96,7 +99,7 @@ class TodoListState extends State<TodoList> {
             child: Text('Categories Menu',style: TextStyle(color: Colors.white),)
           ),
           ListTile(
-            leading: Icon(Icons.add,color: Colors.white,),
+            leading: Icon(Icons.add,color: Colors.white),
             title: Text("Add category",style: TextStyle(color: Colors.white),),
             onTap: () => _addTag(),
           ),
@@ -128,7 +131,7 @@ class TodoListState extends State<TodoList> {
   Future<void> _createDatabase(Database db, int version) async {
 
     await db.execute('CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, description TEXT)');
-    await db.execute('CREATE TABLE tags (id INTEGER PRIMARY KEY, title TEXT, description TEXT)');
+    await db.execute('CREATE TABLE tags (id INTEGER PRIMARY KEY, title TEXT, description TEXT, color INT, weight INT)');
   }
 
   //populate _todoItems with database
@@ -169,8 +172,8 @@ class TodoListState extends State<TodoList> {
 
     () async => await db.close();
 
-    taskBuilder.close();
-    tagBuilder.close();
+    tags.dispose();
+    tasks.dispose();
 
     super.dispose();
   }
@@ -198,7 +201,10 @@ class TodoListState extends State<TodoList> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Expanded(
-              child: IconButton(icon: Icon(Icons.add), onPressed: _addTodoItem, color: Colors.white)
+              child: IconButton(icon: Icon(Icons.add),
+                  onPressed: _addTask,
+                  color: Colors.white
+              )
             )
           ]
         )
