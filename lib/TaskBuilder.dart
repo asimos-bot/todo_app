@@ -22,10 +22,6 @@ class TaskBuilderState extends State<TaskBuilder> {
   @override
   Widget build(BuildContext context){
 
-    //disposed when task is deleted
-    final titleController = TextEditingController(text: "");
-    final descriptionController = TextEditingController(text: "");
-
     return Scaffold(
                 appBar: AppBar(
                     title: Text('Create Task'),
@@ -36,8 +32,8 @@ class TaskBuilderState extends State<TaskBuilder> {
 
                             var task = Task(list);
 
-                            task.title = titleController.text;
-                            task.description = descriptionController.text;
+                            task.title = list.titleController.text;
+                            task.description = list.descriptionController.text;
 
                             list.add(task);
 
@@ -53,13 +49,13 @@ class TaskBuilderState extends State<TaskBuilder> {
 
                             decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
                             style: TextStyle(color: Colors.black),
-                            controller: titleController,
+                            controller: list.titleController,
                           ),
                           Divider(),
                           TextFormField(
                               decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
                               style: TextStyle(color: Colors.black),
-                              controller: descriptionController
+                              controller: list.descriptionController
                           )
                         ]
                     )

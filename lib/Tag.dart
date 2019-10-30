@@ -42,4 +42,9 @@ class Tag {
     titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: title)).value;
     descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: description)).value;
   }
+
+  void dispose(){
+    titleController.dispose();
+    descriptionController.dispose();
+  }
 }

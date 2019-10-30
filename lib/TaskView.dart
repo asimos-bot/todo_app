@@ -71,10 +71,7 @@ class TaskViewState extends State<TaskView> {
                                                         FlatButton(
                                                             child: Text('Yes'),
                                                             onPressed: () {
-                                                              task.titleController.dispose();
-                                                              task.descriptionController.dispose();
-
-                                                              task.list.remove(task);
+                                                              task.list.delete(task);
 
                                                               Navigator.pop(context);
                                                               Navigator.pop(context);

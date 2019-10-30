@@ -54,6 +54,8 @@ class TodoListState extends State<TodoList> {
 
   void _addTask(){
 
+    tasks.updateTextControllers();
+
     Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => TaskBuilder(tasks)
@@ -62,6 +64,8 @@ class TodoListState extends State<TodoList> {
   }
 
   void _addTag(){
+
+    tags.updateTextControllers();
 
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -167,6 +171,9 @@ class TodoListState extends State<TodoList> {
   void dispose(){
 
     () async => await db.close();
+
+    tags.dispose();
+    tasks.dispose();
 
     super.dispose();
   }

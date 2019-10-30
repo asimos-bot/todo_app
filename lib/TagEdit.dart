@@ -8,8 +8,7 @@ class TagEdit extends StatefulWidget {
 
   final Tag tag;
 
-  TagEdit(this.tag);
-
+  TagEdit(this.tag)
   @override
   createState() => TagEditState(tag);
 }
@@ -18,9 +17,9 @@ class TagEditState extends State<TagEdit> {
 
   Tag tag;
 
-  TagEditState(this.tag);
-
   Color pickerColor = Color(0xff443a49);
+
+  TagEditState(this.tag);
 
   void changeColor(Color color){
 

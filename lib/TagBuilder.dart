@@ -30,10 +30,6 @@ class TagBuilderState extends State<TagBuilder> {
   @override
   Widget build(BuildContext context){
 
-    //disposed when task is deleted
-    final titleController = TextEditingController(text: "");
-    final descriptionController = TextEditingController(text: "");
-
     return Scaffold(
         appBar: AppBar(
             title: Text('Create Tag'),
@@ -44,8 +40,8 @@ class TagBuilderState extends State<TagBuilder> {
 
                     var tag = Tag(list);
 
-                    tag.title = titleController.text;
-                    tag.description = descriptionController.text;
+                    tag.title = list.titleController.text;
+                    tag.description = list.descriptionController.text;
                     tag.color = choosenColor;
 
                     list.add(tag);
@@ -63,13 +59,13 @@ class TagBuilderState extends State<TagBuilder> {
 
                     decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
                     style: TextStyle(color: Colors.black),
-                    controller: titleController,
+                    controller: list.titleController,
                   ),
                   Divider(),
                   TextFormField(
                       decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
                       style: TextStyle(color: Colors.black),
-                      controller: descriptionController
+                      controller: list.descriptionController
                   ),
                   Divider(),
                   RaisedButton(

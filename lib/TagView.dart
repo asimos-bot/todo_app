@@ -30,7 +30,9 @@ class TagViewState extends State<TagView> {
               IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
+
                     tag.updateTextControllers();
+
                     Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) => TagEdit(tag)
@@ -71,10 +73,8 @@ class TagViewState extends State<TagView> {
                                                     FlatButton(
                                                         child: Text('Yes'),
                                                         onPressed: () {
-                                                          tag.titleController.dispose();
-                                                          tag.descriptionController.dispose();
 
-                                                          tag.list.remove(tag);
+                                                          tag.list.delete(tag);
 
                                                           Navigator.pop(context);
                                                           Navigator.pop(context);
