@@ -130,12 +130,24 @@ class TodoListState extends State<TodoList> {
   //create database
   Future<void> _createDatabase(Database db, int version) async {
 
-    await db.execute('CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, description TEXT)');
-    await db.execute('CREATE TABLE tags (id INTEGER PRIMARY KEY, title TEXT, description TEXT, color INT, weight INT)');
+    await db.execute('CREATE TABLE tags ('
+        'id INTEGER PRIMARY KEY,'
+        'title TEXT, description TEXT,'
+        'color INT,'
+        'weight INT'
+        ')');
+
+    await db.execute('CREATE TABLE tasks ('
+        'id INTEGER PRIMARY KEY,'
+        'title TEXT,'
+        'description TEXT,'
+        'tag INT,'
+        'FOREIGN KEY (tag) REFERENCES tags(id)'
+        ')');
   }
 
-  //populate _todoItems with database
-  Future<void> _dbGetTodoItems() async {
+  //populate tasks with database
+  Future<void> _dbGetTasks() async {
 
     db = await openDatabase('database.db',
       //in case the database was nonexistent, create it right now
@@ -145,8 +157,7 @@ class TodoListState extends State<TodoList> {
 
         List<Map> rawTasks = await db.rawQuery('SELECT * FROM tasks');
         List<Map> rawTags = await db.rawQuery('SELECT * FROM tags');
-        print(rawTasks);
-        print(rawTags);
+
         setState(() {
           tasks.create(context, db, rawTasks);
           tags.create(context, db, rawTags);
@@ -161,7 +172,7 @@ class TodoListState extends State<TodoList> {
     taskBuilder = new TaskBuilder(tasks);
     tagBuilder = new TagBuilder(tags);
 
-    _dbGetTodoItems();
+    _dbGetTasks();
 
     super.initState();
   }
@@ -170,7 +181,7 @@ class TodoListState extends State<TodoList> {
   @mustCallSuper
   void dispose(){
 
-    () async => await db.close();
+    db.close();
 
     tags.dispose();
     tasks.dispose();
@@ -181,7 +192,7 @@ class TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
 
-    return new Scaffold(
+    return Scaffold(
       //slide bar
       drawer: _buildDrawer(),
       //top bar
@@ -189,7 +200,21 @@ class TodoListState extends State<TodoList> {
           title: new Text('Your tasks')
       ),
       //content in the middle of the screen
-      body: _buildTodoList(),
+      body: FutureBuilder(
+        future: _dbGetTasks(),
+        builder: (context, snapshot) {
+          if( snapshot.connectionState == ConnectionState.done ){
+
+            return _buildTodoList();
+
+          } else {
+            return
+                Center(
+                  child: CircularProgressIndicator()
+                );
+          }
+        }
+      ),
       //bottom bar
       bottomNavigationBar: new BottomAppBar(
         //background color
