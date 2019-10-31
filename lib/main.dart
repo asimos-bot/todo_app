@@ -172,7 +172,7 @@ class TodoListState extends State<TodoList> {
   void initState() {
 
     //TODO: for debugging only, comment it later
-    //Sqflite.devSetDebugModeOn(true);
+    Sqflite.devSetDebugModeOn(true);
 
     db = openDatabase('database.db',
           //in case the database was nonexistent, create it right now

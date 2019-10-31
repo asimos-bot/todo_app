@@ -71,9 +71,11 @@ class TagViewState extends State<TagView> {
                                                   actions: <Widget>[
                                                     FlatButton(
                                                         child: Text('Yes'),
-                                                        onPressed: () {
+                                                        onPressed: () async {
 
-                                                          tag.list.delete(tag);
+                                                          await tag.list.delete(tag);
+
+                                                          setState(() {});
 
                                                           Navigator.pop(context);
                                                           Navigator.pop(context);

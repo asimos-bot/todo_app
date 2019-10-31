@@ -82,6 +82,11 @@ class TagList {
 
   Future<void> delete(Tag tag) async {
 
+    //update tasks which reference to this tag
+    await (await db).update('tasks', {
+      'tag': null
+    }, where: 'tag = ?', whereArgs: [tag.id]);
+
     await (await db).delete('tags', where: 'id = ?', whereArgs: [tag.id]);
   }
 
