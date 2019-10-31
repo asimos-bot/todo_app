@@ -28,7 +28,9 @@ class TaskViewState extends State<TaskView> {
                   IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
+
                         task.updateTextControllers();
+
                         Navigator.of(context).push(
                             MaterialPageRoute(
                                 builder: (context) => TaskEdit(task)
@@ -94,7 +96,10 @@ class TaskViewState extends State<TaskView> {
                                   )
                               )
                           )
-                      )
+                      ),
+                      task.tag != null ? task.tag.toSearchWidget(context, null) :
+                      Text("No Tag associated", style: TextStyle(color: Colors.white)),
+                      Text('weight: ${task.weight.toString()}', style: TextStyle(color: Colors.white))
                     ]
                 )
             )

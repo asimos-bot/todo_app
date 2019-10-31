@@ -35,6 +35,7 @@ class TaskEditState extends State<TaskEdit> {
 
                     task.title = task.titleController.text;
                     task.description = task.descriptionController.text;
+                    task.weight = int.parse(task.weightController.text);
 
                     task.list.update(task);
 

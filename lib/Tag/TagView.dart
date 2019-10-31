@@ -97,7 +97,9 @@ class TagViewState extends State<TagView> {
                               )
                           )
                       )
-                  )
+                  ),
+                  tag.toSearchWidget(context, null),
+                  Text('weight: ${tag.weight.toString()}', style: TextStyle(color: Colors.white))
                 ]
             )
         )
