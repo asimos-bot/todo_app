@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Tag.dart';
+import 'package:todo_yourself/Tag/Tag.dart';
 import 'package:sqflite/sqflite.dart';
 
 //manage database and list at the same time

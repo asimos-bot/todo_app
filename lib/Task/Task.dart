@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Tag.dart';
-import 'TaskList.dart';
-import 'TaskView.dart';
+import '../Tag/Tag.dart';
+import 'package:todo_yourself/Task/TaskList.dart';
+import 'package:todo_yourself/Task/TaskView.dart';
 
 class Task {
 

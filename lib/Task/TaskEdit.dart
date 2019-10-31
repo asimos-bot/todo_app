@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'Task.dart';
-import 'Tag.dart';
+import 'package:todo_yourself/Task/Task.dart';
+import '../Tag/Tag.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 import 'package:flutter/services.dart';

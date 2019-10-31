@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'Tag.dart';
-import 'TagList.dart';
+import 'package:todo_yourself/Tag/Tag.dart';
+import 'package:todo_yourself/Tag/TagList.dart';
 import 'package:flutter/services.dart';
 
 class TagBuilder extends StatefulWidget {

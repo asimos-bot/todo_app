@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Task.dart';
+import 'package:todo_yourself/Task/Task.dart';
 import 'package:sqflite/sqflite.dart';
-import 'TagList.dart';
+import '../Tag/TagList.dart';
 
 //manage database and list at the same time
 class TaskList {

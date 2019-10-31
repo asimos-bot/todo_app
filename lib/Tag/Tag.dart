@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'TagList.dart';
-import 'TagView.dart';
+import 'package:todo_yourself/Tag/TagList.dart';
+import 'package:todo_yourself/Tag/TagView.dart';
 
 class Tag {
 

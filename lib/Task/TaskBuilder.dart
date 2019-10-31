@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Tag.dart';
-import 'Task.dart';
-import 'TaskList.dart';
+import '../Tag/Tag.dart';
+import 'package:todo_yourself/Task/Task.dart';
+import 'package:todo_yourself/Task/TaskList.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 import 'package:flutter/services.dart';
@@ -53,6 +53,7 @@ class TaskBuilderState extends State<TaskBuilder> {
                         children: <Widget>[
                           TextFormField(
 
+                            autofocus: true,
                             decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
                             style: TextStyle(color: Colors.black),
                             controller: list.titleController,
