@@ -5,6 +5,7 @@ import 'package:todo_yourself/Task/TaskList.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 import '../FormWidgets/WeightSlider.dart';
+import '../FormWidgets/TextForm.dart';
 
 class TaskBuilder extends StatefulWidget {
 
@@ -49,19 +50,7 @@ class TaskBuilderState extends State<TaskBuilder> {
                 body: Form(
                     child: ListView(
                         children: <Widget>[
-                          TextFormField(
-
-                            autofocus: true,
-                            decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
-                            style: TextStyle(color: Colors.black),
-                            controller: list.titleController,
-                          ),
-                          Divider(),
-                          TextFormField(
-                              decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
-                              style: TextStyle(color: Colors.black),
-                              controller: list.descriptionController
-                          ),
+                          TextForm(list),
                           Divider(),
                           FutureBuilder(
                               future: list.tagList.list(),

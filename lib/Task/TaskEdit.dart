@@ -4,6 +4,7 @@ import '../Tag/Tag.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 import '../FormWidgets/WeightSlider.dart';
+import '../FormWidgets/TextForm.dart';
 
 class TaskEdit extends StatefulWidget {
 
@@ -45,19 +46,7 @@ class TaskEditState extends State<TaskEdit> {
         body: Form(
             child: ListView(
                   children: <Widget>[
-                    TextFormField(
-
-                      autofocus: true,
-                      decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
-                      style: TextStyle(color: Colors.black),
-                      controller: task.titleController,
-                    ),
-                    Divider(),
-                    TextFormField(
-                        decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
-                        style: TextStyle(color: Colors.black),
-                        controller: task.descriptionController
-                    ),
+                    TextForm(task),
                     Divider(),
                     FutureBuilder(
                       future: task.list.tagList.list(),

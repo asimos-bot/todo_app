@@ -3,6 +3,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
 import 'package:todo_yourself/Tag/TagList.dart';
 import '../FormWidgets/WeightSlider.dart';
+import '../FormWidgets/TextForm.dart';
 
 class TagBuilder extends StatefulWidget {
 
@@ -59,18 +60,7 @@ class TagBuilderState extends State<TagBuilder> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  TextFormField(
-
-                    decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
-                    style: TextStyle(color: Colors.black),
-                    controller: list.titleController,
-                  ),
-                  Divider(),
-                  TextFormField(
-                      decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
-                      style: TextStyle(color: Colors.black),
-                      controller: list.descriptionController
-                  ),
+                  TextForm(list),
                   Divider(),
                   RaisedButton(
                     child: Text('Choose Color'),

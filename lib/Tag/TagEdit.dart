@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
 import '../FormWidgets/WeightSlider.dart';
+import '../FormWidgets/TextForm.dart';
 
 class TagEdit extends StatefulWidget {
 
@@ -51,19 +52,7 @@ class TagEditState extends State<TagEdit> {
         body: Form(
             child: Column(
                 children: <Widget>[
-                  TextFormField(
-
-                    decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
-                    style: TextStyle(color: Colors.black),
-                    controller: tag.titleController,
-                  ),
-                  Divider(),
-                  TextFormField(
-
-                      decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
-                      style: TextStyle(color: Colors.black),
-                      controller: tag.descriptionController
-                  ),
+                  TextForm(tag),
                   Divider(),
                   RaisedButton(
 
