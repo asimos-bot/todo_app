@@ -27,7 +27,7 @@ class TaskEditState extends State<TaskEdit> {
 
     return Scaffold(
         appBar: AppBar(
-            title: Text('Task Edit'),
+            title: Text(task.title, overflow: TextOverflow.ellipsis),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.done),

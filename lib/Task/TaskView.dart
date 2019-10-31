@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_yourself/Task/Task.dart';
 import 'package:todo_yourself/Task/TaskEdit.dart';
+import '../globals.dart' as globals;
 
 class TaskView extends StatefulWidget {
 
@@ -23,7 +24,7 @@ class TaskViewState extends State<TaskView> {
 
     return Scaffold(
             appBar: AppBar(
-                title: Text("Task description"),
+                title: Text(task.title, overflow: TextOverflow.ellipsis),
                 actions: <Widget>[
                   IconButton(
                       icon: Icon(Icons.edit),
@@ -53,7 +54,7 @@ class TaskViewState extends State<TaskView> {
                               child: ClipOval(
                                   child:Container(
                                       padding: EdgeInsets.all(4.0),
-                                      color: Color(0xFF6A1B9A),
+                                      color: globals.foregroundColor,
                                       child:IconButton(
                                           hoverColor: Colors.white ,
                                           highlightColor:Colors.white ,
