@@ -18,6 +18,7 @@ class Task {
   //disposed when task is deleted
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+  final weightController = TextEditingController(text: "");
 
   //prompt for crating a entry
   Task(this.list);
@@ -43,10 +44,12 @@ class Task {
   void updateTextControllers(){
     titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: title)).value;
     descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: description)).value;
+    weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: weight.toString())).value;
   }
 
   void dispose(){
     titleController.dispose();
     descriptionController.dispose();
+    weightController.dispose();
   }
 }

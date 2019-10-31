@@ -4,6 +4,7 @@ import 'Task.dart';
 import 'TaskList.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
+import 'package:flutter/services.dart';
 
 class TaskBuilder extends StatefulWidget {
 
@@ -19,6 +20,8 @@ class TaskBuilderState extends State<TaskBuilder> {
 
   TaskList list;
   Tag tag;
+
+  double currentSliderValue=1;
 
   TaskBuilderState(this.list);
 
@@ -116,6 +119,25 @@ class TaskBuilderState extends State<TaskBuilder> {
                                   );
                                 }
                               }
+                          ),
+                          Slider(
+                              activeColor: Colors.indigoAccent,
+                              min: -50,
+                              max: 50,
+                              onChanged: (newWeight) {
+                                setState(() {
+                                  currentSliderValue = newWeight;
+                                  list.weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: newWeight.round().toString())).value;
+                                });
+                              },
+                              value: currentSliderValue
+                          ),
+                          Divider(),
+                          TextFormField(
+                              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                              decoration: InputDecoration(filled: true, fillColor: Colors.white),
+                              style: TextStyle(color: Colors.black),
+                              controller: list.weightController
                           )
                         ]
                     )
