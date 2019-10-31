@@ -65,8 +65,6 @@ class TaskBuilderState extends State<TaskBuilder> {
                               future: list.tagList.list(),
                               builder: (context, snapshot) {
 
-                                print(list.tagList.length);
-
                                 if( snapshot.connectionState == ConnectionState.done ){
 
                                   if( list.tagList.length > 0 ) {

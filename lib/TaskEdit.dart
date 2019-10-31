@@ -62,10 +62,11 @@ class TaskEditState extends State<TaskEdit> {
                       future: task.list.tagList.list(),
                       builder: (context, snapshot) {
 
-                        if( snapshot.connectionState == ConnectionState.done ){
+                        if (snapshot.connectionState == ConnectionState.done) {
 
-                          if( task.list.tagList.length > 0 ) {
+                          if (task.list.tagList.length > 0) {
 
+                            //appear when there are tags to select
                             return SelectionMenu<Tag>(
                               itemsList: snapshot.data,
                               itemSearchMatcher: (String query, Tag tag) {
@@ -97,18 +98,19 @@ class TaskEditState extends State<TaskEdit> {
                                   )
                               ),
                             );
+                          } else {
 
-                          }else{
-
-                            return Text("No Tag available");
+                            //appears when there is not tag to select
+                            return Card(
+                                child: Center(
+                                    child: Text("No Tag Available")
+                                )
+                            );
                           }
-
-                        }else{
-
-                          return Card(
-                              child: Center(
-                                  child: Text("No Tag Available")
-                              )
+                        } else {
+                          //appears while loading future
+                          return Center(
+                              child: CircularProgressIndicator()
                           );
                         }
                       }
