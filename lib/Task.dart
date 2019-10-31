@@ -7,6 +7,7 @@ class Task {
 
   int id=-1;
   String title="";
+  int weight=1;
   String description="";
 
   Tag tag=null;

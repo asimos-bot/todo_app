@@ -21,13 +21,33 @@ class Tag {
 
   Tag(this.list);
 
+  Widget toMenuButtonWidget(context, data){
+    return Card(
+        child: ListTile(
+          leading: CircleAvatar(
+              backgroundColor: color,
+              child: title.length >= 2 ? Text("${title[0]}${title[1]}") : null
+          ),
+          onTap: data.triggerMenu,
+          title: Text(title),
+          subtitle: Text(description, overflow: TextOverflow.ellipsis)
+        )
+      );
+  }
+
   Widget toSearchWidget(context, onItemTapped){
 
-    return ListTile(
-      onTap: onItemTapped,
-      title: Text(title),
-      subtitle: Text(description, overflow: TextOverflow.ellipsis)
-    );
+    return Card(
+        child: ListTile(
+          leading: CircleAvatar(
+              backgroundColor: color,
+              child: title.length >= 2 ? Text("${title[0]}${title[1]}") : null
+          ),
+          onTap: onItemTapped,
+          title: Text(title),
+          subtitle: Text(description, overflow: TextOverflow.ellipsis)
+        )
+      );
   }
 
   Widget toWidget(context){

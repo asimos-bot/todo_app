@@ -88,12 +88,19 @@ class TaskEditState extends State<TaskEdit> {
                                   triggerComponent: TriggerComponent(
                                       builder: (TriggerComponentData data) {
                                         //widget of the button that calls the menu
-                                        return Center(
-                                            child: RaisedButton(
-                                                onPressed: data.triggerMenu,
-                                                child: Text("Choose Tag")
-                                            )
-                                        );
+
+                                        if( task.tag == null ) {
+                                          //when no tag is selected for this task
+                                          return Center(
+                                              child: RaisedButton(
+                                                  onPressed: data.triggerMenu,
+                                                  child: Text("Choose Tag")
+                                              )
+                                          );
+                                        }else{
+
+                                          return task.tag.toMenuButtonWidget(context, data);
+                                        }
                                       }
                                   )
                               ),
