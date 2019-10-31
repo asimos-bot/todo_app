@@ -19,8 +19,11 @@ class TaskEdit extends StatefulWidget {
 class TaskEditState extends State<TaskEdit> {
 
   Task task;
+  Tag tmpTag;
 
-  TaskEditState(this.task);
+  TaskEditState(this.task){
+    tmpTag = task.tag;
+  }
 
   @override
   Widget build(BuildContext context){
@@ -36,6 +39,7 @@ class TaskEditState extends State<TaskEdit> {
                     task.title = task.titleController.text;
                     task.description = task.descriptionController.text;
                     task.weight = int.parse(task.weightController.text);
+                    task.tag = tmpTag;
 
                     task.list.update(task);
 
@@ -69,18 +73,18 @@ class TaskEditState extends State<TaskEdit> {
                               },
                               searchLatency: Duration(milliseconds: 500),
                               onItemSelected: (Tag tag) {
-                                task.tag = tag;
+                                tmpTag = tag;
                               },
-                              itemBuilder: (BuildContext context, Tag tag,
-                                  OnItemTapped onItemTapped) =>
-                                  tag.toSearchWidget(context, onItemTapped),
-                              componentsConfiguration: DialogComponentsConfiguration<
-                                  Tag>(
+                              itemBuilder:
+                                  (BuildContext context, Tag tag, OnItemTapped onItemTapped) => tag.toSearchWidget(context, onItemTapped),
+
+                              componentsConfiguration: DialogComponentsConfiguration<Tag>(
                                   triggerComponent: TriggerComponent(
                                       builder: (TriggerComponentData data) {
                                         //widget of the button that calls the menu
 
-                                        if( task.tag == null ) {
+                                        if( tmpTag == null ) {
+
                                           //when no tag is selected for this task
                                           return Center(
                                               child: RaisedButton(
@@ -88,9 +92,10 @@ class TaskEditState extends State<TaskEdit> {
                                                   child: Text("Choose Tag")
                                               )
                                           );
+
                                         }else{
 
-                                          return task.tag.toMenuButtonWidget(context, data);
+                                          return tmpTag.toMenuButtonWidget(context, data);
                                         }
                                       }
                                   )
