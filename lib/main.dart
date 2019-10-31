@@ -52,7 +52,7 @@ class TodoListState extends State<TodoList> {
 
   void _addTask(){
 
-    tasks.updateTextControllers();
+    tasks.clearTextControllers();
 
     Navigator.of(context).push(
         MaterialPageRoute(
@@ -63,7 +63,7 @@ class TodoListState extends State<TodoList> {
 
   void _addTag(){
 
-    tags.updateTextControllers();
+    tags.clearTextControllers();
 
     Navigator.of(context).push(
       MaterialPageRoute(

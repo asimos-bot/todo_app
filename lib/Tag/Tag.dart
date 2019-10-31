@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:todo_yourself/Tag/TagList.dart';
 import 'package:todo_yourself/Tag/TagView.dart';
+import '../FormWidgets/Controller.dart';
 
-class Tag {
+class Tag extends Controller {
 
   int id = -1;
 
   Color color;
-  int weight=1;
-  String title="";
-  String description="";
 
   //global list with all the tags
   TagList list;
-
-  //dispose when task is deleted
-  final titleController = TextEditingController(text: "");
-  final descriptionController = TextEditingController(text: "");
-  final weightController = TextEditingController(text: "");
 
   Tag(this.list);
 
@@ -67,17 +60,5 @@ class Tag {
         )
       )
     );
-  }
-
-  void updateTextControllers(){
-    titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: title)).value;
-    descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: description)).value;
-    weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: weight.toString())).value;
-  }
-
-  void dispose(){
-    titleController.dispose();
-    descriptionController.dispose();
-    weightController.dispose();
   }
 }

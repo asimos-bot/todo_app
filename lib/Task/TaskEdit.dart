@@ -3,7 +3,7 @@ import 'package:todo_yourself/Task/Task.dart';
 import '../Tag/Tag.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
-import 'package:flutter/services.dart';
+import '../FormWidgets/WeightSlider.dart';
 
 class TaskEdit extends StatefulWidget {
 
@@ -19,11 +19,7 @@ class TaskEditState extends State<TaskEdit> {
 
   Task task;
 
-  double currentSliderValue;
-
-  TaskEditState(this.task){
-    currentSliderValue = task.weight.toDouble();
-  }
+  TaskEditState(this.task);
 
   @override
   Widget build(BuildContext context){
@@ -127,25 +123,7 @@ class TaskEditState extends State<TaskEdit> {
                         }
                       }
                     ),
-                    Slider(
-                        activeColor: Colors.indigoAccent,
-                        min: -50,
-                        max: 50,
-                        onChanged: (newWeight) {
-                          setState(() {
-                            currentSliderValue = newWeight;
-                            task.weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: newWeight.round().toString())).value;
-                          });
-                        },
-                        value: currentSliderValue
-                    ),
-                    Divider(),
-                    TextFormField(
-                        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                        decoration: InputDecoration(filled: true, fillColor: Colors.white),
-                        style: TextStyle(color: Colors.black),
-                        controller: task.weightController
-                    )
+                    WeightSlider(task, task.weight.toDouble())
                 ]
             )
         )

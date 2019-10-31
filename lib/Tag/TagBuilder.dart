@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
 import 'package:todo_yourself/Tag/TagList.dart';
-import 'package:flutter/services.dart';
+import '../FormWidgets/WeightSlider.dart';
 
 class TagBuilder extends StatefulWidget {
 
@@ -107,25 +107,7 @@ class TagBuilderState extends State<TagBuilder> {
                     }
                   ),
                   Divider(),
-                  Slider(
-                      activeColor: Colors.indigoAccent,
-                      min: -50,
-                      max: 50,
-                      onChanged: (newWeight) {
-                        setState(() {
-                          currentSliderValue = newWeight;
-                          list.weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: newWeight.round().toString())).value;
-                        });
-                      },
-                      value: currentSliderValue
-                  ),
-                  Divider(),
-                  TextFormField(
-                      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                      decoration: InputDecoration(filled: true, fillColor: Colors.white),
-                      style: TextStyle(color: Colors.black),
-                      controller: list.weightController
-                  )
+                  WeightSlider(list, 1.0)
                 ]
               )
             )
