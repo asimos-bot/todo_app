@@ -27,7 +27,7 @@ class TaskEditState extends State<TaskEdit> {
 
     return Scaffold(
         appBar: AppBar(
-            title: Text('Task Edit'),
+            title: Text(task.title, overflow: TextOverflow.ellipsis),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.done),
@@ -35,6 +35,7 @@ class TaskEditState extends State<TaskEdit> {
 
                     task.title = task.titleController.text;
                     task.description = task.descriptionController.text;
+                    task.weight = int.parse(task.weightController.text);
 
                     task.list.update(task);
 

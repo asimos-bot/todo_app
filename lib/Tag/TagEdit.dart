@@ -32,7 +32,7 @@ class TagEditState extends State<TagEdit> {
 
     return Scaffold(
         appBar: AppBar(
-            title: Text('Tag Edit'),
+            title: Text(tag.title, overflow: TextOverflow.ellipsis),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.done),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_yourself/Tag/TagEdit.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
+import '../globals.dart' as globals;
 
 class TagView extends StatefulWidget {
 
@@ -23,7 +24,7 @@ class TagViewState extends State<TagView> {
 
     return Scaffold(
         appBar: AppBar(
-            title: Text("Tag description"),
+            title: Text(tag.title, overflow: TextOverflow.ellipsis),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.edit),
@@ -54,7 +55,7 @@ class TagViewState extends State<TagView> {
                           child: ClipOval(
                               child:Container(
                                   padding: EdgeInsets.all(4.0),
-                                  color: Color(0xFF6A1B9A),
+                                  color: globals.foregroundColor,
                                   child:IconButton(
                                       hoverColor: Colors.white ,
                                       highlightColor:Colors.white ,
@@ -97,7 +98,9 @@ class TagViewState extends State<TagView> {
                               )
                           )
                       )
-                  )
+                  ),
+                  tag.toSearchWidget(context, null),
+                  Text('weight: ${tag.weight.toString()}', style: TextStyle(color: Colors.white))
                 ]
             )
         )

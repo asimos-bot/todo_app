@@ -8,6 +8,7 @@ import 'package:todo_yourself/Task/TaskBuilder.dart';
 import 'package:todo_yourself/Tag/TagBuilder.dart';
 import 'package:todo_yourself/Task/TaskList.dart';
 import 'package:todo_yourself/Tag/TagList.dart';
+import 'globals.dart' as globals;
 
 TaskList tasks;
 TagList tags;
@@ -23,8 +24,7 @@ void main() => runApp(new TodoApp());
 
 //Main widget
 class TodoApp extends StatelessWidget {
-  final purple = const Color(0xFF6A1B9A);
-  final black = const Color(0xDD000000);
+
 
   @override
   Widget build(BuildContext context){
@@ -32,7 +32,7 @@ class TodoApp extends StatelessWidget {
     return new MaterialApp(
       title: 'ToDo Yourself', //title which appear when we minimize the app
       home: new TodoList(), //actual app stuff
-      theme: ThemeData(primaryColor: purple, scaffoldBackgroundColor: black),
+      theme: ThemeData(primaryColor: globals.foregroundColor, scaffoldBackgroundColor: globals.backgroundColor),
       routes: <String, WidgetBuilder> {
 
       }
@@ -112,11 +112,11 @@ class TodoListState extends State<TodoList> {
 
   Widget _buildDrawer() {
     return new Drawer(
-      child: Container(decoration: BoxDecoration(color: Color(0xFF6A1B9A)),child: new Column(  //Column
+      child: Container(decoration: BoxDecoration(color: globals.foregroundColor),child: new Column(  //Column
         //padding: EdgeInsets.zero,
         children: <Widget> [
           DrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFF6A1B9A)),
+            decoration: BoxDecoration(color: globals.foregroundColor),
             child: Text('Categories Menu',style: TextStyle(color: Colors.white),)
           ),
           ListTile(
@@ -231,7 +231,7 @@ class TodoListState extends State<TodoList> {
       //bottom bar
       bottomNavigationBar: new BottomAppBar(
         //background color
-        color: Color(0xFF6A1B9A),
+        color: globals.foregroundColor,
         shape: CircularNotchedRectangle(),
         //here we say we want a row to be inside the bottom bar (because the icons are in a row, just think about it)
         child: new Row(
