@@ -24,7 +24,7 @@ class TagViewState extends State<TagView> {
 
     return Scaffold(
         appBar: AppBar(
-            title: Text(tag.title, overflow: TextOverflow.ellipsis),
+            title: Text(tag.title, overflow: TextOverflow.fade),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.edit),

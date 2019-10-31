@@ -30,7 +30,7 @@ class TaskEditState extends State<TaskEdit> {
 
     return Scaffold(
         appBar: AppBar(
-            title: Text(task.title, overflow: TextOverflow.ellipsis),
+            title: Text(task.title, overflow: TextOverflow.fade),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.done),

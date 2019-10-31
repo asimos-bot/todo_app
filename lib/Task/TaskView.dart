@@ -24,7 +24,7 @@ class TaskViewState extends State<TaskView> {
 
     return Scaffold(
             appBar: AppBar(
-                title: Text(task.title, overflow: TextOverflow.ellipsis),
+                title: Text(task.title, overflow: TextOverflow.fade),
                 actions: <Widget>[
                   IconButton(
                       icon: Icon(Icons.edit),

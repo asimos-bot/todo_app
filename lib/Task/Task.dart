@@ -5,6 +5,24 @@ import 'package:todo_yourself/Task/TaskView.dart';
 import '../FormWidgets/Controller.dart';
 import '../globals.dart' as globals;
 
+class Task extends Controller {
+
+  int id=-1;
+
+  Tag tag=null;
+
+  bool checked=false;
+
+  //global list with all the ListEntries
+  TaskList list;
+
+  //prompt for crating a entry
+  Task(this.list);
+
+  //return this entry in widget form
+  Widget toWidget() => TaskWidget(this);
+}
+
 class TaskWidget extends StatefulWidget {
 
   final Task task;
@@ -28,18 +46,18 @@ class TaskWidgetState extends State<TaskWidget> {
         child: ListTile(
             title: Text(
                 task.title,
-                overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.fade,
                 style: task.checked ? TextStyle(
-                  decoration: TextDecoration.lineThrough,
-                  color: Colors.black.withOpacity(0.4)
+                    decoration: TextDecoration.lineThrough,
+                    color: Colors.black.withOpacity(0.4)
                 ) : null
             ),
             subtitle: Text(
                 task.description,
-                overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.fade,
                 style: task.checked ? TextStyle(
-                  decoration: TextDecoration.lineThrough,
-                  color: Colors.black.withOpacity(0.4)
+                    decoration: TextDecoration.lineThrough,
+                    color: Colors.black.withOpacity(0.4)
                 ) : null
             ),
             onTap: () => Navigator.of(context).push(
@@ -58,22 +76,4 @@ class TaskWidgetState extends State<TaskWidget> {
         )
     );
   }
-}
-
-class Task extends Controller {
-
-  int id=-1;
-
-  Tag tag=null;
-
-  bool checked=false;
-
-  //global list with all the ListEntries
-  TaskList list;
-
-  //prompt for crating a entry
-  Task(this.list);
-
-  //return this entry in widget form
-  Widget toWidget() => TaskWidget(this);
 }

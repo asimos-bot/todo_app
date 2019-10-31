@@ -23,7 +23,7 @@ class Tag extends Controller {
           ),
           onTap: data.triggerMenu,
           title: Text(title),
-          subtitle: Text(description, overflow: TextOverflow.ellipsis)
+          subtitle: Text(description, overflow: TextOverflow.fade)
         )
       );
   }
@@ -38,7 +38,7 @@ class Tag extends Controller {
           ),
           onTap: onItemTapped,
           title: Text(title),
-          subtitle: Text(description, overflow: TextOverflow.ellipsis)
+          subtitle: Text(description, overflow: TextOverflow.fade)
         )
       );
   }
@@ -52,7 +52,7 @@ class Tag extends Controller {
           child: title.length >= 2 ? Text("${title[0]}${title[1]}") : null
         ),
         title: Text(title),
-        subtitle: Text(description, overflow: TextOverflow.ellipsis),
+        subtitle: Text(description, overflow: TextOverflow.fade),
         onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
                 builder: (context) => TagView(this)
