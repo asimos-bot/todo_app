@@ -7,6 +7,7 @@ import 'TagList.dart';
 class TaskList {
 
   TagList tagList;
+  int length=-1;
 
   Future<Database> db;
 
@@ -39,16 +40,21 @@ class TaskList {
       task.title = taskMap['title'];
       task.description = taskMap['description'];
       task.id = taskMap['id'];
+      task.tag = taskMap['tag'] != null ? await tagList.get(taskMap['tag']) : null;
 
       list.add(task);
     }
+
+    length = list.length;
 
     return list;
   }
 
   Future<Task> get(int id) async {
 
-    List<Map> query = await (await db).query('tasks', columns: ['id', 'title', 'description'], where: 'id = ?', whereArgs: [id]);
+    List<Map> query = await (await db).query('tasks', columns: ['id', 'title', 'description', 'tag'], where: 'id = ?', whereArgs: [id]);
+
+    if(query.length == 0) return null;
 
     Map result = query[0];
 
@@ -57,6 +63,7 @@ class TaskList {
     task.id = result['id'];
     task.title = result['title'];
     task.description = result['description'];
+    task.tag = result['tag'] != null ? await tagList.get(result['tag']) : null;
 
     return task;
   }
@@ -65,15 +72,9 @@ class TaskList {
 
     await (await db).insert('tasks', {
       'title': task.title,
-      'description': task.description
+      'description': task.description,
+      'tag': task.tag!=null ? task.tag.id : null
     });
-  }
-
-  Future<Task> removeAt(int index, List<Task> list) async {
-
-    await (await db).delete('tasks', where: 'id = ?', whereArgs: [list[index].id]);
-
-    return list.removeAt(index);
   }
 
   Future<void> delete(Task task) async {
@@ -86,7 +87,8 @@ class TaskList {
 
     await (await db).update('tasks', {
       'title': list[index].title,
-      'description': list[index].description
+      'description': list[index].description,
+      'tag': list[index].tag != null ? list[index].tag.id : null
     }, where: 'id = ?', whereArgs: [list[index].id]);
   }
 
@@ -94,7 +96,8 @@ class TaskList {
 
     await (await db).update('tasks', {
       'title': task.title,
-      'description': task.description
+      'description': task.description,
+      'tag': task.tag != null ? task.tag.id : null
     }, where: 'id = ?', whereArgs: [task.id]);
   }
 }

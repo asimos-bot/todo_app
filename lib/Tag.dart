@@ -21,11 +21,13 @@ class Tag {
 
   Tag(this.list);
 
-  Widget toSearchWidget(context){
+  Widget toSearchWidget(context, onItemTapped){
 
     return ListTile(
-            title: Text(title)
-        );
+      onTap: onItemTapped,
+      title: Text(title),
+      subtitle: Text(description, overflow: TextOverflow.ellipsis)
+    );
   }
 
   Widget toWidget(context){

@@ -9,6 +9,8 @@ class Task {
   String title="";
   String description="";
 
+  Tag tag=null;
+
   //global list with all the ListEntries
   TaskList list;
 

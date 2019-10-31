@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 class TagList {
 
   Future<Database> db;
+  int length=-1;
 
   final titleController = TextEditingController(text: "");
   final descriptionController = TextEditingController(text: "");
@@ -45,12 +46,16 @@ class TagList {
       list.add(tag);
     }
 
+    length = list.length;
+
     return list;
   }
 
   Future<Tag> get(int id) async {
 
     List<Map> query = await (await db).query('tags', columns: ['id', 'title', 'description', 'weight', 'color'], where: 'id = ?', whereArgs: [id]);
+
+    if(query.length == 0) return null;
 
     Map tagMap = query[0];
 
@@ -73,13 +78,6 @@ class TagList {
       'color': tag.color.value,
       'weight': tag.weight
     });
-  }
-
-  Future<Tag> removeAt(int index, List<Tag> list) async {
-
-    await (await db).delete('tags', where: 'id = ?', whereArgs: [list[index].id]);
-
-    return list.removeAt(index);
   }
 
   Future<void> delete(Tag tag) async {

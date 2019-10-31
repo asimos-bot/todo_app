@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'Task.dart';
 import 'Tag.dart';
+import 'package:selection_menu/selection_menu.dart';
+import 'package:selection_menu/components_configurations.dart';
 
 class TaskEdit extends StatefulWidget {
 
@@ -40,10 +42,11 @@ class TaskEditState extends State<TaskEdit> {
             ]
         ),
         body: Form(
-            child: Column(
+            child: ListView(
                   children: <Widget>[
                     TextFormField(
 
+                      autofocus: true,
                       decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
                       style: TextStyle(color: Colors.black),
                       controller: task.titleController,
@@ -54,7 +57,62 @@ class TaskEditState extends State<TaskEdit> {
                         style: TextStyle(color: Colors.black),
                         controller: task.descriptionController
                     ),
-                    Divider()
+                    Divider(),
+                    FutureBuilder(
+                      future: task.list.tagList.list(),
+                      builder: (context, snapshot) {
+
+                        if( snapshot.connectionState == ConnectionState.done ){
+
+                          if( task.list.tagList.length > 0 ) {
+
+                            return SelectionMenu<Tag>(
+                              itemsList: snapshot.data,
+                              itemSearchMatcher: (String query, Tag tag) {
+                                query = query.trim().toLowerCase();
+                                return tag.title.toLowerCase().trim().contains(
+                                    query) || tag.description.trim()
+                                    .toLowerCase()
+                                    .contains(query);
+                              },
+                              searchLatency: Duration(milliseconds: 500),
+                              onItemSelected: (Tag tag) {
+                                task.tag = tag;
+                              },
+                              itemBuilder: (BuildContext context, Tag tag,
+                                  OnItemTapped onItemTapped) =>
+                                  tag.toSearchWidget(context, onItemTapped),
+                              componentsConfiguration: DialogComponentsConfiguration<
+                                  Tag>(
+                                  triggerComponent: TriggerComponent(
+                                      builder: (TriggerComponentData data) {
+                                        //widget of the button that calls the menu
+                                        return Center(
+                                            child: RaisedButton(
+                                                onPressed: data.triggerMenu,
+                                                child: Text("Choose Tag")
+                                            )
+                                        );
+                                      }
+                                  )
+                              ),
+                            );
+
+                          }else{
+
+                            return Text("No Tag available");
+                          }
+
+                        }else{
+
+                          return Card(
+                              child: Center(
+                                  child: Text("No Tag Available")
+                              )
+                          );
+                        }
+                      }
+                    )
                 ]
             )
         )

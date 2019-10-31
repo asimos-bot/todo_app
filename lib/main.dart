@@ -72,7 +72,7 @@ class TodoListState extends State<TodoList> {
     );
   }
 
-  //build whole list of todoitems
+  //build whole list of tasks
   Future<Widget> _buildTaskList() async {
 
     List<Task> list = await tasks.list();
@@ -151,14 +151,15 @@ class TodoListState extends State<TodoList> {
   Future<void> _createDatabase(Database db, int version) async {
 
     await db.execute('CREATE TABLE tags ('
-        'id INTEGER PRIMARY KEY,'
-        'title TEXT, description TEXT,'
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+        'title TEXT,'
+        'description TEXT,'
         'color INT,'
         'weight INT'
         ')');
 
     await db.execute('CREATE TABLE tasks ('
-        'id INTEGER PRIMARY KEY,'
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
         'title TEXT,'
         'description TEXT,'
         'tag INT,'
@@ -169,6 +170,9 @@ class TodoListState extends State<TodoList> {
   @override
   @mustCallSuper
   void initState() {
+
+    //TODO: for debugging only, comment it later
+    //Sqflite.devSetDebugModeOn(true);
 
     db = openDatabase('database.db',
           //in case the database was nonexistent, create it right now
@@ -213,7 +217,7 @@ class TodoListState extends State<TodoList> {
         builder: (context, snapshot) {
           if( snapshot.connectionState == ConnectionState.done ){
 
-            return snapshot.data;
+              return snapshot.data;
 
           } else {
             return
