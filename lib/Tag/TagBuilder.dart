@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'Tag.dart';
-import 'TagList.dart';
-import 'package:flutter/services.dart';
+import 'package:todo_yourself/Tag/Tag.dart';
+import 'package:todo_yourself/Tag/TagList.dart';
+import '../FormWidgets/WeightSlider.dart';
+import '../FormWidgets/TextForm.dart';
 
 class TagBuilder extends StatefulWidget {
 
@@ -59,18 +60,7 @@ class TagBuilderState extends State<TagBuilder> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  TextFormField(
-
-                    decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
-                    style: TextStyle(color: Colors.black),
-                    controller: list.titleController,
-                  ),
-                  Divider(),
-                  TextFormField(
-                      decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
-                      style: TextStyle(color: Colors.black),
-                      controller: list.descriptionController
-                  ),
+                  TextForm(list),
                   Divider(),
                   RaisedButton(
                     child: Text('Choose Color'),
@@ -107,25 +97,7 @@ class TagBuilderState extends State<TagBuilder> {
                     }
                   ),
                   Divider(),
-                  Slider(
-                      activeColor: Colors.indigoAccent,
-                      min: -50,
-                      max: 50,
-                      onChanged: (newWeight) {
-                        setState(() {
-                          currentSliderValue = newWeight;
-                          list.weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: newWeight.round().toString())).value;
-                        });
-                      },
-                      value: currentSliderValue
-                  ),
-                  Divider(),
-                  TextFormField(
-                      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                      decoration: InputDecoration(filled: true, fillColor: Colors.white),
-                      style: TextStyle(color: Colors.black),
-                      controller: list.weightController
-                  )
+                  WeightSlider(list, 1.0)
                 ]
               )
             )

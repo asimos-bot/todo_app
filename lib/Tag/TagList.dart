@@ -1,28 +1,13 @@
 import 'package:flutter/material.dart';
-import 'Tag.dart';
+import 'package:todo_yourself/Tag/Tag.dart';
 import 'package:sqflite/sqflite.dart';
+import '../FormWidgets/Controller.dart';
 
 //manage database and list at the same time
-class TagList {
+class TagList extends Controller {
 
   Future<Database> db;
   int length=-1;
-
-  final titleController = TextEditingController(text: "");
-  final descriptionController = TextEditingController(text: "");
-  final weightController = TextEditingController(text: "");
-
-  void updateTextControllers(){
-    titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
-    descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
-    weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: "1")).value;
-  }
-
-  void dispose(){
-    titleController.dispose();
-    descriptionController.dispose();
-    weightController.dispose();
-  }
 
   TagList(this.db);
 

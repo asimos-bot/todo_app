@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'TagEdit.dart';
-import 'Tag.dart';
+import 'package:todo_yourself/Tag/TagEdit.dart';
+import 'package:todo_yourself/Tag/Tag.dart';
 
 class TagView extends StatefulWidget {
 

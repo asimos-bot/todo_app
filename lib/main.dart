@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_list_drag_and_drop/drag_and_drop_list.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
-import 'Task.dart';
-import 'Tag.dart';
-import 'TaskBuilder.dart';
-import 'TagBuilder.dart';
-import 'TaskList.dart';
-import 'TagList.dart';
+import 'package:todo_yourself/Task/Task.dart';
+import 'package:todo_yourself/Tag/Tag.dart';
+import 'package:todo_yourself/Task/TaskBuilder.dart';
+import 'package:todo_yourself/Tag/TagBuilder.dart';
+import 'package:todo_yourself/Task/TaskList.dart';
+import 'package:todo_yourself/Tag/TagList.dart';
 
 TaskList tasks;
 TagList tags;
@@ -52,7 +52,7 @@ class TodoListState extends State<TodoList> {
 
   void _addTask(){
 
-    tasks.updateTextControllers();
+    tasks.clearTextControllers();
 
     Navigator.of(context).push(
         MaterialPageRoute(
@@ -63,7 +63,7 @@ class TodoListState extends State<TodoList> {
 
   void _addTag(){
 
-    tags.updateTextControllers();
+    tags.clearTextControllers();
 
     Navigator.of(context).push(
       MaterialPageRoute(

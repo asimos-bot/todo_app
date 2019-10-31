@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'Tag.dart';
-import 'package:flutter/services.dart';
+import 'package:todo_yourself/Tag/Tag.dart';
+import '../FormWidgets/WeightSlider.dart';
+import '../FormWidgets/TextForm.dart';
 
 class TagEdit extends StatefulWidget {
 
@@ -19,11 +20,7 @@ class TagEditState extends State<TagEdit> {
 
   Color pickerColor = Color(0xff443a49);
 
-  double currentSliderValue;
-
-  TagEditState(this.tag){
-    currentSliderValue = tag.weight.toDouble();
-  }
+  TagEditState(this.tag);
 
   void changeColor(Color color){
 
@@ -55,19 +52,7 @@ class TagEditState extends State<TagEdit> {
         body: Form(
             child: Column(
                 children: <Widget>[
-                  TextFormField(
-
-                    decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
-                    style: TextStyle(color: Colors.black),
-                    controller: tag.titleController,
-                  ),
-                  Divider(),
-                  TextFormField(
-
-                      decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
-                      style: TextStyle(color: Colors.black),
-                      controller: tag.descriptionController
-                  ),
+                  TextForm(tag),
                   Divider(),
                   RaisedButton(
 
@@ -105,25 +90,7 @@ class TagEditState extends State<TagEdit> {
                       }
                   ),
                   Divider(),
-                  Slider(
-                    activeColor: Colors.indigoAccent,
-                    min: -50,
-                    max: 50,
-                    onChanged: (newWeight) {
-                      setState(() {
-                        currentSliderValue = newWeight;
-                        tag.weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: newWeight.round().toString())).value;
-                      });
-                    },
-                    value: currentSliderValue
-                  ),
-                  Divider(),
-                  TextFormField(
-                    inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                    decoration: InputDecoration(filled: true, fillColor: Colors.white),
-                    style: TextStyle(color: Colors.black),
-                    controller: tag.weightController
-                  )
+                  WeightSlider(tag, tag.weight.toDouble())
                 ]
             )
         )
