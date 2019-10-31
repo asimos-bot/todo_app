@@ -1,32 +1,39 @@
 import 'package:flutter/material.dart';
 import 'Task.dart';
-import 'Tag.dart';
 import 'package:sqflite/sqflite.dart';
+import 'TagList.dart';
 
 //manage database and list at the same time
 class TaskList {
 
-  List<Task> list = [];
-  Database db;
-  BuildContext context;
+  TagList tagList;
+  int length=-1;
+
+  Future<Database> db;
 
   final titleController = TextEditingController(text: "");
   final descriptionController = TextEditingController(text: "");
+  final weightController = TextEditingController(text: "");
 
   void updateTextControllers(){
     titleController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
     descriptionController.value = new TextEditingController.fromValue(new TextEditingValue(text: "")).value;
+    weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: "1")).value;
   }
 
   void dispose(){
     titleController.dispose();
     descriptionController.dispose();
+    weightController.dispose();
   }
 
-  void create(context, db, List<Map> queryResult){
+  TaskList(this.db, this.tagList);
 
-    this.db = db;
-    this.context = context;
+  Future<List<Task>> list() async {
+
+    List<Task> list = [];
+
+    List<Map> queryResult = await (await db).rawQuery('SELECT * FROM tasks');
 
     for(int i=0; i < queryResult.length; i++){
 
@@ -36,70 +43,69 @@ class TaskList {
       task.title = taskMap['title'];
       task.description = taskMap['description'];
       task.id = taskMap['id'];
+      task.tag = taskMap['tag'] != null ? await tagList.get(taskMap['tag']) : null;
+      task.weight = taskMap['weight'];
 
       list.add(task);
     }
+
+    length = list.length;
+
+    return list;
   }
 
-  void add(Task task){
+  Future<Task> get(int id) async {
 
-    list.add(task);
+    List<Map> query = await (await db).query('tasks', columns: ['id', 'title', 'description', 'tag', 'weight'], where: 'id = ?', whereArgs: [id]);
 
-    db.insert('tasks', {'title': task.title, 'description': task.description});
-  }
+    if(query.length == 0) return null;
 
-  Task get(int index){
+    Map result = query[0];
 
-    if( index >= list.length || index < 0 ) throw("Index out of bounds in TaskList");
+    Task task = Task(this);
 
-    return list[index];
-  }
-
-  Task removeAt(int index) {
-
-    Task tmp = this.get(index);
-
-    list.removeAt(index);
-
-    db.delete('tasks', where: 'id = ?', whereArgs: [tmp.id]);
-
-    return tmp;
-  }
-
-  Task remove(Task task){
-
-    if( list.remove(task) ){
-
-      db.delete('tasks', where: 'id = ?', whereArgs: [task.id]);
-    }
+    task.id = result['id'];
+    task.title = result['title'];
+    task.description = result['description'];
+    task.tag = result['tag'] != null ? await tagList.get(result['tag']) : null;
+    task.weight = result['weight'];
 
     return task;
   }
 
-  void delete(Task task){
+  Future<void> add(Task task) async {
 
-    Task tmp = remove(task);
-
-    tmp.dispose();
+    await (await db).insert('tasks', {
+      'title': task.title,
+      'description': task.description,
+      'tag': task.tag!=null ? task.tag.id : null,
+      'weight': task.weight
+    });
   }
 
-  void deleteAt(int index){
+  Future<void> delete(Task task) async {
 
-    Task tmp = removeAt(index);
-
-    tmp.dispose();
+      await (await db).delete('tasks', where: 'id = ?', whereArgs: [task.id]);
   }
 
   //update database
-  void updateAt(int index){
+  Future<void> updateAt(int index, List<Task> list) async{
 
-    if( index >= list.length || index < 0 ) throw("Index out of bounds in TaskList");
-
-    db.update('tasks', {'title': list[index].title, 'description': list[index].description}, where: 'id = ?', whereArgs: [list[index].id]);
+    await (await db).update('tasks', {
+      'title': list[index].title,
+      'description': list[index].description,
+      'tag': list[index].tag != null ? list[index].tag.id : null,
+      'weight': list[index].weight,
+    }, where: 'id = ?', whereArgs: [list[index].id]);
   }
 
-  void update(Task task){
+  Future<void> update(Task task) async {
 
-    updateAt( list.indexOf(task) );
+    await (await db).update('tasks', {
+      'title': task.title,
+      'description': task.description,
+      'tag': task.tag != null ? task.tag.id : null,
+      'weight': task.weight
+    }, where: 'id = ?', whereArgs: [task.id]);
   }
 }

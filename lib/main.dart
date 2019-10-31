@@ -9,17 +9,15 @@ import 'TagBuilder.dart';
 import 'TaskList.dart';
 import 'TagList.dart';
 
-TaskList tasks = TaskList();
-
-//list of categories
-TagList tags = TagList();
+TaskList tasks;
+TagList tags;
 
 //builders
 var taskBuilder;
 var tagBuilder;
 
 //database
-Database db;
+Future<Database> db=null;
 
 void main() => runApp(new TodoApp());
 
@@ -74,19 +72,42 @@ class TodoListState extends State<TodoList> {
     );
   }
 
-  //build whole list of todoitems
-  Widget _buildTodoList() {
+  //build whole list of tasks
+  Future<Widget> _buildTaskList() async {
 
-    return tasks.list.length > 1 ? DragAndDropList<Task>(
-      tasks.list,
+    List<Task> list = await tasks.list();
+
+    return list.length > 1 ? DragAndDropList<Task>(
+      list,
       itemBuilder: (BuildContext context, item) => item.toWidget(context),
       onDragFinish: (before, after) {
-        tasks.list.insert(after, tasks.list.removeAt(before));
+        list.insert(after, list.removeAt(before));
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
       tilt: 0.01,
-    ) : ListView.builder(itemCount: tasks.list.length, itemBuilder: (context, index) => tasks.get(index).toWidget(context));
+    ) : ListView.builder(itemCount: list.length, itemBuilder: (context, index) => list[index].toWidget(context));
+  }
+
+  Future<Widget> _buildTagList() async {
+
+    List<Tag> list = await tags.list();
+
+    return list.length > 1 ? DragAndDropList<Tag>(
+        list,
+        itemBuilder: (BuildContext context, item) {
+
+          return item.toWidget(context);
+        },
+        onDragFinish: (before, after) {
+
+          list.insert(after, list.removeAt(before));
+        },
+        canBeDraggedTo: (one, two) => true,
+        dragElevation: 8.0,
+        tilt: 0.01
+      //if one or none tag is present
+    ) : ListView.builder(itemCount: list.length, itemBuilder: (context, index) => list[index].toWidget(context) );
   }
 
   Widget _buildDrawer() {
@@ -105,21 +126,20 @@ class TodoListState extends State<TodoList> {
           ),
           Container(
             child: Expanded(
-              child: tags.list.length > 1 ? DragAndDropList<Tag>(
-                tags.list,
-                itemBuilder: (BuildContext context, item) {
+              child: FutureBuilder(
+                future: _buildTagList(),
+                builder: (context, snapshot) {
 
-                  return item.toWidget(context);
-                },
-                onDragFinish: (before, after) {
+                  if( snapshot.connectionState == ConnectionState.done ){
 
-                  tags.list.insert(after, tags.list.removeAt(before));
-                },
-                canBeDraggedTo: (one, two) => true,
-                dragElevation: 8.0,
-                tilt: 0.01
-                //if one or none tag is present
-              ) : ListView.builder(itemCount: tags.list.length, itemBuilder: (context, index) => tags.get(index).toWidget(context) )
+                    return snapshot.data;
+                  }else{
+                    return Center(
+                      child: CircularProgressIndicator()
+                    );
+                  }
+                }
+              )
             )
           )
         ]
@@ -130,47 +150,51 @@ class TodoListState extends State<TodoList> {
   //create database
   Future<void> _createDatabase(Database db, int version) async {
 
-    await db.execute('CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, description TEXT)');
-    await db.execute('CREATE TABLE tags (id INTEGER PRIMARY KEY, title TEXT, description TEXT, color INT, weight INT)');
-  }
+    await db.execute('CREATE TABLE tags ('
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+        'title TEXT,'
+        'description TEXT,'
+        'color INT,'
+        'weight INT'
+        ')');
 
-  //populate _todoItems with database
-  Future<void> _dbGetTodoItems() async {
-
-    db = await openDatabase('database.db',
-      //in case the database was nonexistent, create it right now
-      version: 1,
-      onCreate: (Database db, version) => _createDatabase(db, version),
-      onOpen: (Database db) async {
-
-        List<Map> rawTasks = await db.rawQuery('SELECT * FROM tasks');
-        List<Map> rawTags = await db.rawQuery('SELECT * FROM tags');
-        print(rawTasks);
-        print(rawTags);
-        setState(() {
-          tasks.create(context, db, rawTasks);
-          tags.create(context, db, rawTags);
-        });
-      });
+    await db.execute('CREATE TABLE tasks ('
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+        'title TEXT NOT NULL,'
+        'description TEXT NOT NULL,'
+        'weight INT NOT NULL,'
+        'tag INT,'
+        'FOREIGN KEY (tag) REFERENCES tags(id)'
+        ')');
   }
 
   @override
   @mustCallSuper
-  void initState(){
+  void initState() {
+
+    //TODO: for debugging only, comment it later
+    Sqflite.devSetDebugModeOn(true);
+
+    db = openDatabase('database.db',
+          //in case the database was nonexistent, create it right now
+          version: 1,
+          onCreate: (Database db, version) => _createDatabase(db, version),
+        );
 
     taskBuilder = new TaskBuilder(tasks);
     tagBuilder = new TagBuilder(tags);
 
-    _dbGetTodoItems();
+    tags = TagList(db);
+    tasks = TaskList(db, tags);
 
     super.initState();
   }
 
   @override
   @mustCallSuper
-  void dispose(){
+  void dispose() async {
 
-    () async => await db.close();
+    await (await db).close();
 
     tags.dispose();
     tasks.dispose();
@@ -181,7 +205,7 @@ class TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
 
-    return new Scaffold(
+    return Scaffold(
       //slide bar
       drawer: _buildDrawer(),
       //top bar
@@ -189,7 +213,21 @@ class TodoListState extends State<TodoList> {
           title: new Text('Your tasks')
       ),
       //content in the middle of the screen
-      body: _buildTodoList(),
+      body: FutureBuilder(
+        future: _buildTaskList(),
+        builder: (context, snapshot) {
+          if( snapshot.connectionState == ConnectionState.done ){
+
+              return snapshot.data;
+
+          } else {
+            return
+                Center(
+                  child: CircularProgressIndicator()
+                );
+          }
+        }
+      ),
       //bottom bar
       bottomNavigationBar: new BottomAppBar(
         //background color

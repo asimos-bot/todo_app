@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'Task.dart';
 import 'TagEdit.dart';
 import 'Tag.dart';
-import 'TaskList.dart';
 
 class TagView extends StatefulWidget {
 
@@ -50,6 +48,7 @@ class TagViewState extends State<TagView> {
                   Text(tag.title,style: TextStyle(color: Colors.white)),
                   Divider(),
                   Text(tag.description,style: TextStyle(color: Colors.white)),
+                  Divider(),
                   Expanded(
                       child: Center(
                           child: ClipOval(
@@ -72,9 +71,11 @@ class TagViewState extends State<TagView> {
                                                   actions: <Widget>[
                                                     FlatButton(
                                                         child: Text('Yes'),
-                                                        onPressed: () {
+                                                        onPressed: () async {
 
-                                                          tag.list.delete(tag);
+                                                          await tag.list.delete(tag);
+
+                                                          setState(() {});
 
                                                           Navigator.pop(context);
                                                           Navigator.pop(context);

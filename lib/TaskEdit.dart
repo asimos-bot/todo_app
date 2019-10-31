@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'Task.dart';
 import 'Tag.dart';
-import 'TaskList.dart';
+import 'package:selection_menu/selection_menu.dart';
+import 'package:selection_menu/components_configurations.dart';
+import 'package:flutter/services.dart';
 
 class TaskEdit extends StatefulWidget {
 
@@ -17,7 +19,11 @@ class TaskEditState extends State<TaskEdit> {
 
   Task task;
 
-  TaskEditState(this.task);
+  double currentSliderValue;
+
+  TaskEditState(this.task){
+    currentSliderValue = task.weight.toDouble();
+  }
 
   @override
   Widget build(BuildContext context){
@@ -41,20 +47,105 @@ class TaskEditState extends State<TaskEdit> {
             ]
         ),
         body: Form(
-            child: Column(
-                children: <Widget>[
-                  TextFormField(
+            child: ListView(
+                  children: <Widget>[
+                    TextFormField(
 
-                    decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
-                    style: TextStyle(color: Colors.black),
-                    controller: task.titleController,
-                  ),
-                  Divider(),
-                  TextFormField(
-                      decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
+                      autofocus: true,
+                      decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
                       style: TextStyle(color: Colors.black),
-                      controller: task.descriptionController
-                  )
+                      controller: task.titleController,
+                    ),
+                    Divider(),
+                    TextFormField(
+                        decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
+                        style: TextStyle(color: Colors.black),
+                        controller: task.descriptionController
+                    ),
+                    Divider(),
+                    FutureBuilder(
+                      future: task.list.tagList.list(),
+                      builder: (context, snapshot) {
+
+                        if (snapshot.connectionState == ConnectionState.done) {
+
+                          if (task.list.tagList.length > 0) {
+
+                            //appear when there are tags to select
+                            return SelectionMenu<Tag>(
+                              itemsList: snapshot.data,
+                              itemSearchMatcher: (String query, Tag tag) {
+                                query = query.trim().toLowerCase();
+                                return tag.title.toLowerCase().trim().contains(
+                                    query) || tag.description.trim()
+                                    .toLowerCase()
+                                    .contains(query);
+                              },
+                              searchLatency: Duration(milliseconds: 500),
+                              onItemSelected: (Tag tag) {
+                                task.tag = tag;
+                              },
+                              itemBuilder: (BuildContext context, Tag tag,
+                                  OnItemTapped onItemTapped) =>
+                                  tag.toSearchWidget(context, onItemTapped),
+                              componentsConfiguration: DialogComponentsConfiguration<
+                                  Tag>(
+                                  triggerComponent: TriggerComponent(
+                                      builder: (TriggerComponentData data) {
+                                        //widget of the button that calls the menu
+
+                                        if( task.tag == null ) {
+                                          //when no tag is selected for this task
+                                          return Center(
+                                              child: RaisedButton(
+                                                  onPressed: data.triggerMenu,
+                                                  child: Text("Choose Tag")
+                                              )
+                                          );
+                                        }else{
+
+                                          return task.tag.toMenuButtonWidget(context, data);
+                                        }
+                                      }
+                                  )
+                              ),
+                            );
+                          } else {
+
+                            //appears when there is not tag to select
+                            return Card(
+                                child: Center(
+                                    child: Text("No Tag Available")
+                                )
+                            );
+                          }
+                        } else {
+                          //appears while loading future
+                          return Center(
+                              child: CircularProgressIndicator()
+                          );
+                        }
+                      }
+                    ),
+                    Slider(
+                        activeColor: Colors.indigoAccent,
+                        min: -50,
+                        max: 50,
+                        onChanged: (newWeight) {
+                          setState(() {
+                            currentSliderValue = newWeight;
+                            task.weightController.value = new TextEditingController.fromValue(new TextEditingValue(text: newWeight.round().toString())).value;
+                          });
+                        },
+                        value: currentSliderValue
+                    ),
+                    Divider(),
+                    TextFormField(
+                        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                        decoration: InputDecoration(filled: true, fillColor: Colors.white),
+                        style: TextStyle(color: Colors.black),
+                        controller: task.weightController
+                    )
                 ]
             )
         )

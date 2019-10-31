@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Task.dart';
 import 'TaskEdit.dart';
-import 'Tag.dart';
-import 'TaskList.dart';
 
 class TaskView extends StatefulWidget {
 
@@ -70,8 +68,11 @@ class TaskViewState extends State<TaskView> {
                                                       actions: <Widget>[
                                                         FlatButton(
                                                             child: Text('Yes'),
-                                                            onPressed: () {
-                                                              task.list.delete(task);
+                                                            onPressed: () async {
+
+                                                              await task.list.delete(task);
+
+                                                              setState(() {});
 
                                                               Navigator.pop(context);
                                                               Navigator.pop(context);
