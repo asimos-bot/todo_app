@@ -50,7 +50,7 @@ class TagEditState extends State<TagEdit> {
             ]
         ),
         body: Form(
-            child: Column(
+            child: ListView(
                 children: <Widget>[
                   TextForm(tag),
                   Divider(),

@@ -27,6 +27,7 @@ class TagList extends Controller {
       tag.description = tagMap['description'];
       tag.weight = tagMap['weight'];
       tag.color = Color(tagMap['color']);
+      tag.created_at = DateTime.parse(tagMap['created_at']);
 
       list.add(tag);
     }
@@ -38,7 +39,16 @@ class TagList extends Controller {
 
   Future<Tag> get(int id) async {
 
-    List<Map> query = await (await db).query('tags', columns: ['id', 'title', 'description', 'weight', 'color'], where: 'id = ?', whereArgs: [id]);
+    List<Map> query = await (await db).query(
+        'tags',
+        columns: [
+          'id',
+          'title',
+          'description',
+          'weight',
+          'color',
+          'created_at'
+        ], where: 'id = ?', whereArgs: [id]);
 
     if(query.length == 0) return null;
 
@@ -51,6 +61,7 @@ class TagList extends Controller {
     tag.description = tagMap['description'];
     tag.weight = tagMap['weight'];
     tag.color = Color(tagMap['color']);
+    tag.created_at = DateTime.parse(tagMap['created_at']);
 
     return tag;
   }
@@ -61,7 +72,8 @@ class TagList extends Controller {
       'title': tag.title,
       'description': tag.description,
       'color': tag.color.value,
-      'weight': tag.weight
+      'weight': tag.weight,
+      'created_at': DateTime.now().toIso8601String()
     });
   }
 

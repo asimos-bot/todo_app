@@ -100,7 +100,8 @@ class TagViewState extends State<TagView> {
                       )
                   ),
                   tag.toSearchWidget(context, null),
-                  Text('weight: ${tag.weight.toString()}', style: TextStyle(color: Colors.white))
+                  Text('weight: ${tag.weight.toString()}', style: TextStyle(color: Colors.white)),
+                  Text(tag.created_at.toIso8601String())
                 ]
             )
         )

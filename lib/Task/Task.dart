@@ -3,12 +3,70 @@ import '../Tag/Tag.dart';
 import 'package:todo_yourself/Task/TaskList.dart';
 import 'package:todo_yourself/Task/TaskView.dart';
 import '../FormWidgets/Controller.dart';
+import '../globals.dart' as globals;
+
+class TaskWidget extends StatefulWidget {
+
+  final Task task;
+
+  TaskWidget(this.task);
+
+  @override
+  createState() => TaskWidgetState(task);
+}
+
+class TaskWidgetState extends State<TaskWidget> {
+
+  Task task;
+
+  TaskWidgetState(this.task);
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Card(
+        child: ListTile(
+            title: Text(
+                task.title,
+                overflow: TextOverflow.ellipsis,
+                style: task.checked ? TextStyle(
+                  decoration: TextDecoration.lineThrough,
+                  color: Colors.black.withOpacity(0.4)
+                ) : null
+            ),
+            subtitle: Text(
+                task.description,
+                overflow: TextOverflow.ellipsis,
+                style: task.checked ? TextStyle(
+                  decoration: TextDecoration.lineThrough,
+                  color: Colors.black.withOpacity(0.4)
+                ) : null
+            ),
+            onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => TaskView(task)
+                )
+            ),
+            trailing: Checkbox(
+              value: task.checked,
+              checkColor: task.tag != null ? task.tag.color : globals.foregroundColor,
+              activeColor: Colors.white,
+              onChanged: (bool value){
+                setState(() => task.checked = value);
+              },
+            )
+        )
+    );
+  }
+}
 
 class Task extends Controller {
 
   int id=-1;
 
   Tag tag=null;
+
+  bool checked=false;
 
   //global list with all the ListEntries
   TaskList list;
@@ -17,20 +75,5 @@ class Task extends Controller {
   Task(this.list);
 
   //return this entry in widget form
-  Widget toWidget(context){
-
-    return new SizedBox(
-      child: new Card(
-        child: new ListTile(
-          title: new Text(title, overflow: TextOverflow.ellipsis),
-          subtitle: new Text(description, overflow: TextOverflow.ellipsis),
-          onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) => TaskView(this)
-              )
-          )
-        )
-      )
-    );
-  }
+  Widget toWidget() => TaskWidget(this);
 }

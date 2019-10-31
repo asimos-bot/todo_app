@@ -6,6 +6,7 @@ abstract class Controller {
   String description="";
 
   int weight=1;
+  DateTime created_at;
 
   final titleController = TextEditingController(text: "");
   final descriptionController = TextEditingController(text: "");

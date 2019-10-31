@@ -100,7 +100,8 @@ class TaskViewState extends State<TaskView> {
                       ),
                       task.tag != null ? task.tag.toSearchWidget(context, null) :
                       Text("No Tag associated", style: TextStyle(color: Colors.white)),
-                      Text('weight: ${task.weight.toString()}', style: TextStyle(color: Colors.white))
+                      Text('weight: ${task.weight.toString()}', style: TextStyle(color: Colors.white)),
+                      Text(task.created_at.toIso8601String())
                     ]
                 )
             )

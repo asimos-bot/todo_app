@@ -18,13 +18,12 @@ var taskBuilder;
 var tagBuilder;
 
 //database
-Future<Database> db=null;
+Future<Database> db;
 
 void main() => runApp(new TodoApp());
 
 //Main widget
 class TodoApp extends StatelessWidget {
-
 
   @override
   Widget build(BuildContext context){
@@ -32,10 +31,7 @@ class TodoApp extends StatelessWidget {
     return new MaterialApp(
       title: 'ToDo Yourself', //title which appear when we minimize the app
       home: new TodoList(), //actual app stuff
-      theme: ThemeData(primaryColor: globals.foregroundColor, scaffoldBackgroundColor: globals.backgroundColor),
-      routes: <String, WidgetBuilder> {
-
-      }
+      theme: ThemeData(primaryColor: globals.foregroundColor, scaffoldBackgroundColor: globals.backgroundColor)
     );
   }
 }
@@ -79,14 +75,14 @@ class TodoListState extends State<TodoList> {
 
     return list.length > 1 ? DragAndDropList<Task>(
       list,
-      itemBuilder: (BuildContext context, item) => item.toWidget(context),
+      itemBuilder: (BuildContext context, item) => item.toWidget(),
       onDragFinish: (before, after) {
         list.insert(after, list.removeAt(before));
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
       tilt: 0.01,
-    ) : ListView.builder(itemCount: list.length, itemBuilder: (context, index) => list[index].toWidget(context));
+    ) : ListView.builder(itemCount: list.length, itemBuilder: (context, index) => list[index].toWidget());
   }
 
   Future<Widget> _buildTagList() async {
@@ -111,59 +107,68 @@ class TodoListState extends State<TodoList> {
   }
 
   Widget _buildDrawer() {
-    return new Drawer(
-      child: Container(decoration: BoxDecoration(color: globals.foregroundColor),child: new Column(  //Column
+    return Drawer(
+      child: Container(
+        decoration: BoxDecoration(color: globals.foregroundColor),
+        child: Column(  //Column
         //padding: EdgeInsets.zero,
-        children: <Widget> [
-          DrawerHeader(
-            decoration: BoxDecoration(color: globals.foregroundColor),
-            child: Text('Categories Menu',style: TextStyle(color: Colors.white),)
-          ),
-          ListTile(
-            leading: Icon(Icons.add,color: Colors.white),
-            title: Text("Add category",style: TextStyle(color: Colors.white),),
-            onTap: () => _addTag(),
-          ),
-          Container(
-            child: Expanded(
-              child: FutureBuilder(
-                future: _buildTagList(),
-                builder: (context, snapshot) {
+          children: <Widget> [
+            DrawerHeader(
+              decoration: BoxDecoration(color: globals.foregroundColor),
+              child: Center(
+                child: Text('Tags Menu',style: TextStyle(color: Colors.white, fontSize: 20, fontStyle: FontStyle.italic))
+              )
+            ),
+            ListTile(
+              leading: Icon(Icons.add,color: Colors.white),
+              title: Text("Add Tag",style: TextStyle(color: Colors.white)),
+              onTap: () => _addTag(),
+            ),
+            Container(
+              child: Expanded(
+                child: FutureBuilder(
+                  future: _buildTagList(),
+                  builder: (context, snapshot) {
 
-                  if( snapshot.connectionState == ConnectionState.done ){
+                    if( snapshot.connectionState == ConnectionState.done ){
 
-                    return snapshot.data;
-                  }else{
-                    return Center(
-                      child: CircularProgressIndicator()
-                    );
+                      return snapshot.data;
+                    }else{
+                      return Center(
+                        child: CircularProgressIndicator()
+                      );
+                    }
                   }
-                }
+                )
               )
             )
-          )
-        ]
+          ]
+        )
       )
-    ));
+    );
   }
 
   //create database
   Future<void> _createDatabase(Database db, int version) async {
 
-    await db.execute('CREATE TABLE tags ('
+    await db.execute(
+        'CREATE TABLE tags ('
         'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-        'title TEXT,'
-        'description TEXT,'
-        'color INT,'
-        'weight INT'
+        'title TEXT NOT NULL,'
+        'description TEXT NOT NULL,'
+        'color INT NOT NULL,'
+        'weight INT NOT NULL,'
+        'created_at TEXT NOT NULL'
         ')');
 
-    await db.execute('CREATE TABLE tasks ('
+    await db.execute(
+        'CREATE TABLE tasks ('
         'id INTEGER PRIMARY KEY AUTOINCREMENT,'
         'title TEXT NOT NULL,'
         'description TEXT NOT NULL,'
         'weight INT NOT NULL,'
         'tag INT,'
+        'created_at TEXT NOT NULL,'
         'FOREIGN KEY (tag) REFERENCES tags(id)'
         ')');
   }
@@ -209,8 +214,8 @@ class TodoListState extends State<TodoList> {
       //slide bar
       drawer: _buildDrawer(),
       //top bar
-      appBar: new AppBar(
-          title: new Text('Your tasks')
+      appBar: AppBar(
+          title: Text('Your tasks')
       ),
       //content in the middle of the screen
       body: FutureBuilder(

@@ -29,6 +29,7 @@ class TaskList extends Controller {
       task.id = taskMap['id'];
       task.tag = taskMap['tag'] != null ? await tagList.get(taskMap['tag']) : null;
       task.weight = taskMap['weight'];
+      task.created_at = DateTime.parse(taskMap['created_at']);
 
       list.add(task);
     }
@@ -40,7 +41,16 @@ class TaskList extends Controller {
 
   Future<Task> get(int id) async {
 
-    List<Map> query = await (await db).query('tasks', columns: ['id', 'title', 'description', 'tag', 'weight'], where: 'id = ?', whereArgs: [id]);
+    List<Map> query = await (await db).query(
+        'tasks',
+        columns: [
+          'id',
+          'title',
+          'description',
+          'tag',
+          'weight',
+          'created_at'
+        ], where: 'id = ?', whereArgs: [id]);
 
     if(query.length == 0) return null;
 
@@ -53,6 +63,7 @@ class TaskList extends Controller {
     task.description = result['description'];
     task.tag = result['tag'] != null ? await tagList.get(result['tag']) : null;
     task.weight = result['weight'];
+    task.created_at = DateTime.parse(result['created_at']);
 
     return task;
   }
@@ -63,7 +74,8 @@ class TaskList extends Controller {
       'title': task.title,
       'description': task.description,
       'tag': task.tag!=null ? task.tag.id : null,
-      'weight': task.weight
+      'weight': task.weight,
+      'created_at': DateTime.now().toIso8601String()
     });
   }
 
@@ -79,7 +91,7 @@ class TaskList extends Controller {
       'title': list[index].title,
       'description': list[index].description,
       'tag': list[index].tag != null ? list[index].tag.id : null,
-      'weight': list[index].weight,
+      'weight': list[index].weight
     }, where: 'id = ?', whereArgs: [list[index].id]);
   }
 
