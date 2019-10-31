@@ -160,8 +160,9 @@ class TodoListState extends State<TodoList> {
 
     await db.execute('CREATE TABLE tasks ('
         'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-        'title TEXT,'
-        'description TEXT,'
+        'title TEXT NOT NULL,'
+        'description TEXT NOT NULL,'
+        'weight INT NOT NULL,'
         'tag INT,'
         'FOREIGN KEY (tag) REFERENCES tags(id)'
         ')');

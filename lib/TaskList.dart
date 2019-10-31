@@ -41,6 +41,7 @@ class TaskList {
       task.description = taskMap['description'];
       task.id = taskMap['id'];
       task.tag = taskMap['tag'] != null ? await tagList.get(taskMap['tag']) : null;
+      task.weight = taskMap['weight'];
 
       list.add(task);
     }
@@ -52,7 +53,7 @@ class TaskList {
 
   Future<Task> get(int id) async {
 
-    List<Map> query = await (await db).query('tasks', columns: ['id', 'title', 'description', 'tag'], where: 'id = ?', whereArgs: [id]);
+    List<Map> query = await (await db).query('tasks', columns: ['id', 'title', 'description', 'tag', 'weight'], where: 'id = ?', whereArgs: [id]);
 
     if(query.length == 0) return null;
 
@@ -64,6 +65,7 @@ class TaskList {
     task.title = result['title'];
     task.description = result['description'];
     task.tag = result['tag'] != null ? await tagList.get(result['tag']) : null;
+    task.weight = result['weight'];
 
     return task;
   }
@@ -73,7 +75,8 @@ class TaskList {
     await (await db).insert('tasks', {
       'title': task.title,
       'description': task.description,
-      'tag': task.tag!=null ? task.tag.id : null
+      'tag': task.tag!=null ? task.tag.id : null,
+      'weight': task.weight
     });
   }
 
@@ -88,7 +91,8 @@ class TaskList {
     await (await db).update('tasks', {
       'title': list[index].title,
       'description': list[index].description,
-      'tag': list[index].tag != null ? list[index].tag.id : null
+      'tag': list[index].tag != null ? list[index].tag.id : null,
+      'weight': list[index].weight,
     }, where: 'id = ?', whereArgs: [list[index].id]);
   }
 
@@ -97,7 +101,8 @@ class TaskList {
     await (await db).update('tasks', {
       'title': task.title,
       'description': task.description,
-      'tag': task.tag != null ? task.tag.id : null
+      'tag': task.tag != null ? task.tag.id : null,
+      'weight': task.weight
     }, where: 'id = ?', whereArgs: [task.id]);
   }
 }
