@@ -1,17 +1,17 @@
 import 'package:todo_yourself/Task/Task.dart';
 import 'package:sqflite/sqflite.dart';
-import '../Tag/TagList.dart';
+import '../Tag/TagManager.dart';
 import '../FormWidgets/Controller.dart';
 
 //manage database and list at the same time
-class TaskList extends Controller {
+class TaskManager extends Controller {
 
-  TagList tagList;
+  TagManager tagList;
   int length=-1;
 
   Future<Database> db;
 
-  TaskList(this.db, this.tagList);
+  TaskManager(this.db, this.tagList);
 
   Future<List<Task>> list() async {
 
@@ -79,7 +79,7 @@ class TaskList extends Controller {
       'tag': task.tag!=null ? task.tag.id : null,
       'weight': task.weight,
       'created_at': DateTime.now().toIso8601String(),
-      'checked': task.checked ? 1 : 0
+      'checked': task.checked
     });
   }
 
@@ -96,7 +96,7 @@ class TaskList extends Controller {
       'description': list[index].description,
       'tag': list[index].tag != null ? list[index].tag.id : null,
       'weight': list[index].weight,
-      'checked': list[index].checked ? 1 : 0
+      'checked': list[index].checked
     }, where: 'id = ?', whereArgs: [list[index].id]);
   }
 
@@ -107,7 +107,7 @@ class TaskList extends Controller {
       'description': task.description,
       'tag': task.tag != null ? task.tag.id : null,
       'weight': task.weight,
-      'checked': task.checked ? 1 : 0
+      'checked': task.checked
     }, where: 'id = ?', whereArgs: [task.id]);
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../Tag/Tag.dart';
 import 'package:todo_yourself/Task/Task.dart';
-import 'package:todo_yourself/Task/TaskList.dart';
+import 'package:todo_yourself/Task/TaskManager.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 import '../FormWidgets/WeightSlider.dart';
@@ -9,7 +9,7 @@ import '../FormWidgets/TextForm.dart';
 
 class TaskBuilder extends StatefulWidget {
 
-  final TaskList list;
+  final TaskManager list;
 
   TaskBuilder(this.list);
 
@@ -19,7 +19,7 @@ class TaskBuilder extends StatefulWidget {
 
 class TaskBuilderState extends State<TaskBuilder> {
 
-  TaskList list;
+  TaskManager list;
   Tag tmpTag;
 
   TaskBuilderState(this.list){

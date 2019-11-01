@@ -6,19 +6,19 @@ import 'package:todo_yourself/Task/Task.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
 import 'package:todo_yourself/Task/TaskBuilder.dart';
 import 'package:todo_yourself/Tag/TagBuilder.dart';
-import 'package:todo_yourself/Task/TaskList.dart';
-import 'package:todo_yourself/Tag/TagList.dart';
+import 'package:todo_yourself/Task/TaskManager.dart';
+import 'package:todo_yourself/Tag/TagManager.dart';
+import 'DBManager.dart';
 import 'globals.dart' as globals;
 
-TaskList tasks;
-TagList tags;
+DBManager db;
+
+TaskManager tasks;
+TagManager tags;
 
 //builders
 var taskBuilder;
 var tagBuilder;
-
-//database
-Future<Database> db;
 
 void main() => runApp(new TodoApp());
 
@@ -134,44 +134,6 @@ class TodoListState extends State<TodoList> {
     );
   }
 
-  //create database
-  Future<void> _createDatabase(Database db, int version) async {
-
-    await db.execute(
-        'CREATE TABLE tags ('
-        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-        'title TEXT NOT NULL,'
-        'description TEXT NOT NULL,'
-        'color INT NOT NULL,'
-        'weight INT NOT NULL,'
-        'created_at TEXT NOT NULL,'
-        'total_points INT NOT NULL'
-        ')'
-    );
-
-    await db.execute(
-        'CREATE TABLE tasks ('
-        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-        'title TEXT NOT NULL,'
-        'description TEXT NOT NULL,'
-        'weight INT NOT NULL,'
-        'tag INT,'
-        'created_at TEXT NOT NULL,'
-        'checked INT NOT NULL,'
-        'FOREIGN KEY (tag) REFERENCES tags(id)'
-        ')'
-    );
-
-    await db.execute(
-      'CREATE TABLE points ('
-      'tag INT NOT NULL,'
-      'created_at TEXT NOT NULL,'
-      'points INT NOT NULL,'
-      'FOREIGN KEY (tag) REFERENCES tags(id)'
-      ')'
-    );
-  }
-
   @override
   @mustCallSuper
   void initState() {
@@ -179,17 +141,13 @@ class TodoListState extends State<TodoList> {
     //TODO: for debugging only, comment it later
     Sqflite.devSetDebugModeOn(true);
 
-    db = openDatabase('database.db',
-          //in case the database was nonexistent, create it right now
-          version: 1,
-          onCreate: (Database db, version) => _createDatabase(db, version),
-        );
-
     taskBuilder = new TaskBuilder(tasks);
     tagBuilder = new TagBuilder(tags);
 
-    tags = TagList(db);
-    tasks = TaskList(db, tags);
+    db = DBManager();
+
+    tags = TagManager(db.db);
+    tasks = TaskManager(db.db, tags);
 
     super.initState();
   }
@@ -198,7 +156,7 @@ class TodoListState extends State<TodoList> {
   @mustCallSuper
   void dispose() async {
 
-    await (await db).close();
+    await db.dispose();
 
     tags.dispose();
     tasks.dispose();

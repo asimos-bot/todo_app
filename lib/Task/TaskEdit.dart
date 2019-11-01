@@ -41,7 +41,7 @@ class TaskEditState extends State<TaskEdit> {
                     task.weight = int.parse(task.weightController.text);
                     task.tag = tmpTag;
 
-                    task.list.update(task);
+                    task.manager.update(task);
 
                     Navigator.pop(context);
                   }
@@ -54,12 +54,12 @@ class TaskEditState extends State<TaskEdit> {
                     TextForm(task),
                     Divider(),
                     FutureBuilder(
-                      future: task.list.tagList.list(),
+                      future: task.manager.tagList.list(),
                       builder: (context, snapshot) {
 
                         if (snapshot.connectionState == ConnectionState.done) {
 
-                          if (task.list.tagList.length > 0) {
+                          if (task.manager.tagList.length > 0) {
 
                             //appear when there are tags to select
                             return SelectionMenu<Tag>(

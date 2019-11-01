@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../Tag/Tag.dart';
-import 'package:todo_yourself/Task/TaskList.dart';
+import 'package:todo_yourself/Task/TaskManager.dart';
 import 'package:todo_yourself/Task/TaskView.dart';
 import '../FormWidgets/Controller.dart';
 import '../globals.dart' as globals;
@@ -14,12 +14,13 @@ class Task extends Controller {
   bool checked=false;
 
   //global list with all the ListEntries
-  TaskList list;
+  TaskManager manager;
 
   //prompt for crating a entry
-  Task(this.list);
+  Task(this.manager);
 
   //return this entry in widget form
+  //we pass the id to be sure we get the task from database, guaranteed to be updated
   Widget toWidget() => TaskWidget(this);
 }
 
@@ -74,7 +75,7 @@ class TaskWidgetState extends State<TaskWidget> {
 
                 if( task.tag != null ){
 
-                  await task.tag.list.changeTotalPoints(
+                  await task.tag.manager.changeTotalPoints(
                       task.tag,
                       task.checked ? -task.weight : task.weight
                   );
@@ -83,7 +84,7 @@ class TaskWidgetState extends State<TaskWidget> {
                 setState(() => task.checked = value);
 
                 //update checked field in database
-                await task.list.updateChecked(task);
+                await task.manager.updateChecked(task);
               },
             )
         )

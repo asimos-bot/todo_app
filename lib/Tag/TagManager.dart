@@ -4,12 +4,12 @@ import 'package:sqflite/sqflite.dart';
 import '../FormWidgets/Controller.dart';
 
 //manage database and list at the same time
-class TagList extends Controller {
+class TagManager extends Controller {
 
   Future<Database> db;
   int length=-1;
 
-  TagList (this.db);
+  TagManager(this.db);
 
   Future<List<Tag>> list() async {
 

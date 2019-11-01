@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_yourself/Tag/TagList.dart';
+import 'package:todo_yourself/Tag/TagManager.dart';
 import 'package:todo_yourself/Tag/TagView.dart';
 import '../FormWidgets/Controller.dart';
 
@@ -11,9 +11,9 @@ class Tag extends Controller {
   int total_points=0;
 
   //global list with all the tags
-  TagList list;
+  TagManager manager;
 
-  Tag(this.list);
+  Tag(this.manager);
 
   Widget toCircleAvatar(){
     return CircleAvatar(
@@ -54,7 +54,7 @@ class Tag extends Controller {
         subtitle: Text(description, overflow: TextOverflow.fade),
         onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-                builder: (context) => TagView(this)
+                builder: (context) => TagView(id, manager)
             )
         )
       )

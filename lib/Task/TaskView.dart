@@ -73,7 +73,7 @@ class TaskViewState extends State<TaskView> {
                                                             child: Text('Yes'),
                                                             onPressed: () async {
 
-                                                              await task.list.delete(task);
+                                                              await task.manager.delete(task);
 
                                                               setState(() {});
 

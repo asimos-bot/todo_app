@@ -42,7 +42,7 @@ class TagEditState extends State<TagEdit> {
                     tag.description = tag.descriptionController.text;
                     tag.weight = int.parse(tag.weightController.text);
 
-                    tag.list.update(tag);
+                    tag.manager.update(tag);
 
                     Navigator.pop(context);
                   }
