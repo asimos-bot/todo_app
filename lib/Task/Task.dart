@@ -44,6 +44,7 @@ class TaskWidgetState extends State<TaskWidget> {
 
     return Card(
         child: ListTile(
+            leading: task.tag != null ? task.tag.toCircleAvatar() : null,
             title: Text(
                 task.title,
                 overflow: TextOverflow.fade,
@@ -69,8 +70,20 @@ class TaskWidgetState extends State<TaskWidget> {
               value: task.checked,
               checkColor: task.tag != null ? task.tag.color : globals.foregroundColor,
               activeColor: Colors.white,
-              onChanged: (bool value){
+              onChanged: (bool value) async {
+
+                if( task.tag != null ){
+
+                  await task.tag.list.changeTotalPoints(
+                      task.tag,
+                      task.checked ? -task.weight : task.weight
+                  );
+                }
+
                 setState(() => task.checked = value);
+
+                //update checked field in database
+                await task.list.updateChecked(task);
               },
             )
         )

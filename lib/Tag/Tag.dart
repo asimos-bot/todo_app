@@ -8,19 +8,24 @@ class Tag extends Controller {
   int id = -1;
 
   Color color;
+  int total_points=0;
 
   //global list with all the tags
   TagList list;
 
   Tag(this.list);
 
+  Widget toCircleAvatar(){
+    return CircleAvatar(
+        backgroundColor: color,
+        child: title.length >= 2 ? Text("${title[0]}${title[1]}") : null
+    );
+  }
+
   Widget toMenuButtonWidget(context, data){
     return Card(
         child: ListTile(
-          leading: CircleAvatar(
-              backgroundColor: color,
-              child: title.length >= 2 ? Text("${title[0]}${title[1]}") : null
-          ),
+          leading: toCircleAvatar(),
           onTap: data.triggerMenu,
           title: Text(title),
           subtitle: Text(description, overflow: TextOverflow.fade)
@@ -32,10 +37,7 @@ class Tag extends Controller {
 
     return Card(
         child: ListTile(
-          leading: CircleAvatar(
-              backgroundColor: color,
-              child: title.length >= 2 ? Text("${title[0]}${title[1]}") : null
-          ),
+          leading: toCircleAvatar(),
           onTap: onItemTapped,
           title: Text(title),
           subtitle: Text(description, overflow: TextOverflow.fade)
@@ -47,10 +49,7 @@ class Tag extends Controller {
 
     return Card(
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color,
-          child: title.length >= 2 ? Text("${title[0]}${title[1]}") : null
-        ),
+        leading: toCircleAvatar(),
         title: Text(title),
         subtitle: Text(description, overflow: TextOverflow.fade),
         onTap: () => Navigator.of(context).push(

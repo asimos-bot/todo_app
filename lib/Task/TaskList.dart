@@ -110,4 +110,11 @@ class TaskList extends Controller {
       'checked': task.checked ? 1 : 0
     }, where: 'id = ?', whereArgs: [task.id]);
   }
+
+  Future<void> updateChecked(Task task) async {
+
+    await (await db).update('tasks',{
+      'checked': task.checked
+    }, where: 'id = ?', whereArgs: [task.id]);
+  }
 }

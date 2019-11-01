@@ -46,28 +46,6 @@ class TodoList extends StatefulWidget {
 //describe states of todoList
 class TodoListState extends State<TodoList> {
 
-  void _addTask(){
-
-    tasks.clearTextControllers();
-
-    Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) => TaskBuilder(tasks)
-        )
-    );
-  }
-
-  void _addTag(){
-
-    tags.clearTextControllers();
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => TagBuilder(tags)
-      )
-    );
-  }
-
   //build whole list of tasks
   Future<Widget> _buildTaskList() async {
 
@@ -122,7 +100,15 @@ class TodoListState extends State<TodoList> {
             ListTile(
               leading: Icon(Icons.add,color: Colors.white),
               title: Text("Add Tag",style: TextStyle(color: Colors.white)),
-              onTap: () => _addTag(),
+              onTap: () {
+                tags.clearTextControllers();
+
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => TagBuilder(tags)
+                    )
+                );
+              },
             ),
             Container(
               child: Expanded(
@@ -158,7 +144,8 @@ class TodoListState extends State<TodoList> {
         'description TEXT NOT NULL,'
         'color INT NOT NULL,'
         'weight INT NOT NULL,'
-        'created_at TEXT NOT NULL'
+        'created_at TEXT NOT NULL,'
+        'total_points INT NOT NULL'
         ')'
     );
 
@@ -178,7 +165,7 @@ class TodoListState extends State<TodoList> {
     await db.execute(
       'CREATE TABLE points ('
       'tag INT NOT NULL,'
-      'datetime TEXT NOT NULL,'
+      'created_at TEXT NOT NULL,'
       'points INT NOT NULL,'
       'FOREIGN KEY (tag) REFERENCES tags(id)'
       ')'
@@ -262,7 +249,15 @@ class TodoListState extends State<TodoList> {
           children: <Widget>[
             Expanded(
               child: IconButton(icon: Icon(Icons.add),
-                  onPressed: _addTask,
+                  onPressed: () {
+                    tasks.clearTextControllers();
+
+                    Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => TaskBuilder(tasks)
+                        )
+                    );
+                  },
                   color: Colors.white
               )
             )
