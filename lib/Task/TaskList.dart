@@ -30,6 +30,7 @@ class TaskList extends Controller {
       task.tag = taskMap['tag'] != null ? await tagList.get(taskMap['tag']) : null;
       task.weight = taskMap['weight'];
       task.created_at = DateTime.parse(taskMap['created_at']);
+      task.checked = taskMap['checked'] == 1 ? true : false;
 
       list.add(task);
     }
@@ -49,7 +50,8 @@ class TaskList extends Controller {
           'description',
           'tag',
           'weight',
-          'created_at'
+          'created_at',
+          'checked'
         ], where: 'id = ?', whereArgs: [id]);
 
     if(query.length == 0) return null;
@@ -64,6 +66,7 @@ class TaskList extends Controller {
     task.tag = result['tag'] != null ? await tagList.get(result['tag']) : null;
     task.weight = result['weight'];
     task.created_at = DateTime.parse(result['created_at']);
+    task.checked = result['checked'] == 1 ? true : false;
 
     return task;
   }
@@ -75,7 +78,8 @@ class TaskList extends Controller {
       'description': task.description,
       'tag': task.tag!=null ? task.tag.id : null,
       'weight': task.weight,
-      'created_at': DateTime.now().toIso8601String()
+      'created_at': DateTime.now().toIso8601String(),
+      'checked': task.checked ? 1 : 0
     });
   }
 
@@ -91,7 +95,8 @@ class TaskList extends Controller {
       'title': list[index].title,
       'description': list[index].description,
       'tag': list[index].tag != null ? list[index].tag.id : null,
-      'weight': list[index].weight
+      'weight': list[index].weight,
+      'checked': list[index].checked ? 1 : 0
     }, where: 'id = ?', whereArgs: [list[index].id]);
   }
 
@@ -101,7 +106,8 @@ class TaskList extends Controller {
       'title': task.title,
       'description': task.description,
       'tag': task.tag != null ? task.tag.id : null,
-      'weight': task.weight
+      'weight': task.weight,
+      'checked': task.checked ? 1 : 0
     }, where: 'id = ?', whereArgs: [task.id]);
   }
 }

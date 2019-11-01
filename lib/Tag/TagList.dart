@@ -9,7 +9,7 @@ class TagList extends Controller {
   Future<Database> db;
   int length=-1;
 
-  TagList(this.db);
+  TagList (this.db);
 
   Future<List<Tag>> list() async {
 
@@ -101,5 +101,13 @@ class TagList extends Controller {
   Future<void> updateAt(int index, List<Tag> list) async{
 
     await update(list[index]);
+  }
+
+  Future<int> totalPoints(Tag tag) async {
+
+    return Sqflite.firstIntValue(await (await db).rawQuery(
+        'SELECT SUM(points) FROM points WHERE tag = ?',
+        [tag.id]
+    ));
   }
 }

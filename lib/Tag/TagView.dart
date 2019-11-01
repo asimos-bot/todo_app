@@ -101,7 +101,20 @@ class TagViewState extends State<TagView> {
                   ),
                   tag.toSearchWidget(context, null),
                   Text('weight: ${tag.weight.toString()}', style: TextStyle(color: Colors.white)),
-                  Text(tag.created_at.toIso8601String())
+                  Text(tag.created_at.toIso8601String()),
+                  FutureBuilder(
+                    future: tag.list.totalPoints(tag),
+                    builder: (context, snapshot) {
+
+                      if(snapshot.connectionState == ConnectionState.done){
+
+                        return Text(snapshot.data.toString());
+                      }else{
+
+                        return CircularProgressIndicator();
+                      }
+                    }
+                  )
                 ]
             )
         )

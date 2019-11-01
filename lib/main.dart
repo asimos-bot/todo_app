@@ -170,6 +170,7 @@ class TodoListState extends State<TodoList> {
         'weight INT NOT NULL,'
         'tag INT,'
         'created_at TEXT NOT NULL,'
+        'checked INT NOT NULL,'
         'FOREIGN KEY (tag) REFERENCES tags(id)'
         ')'
     );
@@ -233,6 +234,11 @@ class TodoListState extends State<TodoList> {
         future: _buildTaskList(),
         builder: (context, snapshot) {
           if( snapshot.connectionState == ConnectionState.done ){
+
+              if( snapshot.hasError ) {
+                print(snapshot.error);
+                return Text("Error: check debug output");
+              }
 
               return snapshot.data;
 
