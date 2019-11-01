@@ -159,7 +159,8 @@ class TodoListState extends State<TodoList> {
         'color INT NOT NULL,'
         'weight INT NOT NULL,'
         'created_at TEXT NOT NULL'
-        ')');
+        ')'
+    );
 
     await db.execute(
         'CREATE TABLE tasks ('
@@ -170,7 +171,17 @@ class TodoListState extends State<TodoList> {
         'tag INT,'
         'created_at TEXT NOT NULL,'
         'FOREIGN KEY (tag) REFERENCES tags(id)'
-        ')');
+        ')'
+    );
+
+    await db.execute(
+      'CREATE TABLE points ('
+      'tag INT NOT NULL,'
+      'datetime TEXT NOT NULL,'
+      'points INT NOT NULL,'
+      'FOREIGN KEY (tag) REFERENCES tags(id)'
+      ')'
+    );
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:todo_yourself/Tag/Tag.dart';
 import 'package:todo_yourself/Tag/TagList.dart';
 import '../FormWidgets/WeightSlider.dart';
 import '../FormWidgets/TextForm.dart';
+import '../globals.dart' as globals;
 
 class TagBuilder extends StatefulWidget {
 
@@ -20,7 +21,7 @@ class TagBuilderState extends State<TagBuilder> {
   TagList list;
 
   Color pickerColor = Color(0xff443a49);
-  Color choosenColor = Color(0xffffffff);
+  Color choosenColor = globals.backgroundColor;
 
   double currentSliderValue=1;
 
