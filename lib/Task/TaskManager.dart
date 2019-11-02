@@ -1,17 +1,17 @@
 import 'package:todo_yourself/Task/Task.dart';
 import 'package:sqflite/sqflite.dart';
-import '../Tag/TagList.dart';
+import '../Tag/TagManager.dart';
 import '../FormWidgets/Controller.dart';
 
 //manage database and list at the same time
-class TaskList extends Controller {
+class TaskManager extends Controller {
 
-  TagList tagList;
+  TagManager tagList;
   int length=-1;
 
   Future<Database> db;
 
-  TaskList(this.db, this.tagList);
+  TaskManager(this.db, this.tagList);
 
   Future<List<Task>> list() async {
 
@@ -29,6 +29,8 @@ class TaskList extends Controller {
       task.id = taskMap['id'];
       task.tag = taskMap['tag'] != null ? await tagList.get(taskMap['tag']) : null;
       task.weight = taskMap['weight'];
+      task.created_at = DateTime.parse(taskMap['created_at']);
+      task.checked = taskMap['checked'] == 1 ? true : false;
 
       list.add(task);
     }
@@ -40,7 +42,17 @@ class TaskList extends Controller {
 
   Future<Task> get(int id) async {
 
-    List<Map> query = await (await db).query('tasks', columns: ['id', 'title', 'description', 'tag', 'weight'], where: 'id = ?', whereArgs: [id]);
+    List<Map> query = await (await db).query(
+        'tasks',
+        columns: [
+          'id',
+          'title',
+          'description',
+          'tag',
+          'weight',
+          'created_at',
+          'checked'
+        ], where: 'id = ?', whereArgs: [id]);
 
     if(query.length == 0) return null;
 
@@ -53,6 +65,8 @@ class TaskList extends Controller {
     task.description = result['description'];
     task.tag = result['tag'] != null ? await tagList.get(result['tag']) : null;
     task.weight = result['weight'];
+    task.created_at = DateTime.parse(result['created_at']);
+    task.checked = result['checked'] == 1 ? true : false;
 
     return task;
   }
@@ -63,7 +77,9 @@ class TaskList extends Controller {
       'title': task.title,
       'description': task.description,
       'tag': task.tag!=null ? task.tag.id : null,
-      'weight': task.weight
+      'weight': task.weight,
+      'created_at': DateTime.now().toIso8601String(),
+      'checked': task.checked
     });
   }
 
@@ -80,6 +96,7 @@ class TaskList extends Controller {
       'description': list[index].description,
       'tag': list[index].tag != null ? list[index].tag.id : null,
       'weight': list[index].weight,
+      'checked': list[index].checked
     }, where: 'id = ?', whereArgs: [list[index].id]);
   }
 
@@ -89,7 +106,15 @@ class TaskList extends Controller {
       'title': task.title,
       'description': task.description,
       'tag': task.tag != null ? task.tag.id : null,
-      'weight': task.weight
+      'weight': task.weight,
+      'checked': task.checked
+    }, where: 'id = ?', whereArgs: [task.id]);
+  }
+
+  Future<void> updateChecked(Task task) async {
+
+    await (await db).update('tasks',{
+      'checked': task.checked
     }, where: 'id = ?', whereArgs: [task.id]);
   }
 }

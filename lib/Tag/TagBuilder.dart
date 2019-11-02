@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
-import 'package:todo_yourself/Tag/TagList.dart';
+import 'package:todo_yourself/Tag/TagManager.dart';
 import '../FormWidgets/WeightSlider.dart';
 import '../FormWidgets/TextForm.dart';
+import '../globals.dart' as globals;
 
 class TagBuilder extends StatefulWidget {
 
-  final TagList list;
+  final TagManager list;
 
   TagBuilder(this.list);
 
@@ -17,10 +18,10 @@ class TagBuilder extends StatefulWidget {
 
 class TagBuilderState extends State<TagBuilder> {
 
-  TagList list;
+  TagManager list;
 
   Color pickerColor = Color(0xff443a49);
-  Color choosenColor = Color(0xffffffff);
+  Color choosenColor = globals.backgroundColor;
 
   double currentSliderValue=1;
 

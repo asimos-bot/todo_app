@@ -19,25 +19,37 @@ class TaskEdit extends StatefulWidget {
 class TaskEditState extends State<TaskEdit> {
 
   Task task;
+  Tag tmpTag;
 
-  TaskEditState(this.task);
+  TaskEditState(this.task){
+    tmpTag = task.tag;
+  }
 
   @override
   Widget build(BuildContext context){
 
     return Scaffold(
         appBar: AppBar(
-            title: Text(task.title, overflow: TextOverflow.ellipsis),
+            title: Text(task.title, overflow: TextOverflow.fade),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.done),
-                  onPressed: (){
+                  onPressed: () async {
 
                     task.title = task.titleController.text;
                     task.description = task.descriptionController.text;
                     task.weight = int.parse(task.weightController.text);
+                    task.tag = tmpTag;
 
-                    task.list.update(task);
+                    if( task.tag != null && task.checked){
+
+                      await task.tag.manager.changeTotalPoints(
+                          task.tag,
+                          task.weight
+                      );
+                    }
+
+                    task.manager.update(task);
 
                     Navigator.pop(context);
                   }
@@ -50,12 +62,12 @@ class TaskEditState extends State<TaskEdit> {
                     TextForm(task),
                     Divider(),
                     FutureBuilder(
-                      future: task.list.tagList.list(),
+                      future: task.manager.tagList.list(),
                       builder: (context, snapshot) {
 
                         if (snapshot.connectionState == ConnectionState.done) {
 
-                          if (task.list.tagList.length > 0) {
+                          if (task.manager.tagList.length > 0) {
 
                             //appear when there are tags to select
                             return SelectionMenu<Tag>(
@@ -69,18 +81,18 @@ class TaskEditState extends State<TaskEdit> {
                               },
                               searchLatency: Duration(milliseconds: 500),
                               onItemSelected: (Tag tag) {
-                                task.tag = tag;
+                                tmpTag = tag;
                               },
-                              itemBuilder: (BuildContext context, Tag tag,
-                                  OnItemTapped onItemTapped) =>
-                                  tag.toSearchWidget(context, onItemTapped),
-                              componentsConfiguration: DialogComponentsConfiguration<
-                                  Tag>(
+                              itemBuilder:
+                                  (BuildContext context, Tag tag, OnItemTapped onItemTapped) => tag.toSearchWidget(context, onItemTapped),
+
+                              componentsConfiguration: DialogComponentsConfiguration<Tag>(
                                   triggerComponent: TriggerComponent(
                                       builder: (TriggerComponentData data) {
                                         //widget of the button that calls the menu
 
-                                        if( task.tag == null ) {
+                                        if( tmpTag == null ) {
+
                                           //when no tag is selected for this task
                                           return Center(
                                               child: RaisedButton(
@@ -88,9 +100,10 @@ class TaskEditState extends State<TaskEdit> {
                                                   child: Text("Choose Tag")
                                               )
                                           );
+
                                         }else{
 
-                                          return task.tag.toMenuButtonWidget(context, data);
+                                          return tmpTag.toMenuButtonWidget(context, data);
                                         }
                                       }
                                   )

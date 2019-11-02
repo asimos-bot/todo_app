@@ -12,7 +12,7 @@ class TextForm extends StatelessWidget {
 
     return Column(
       children: <Widget> [
-        TextFormField(
+        TextField(
 
           autofocus: true,
           decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
@@ -20,7 +20,7 @@ class TextForm extends StatelessWidget {
           controller: controller.titleController,
         ),
         Divider(),
-        TextFormField(
+        TextField(
             decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
             style: TextStyle(color: Colors.black),
             controller: controller.descriptionController

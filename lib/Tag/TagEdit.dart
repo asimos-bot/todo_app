@@ -32,7 +32,7 @@ class TagEditState extends State<TagEdit> {
 
     return Scaffold(
         appBar: AppBar(
-            title: Text(tag.title, overflow: TextOverflow.ellipsis),
+            title: Text(tag.title, overflow: TextOverflow.fade),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.done),
@@ -42,7 +42,7 @@ class TagEditState extends State<TagEdit> {
                     tag.description = tag.descriptionController.text;
                     tag.weight = int.parse(tag.weightController.text);
 
-                    tag.list.update(tag);
+                    tag.manager.update(tag);
 
                     Navigator.pop(context);
                   }
@@ -50,7 +50,7 @@ class TagEditState extends State<TagEdit> {
             ]
         ),
         body: Form(
-            child: Column(
+            child: ListView(
                 children: <Widget>[
                   TextForm(tag),
                   Divider(),

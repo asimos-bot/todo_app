@@ -6,25 +6,24 @@ import 'package:todo_yourself/Task/Task.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
 import 'package:todo_yourself/Task/TaskBuilder.dart';
 import 'package:todo_yourself/Tag/TagBuilder.dart';
-import 'package:todo_yourself/Task/TaskList.dart';
-import 'package:todo_yourself/Tag/TagList.dart';
+import 'package:todo_yourself/Task/TaskManager.dart';
+import 'package:todo_yourself/Tag/TagManager.dart';
+import 'DBManager.dart';
 import 'globals.dart' as globals;
 
-TaskList tasks;
-TagList tags;
+DBManager db;
+
+TaskManager tasks;
+TagManager tags;
 
 //builders
 var taskBuilder;
 var tagBuilder;
 
-//database
-Future<Database> db=null;
-
 void main() => runApp(new TodoApp());
 
 //Main widget
 class TodoApp extends StatelessWidget {
-
 
   @override
   Widget build(BuildContext context){
@@ -32,10 +31,7 @@ class TodoApp extends StatelessWidget {
     return new MaterialApp(
       title: 'ToDo Yourself', //title which appear when we minimize the app
       home: new TodoList(), //actual app stuff
-      theme: ThemeData(primaryColor: globals.foregroundColor, scaffoldBackgroundColor: globals.backgroundColor),
-      routes: <String, WidgetBuilder> {
-
-      }
+      theme: ThemeData(primaryColor: globals.foregroundColor, scaffoldBackgroundColor: globals.backgroundColor)
     );
   }
 }
@@ -50,28 +46,6 @@ class TodoList extends StatefulWidget {
 //describe states of todoList
 class TodoListState extends State<TodoList> {
 
-  void _addTask(){
-
-    tasks.clearTextControllers();
-
-    Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) => TaskBuilder(tasks)
-        )
-    );
-  }
-
-  void _addTag(){
-
-    tags.clearTextControllers();
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => TagBuilder(tags)
-      )
-    );
-  }
-
   //build whole list of tasks
   Future<Widget> _buildTaskList() async {
 
@@ -79,14 +53,14 @@ class TodoListState extends State<TodoList> {
 
     return list.length > 1 ? DragAndDropList<Task>(
       list,
-      itemBuilder: (BuildContext context, item) => item.toWidget(context),
+      itemBuilder: (BuildContext context, item) => item.toWidget(),
       onDragFinish: (before, after) {
         list.insert(after, list.removeAt(before));
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
       tilt: 0.01,
-    ) : ListView.builder(itemCount: list.length, itemBuilder: (context, index) => list[index].toWidget(context));
+    ) : ListView.builder(itemCount: list.length, itemBuilder: (context, index) => list[index].toWidget());
   }
 
   Future<Widget> _buildTagList() async {
@@ -111,61 +85,53 @@ class TodoListState extends State<TodoList> {
   }
 
   Widget _buildDrawer() {
-    return new Drawer(
-      child: Container(decoration: BoxDecoration(color: globals.foregroundColor),child: new Column(  //Column
+    return Drawer(
+      child: Container(
+        decoration: BoxDecoration(color: globals.foregroundColor),
+        child: Column(  //Column
         //padding: EdgeInsets.zero,
-        children: <Widget> [
-          DrawerHeader(
-            decoration: BoxDecoration(color: globals.foregroundColor),
-            child: Text('Categories Menu',style: TextStyle(color: Colors.white),)
-          ),
-          ListTile(
-            leading: Icon(Icons.add,color: Colors.white),
-            title: Text("Add category",style: TextStyle(color: Colors.white),),
-            onTap: () => _addTag(),
-          ),
-          Container(
-            child: Expanded(
-              child: FutureBuilder(
-                future: _buildTagList(),
-                builder: (context, snapshot) {
+          children: <Widget> [
+            DrawerHeader(
+              decoration: BoxDecoration(color: globals.foregroundColor),
+              child: Center(
+                child: Text('Tags Menu',style: TextStyle(color: Colors.white, fontSize: 20, fontStyle: FontStyle.italic))
+              )
+            ),
+            ListTile(
+              leading: Icon(Icons.add,color: Colors.white),
+              title: Text("Add Tag",style: TextStyle(color: Colors.white)),
+              onTap: () {
+                tags.clearTextControllers();
 
-                  if( snapshot.connectionState == ConnectionState.done ){
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => TagBuilder(tags)
+                    )
+                );
+              },
+            ),
+            Container(
+              child: Expanded(
+                child: FutureBuilder(
+                  future: _buildTagList(),
+                  builder: (context, snapshot) {
 
-                    return snapshot.data;
-                  }else{
-                    return Center(
-                      child: CircularProgressIndicator()
-                    );
+                    if( snapshot.connectionState == ConnectionState.done ){
+
+                      return snapshot.data;
+                    }else{
+                      return Center(
+                        child: CircularProgressIndicator()
+                      );
+                    }
                   }
-                }
+                )
               )
             )
-          )
-        ]
+          ]
+        )
       )
-    ));
-  }
-
-  //create database
-  Future<void> _createDatabase(Database db, int version) async {
-
-    await db.execute('CREATE TABLE tags ('
-        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-        'title TEXT,'
-        'description TEXT,'
-        'color INT,'
-        'weight INT'
-        ')');
-
-    await db.execute('CREATE TABLE tasks ('
-        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-        'title TEXT NOT NULL,'
-        'description TEXT NOT NULL,'
-        'weight INT NOT NULL,'
-        'tag INT,'
-        'FOREIGN KEY (tag) REFERENCES tags(id)'
-        ')');
+    );
   }
 
   @override
@@ -175,17 +141,13 @@ class TodoListState extends State<TodoList> {
     //TODO: for debugging only, comment it later
     Sqflite.devSetDebugModeOn(true);
 
-    db = openDatabase('database.db',
-          //in case the database was nonexistent, create it right now
-          version: 1,
-          onCreate: (Database db, version) => _createDatabase(db, version),
-        );
-
     taskBuilder = new TaskBuilder(tasks);
     tagBuilder = new TagBuilder(tags);
 
-    tags = TagList(db);
-    tasks = TaskList(db, tags);
+    db = DBManager();
+
+    tags = TagManager(db.db);
+    tasks = TaskManager(db.db, tags);
 
     super.initState();
   }
@@ -194,7 +156,7 @@ class TodoListState extends State<TodoList> {
   @mustCallSuper
   void dispose() async {
 
-    await (await db).close();
+    await db.dispose();
 
     tags.dispose();
     tasks.dispose();
@@ -209,14 +171,19 @@ class TodoListState extends State<TodoList> {
       //slide bar
       drawer: _buildDrawer(),
       //top bar
-      appBar: new AppBar(
-          title: new Text('Your tasks')
+      appBar: AppBar(
+          title: Text('Your tasks')
       ),
       //content in the middle of the screen
       body: FutureBuilder(
         future: _buildTaskList(),
         builder: (context, snapshot) {
           if( snapshot.connectionState == ConnectionState.done ){
+
+              if( snapshot.hasError ) {
+                print(snapshot.error);
+                return Text("Error: check debug output");
+              }
 
               return snapshot.data;
 
@@ -240,7 +207,15 @@ class TodoListState extends State<TodoList> {
           children: <Widget>[
             Expanded(
               child: IconButton(icon: Icon(Icons.add),
-                  onPressed: _addTask,
+                  onPressed: () {
+                    tasks.clearTextControllers();
+
+                    Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => TaskBuilder(tasks)
+                        )
+                    );
+                  },
                   color: Colors.white
               )
             )

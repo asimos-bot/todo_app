@@ -24,7 +24,7 @@ class TaskViewState extends State<TaskView> {
 
     return Scaffold(
             appBar: AppBar(
-                title: Text(task.title, overflow: TextOverflow.ellipsis),
+                title: Text(task.title, overflow: TextOverflow.fade),
                 actions: <Widget>[
                   IconButton(
                       icon: Icon(Icons.edit),
@@ -73,7 +73,7 @@ class TaskViewState extends State<TaskView> {
                                                             child: Text('Yes'),
                                                             onPressed: () async {
 
-                                                              await task.list.delete(task);
+                                                              await task.manager.delete(task);
 
                                                               setState(() {});
 
@@ -100,7 +100,8 @@ class TaskViewState extends State<TaskView> {
                       ),
                       task.tag != null ? task.tag.toSearchWidget(context, null) :
                       Text("No Tag associated", style: TextStyle(color: Colors.white)),
-                      Text('weight: ${task.weight.toString()}', style: TextStyle(color: Colors.white))
+                      Text('weight: ${task.weight.toString()}', style: TextStyle(color: Colors.white)),
+                      Text(task.created_at.toIso8601String())
                     ]
                 )
             )

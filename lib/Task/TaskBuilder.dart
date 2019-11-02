@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../Tag/Tag.dart';
 import 'package:todo_yourself/Task/Task.dart';
-import 'package:todo_yourself/Task/TaskList.dart';
+import 'package:todo_yourself/Task/TaskManager.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 import '../FormWidgets/WeightSlider.dart';
@@ -9,7 +9,7 @@ import '../FormWidgets/TextForm.dart';
 
 class TaskBuilder extends StatefulWidget {
 
-  final TaskList list;
+  final TaskManager list;
 
   TaskBuilder(this.list);
 
@@ -19,10 +19,12 @@ class TaskBuilder extends StatefulWidget {
 
 class TaskBuilderState extends State<TaskBuilder> {
 
-  TaskList list;
-  Tag tag;
+  TaskManager list;
+  Tag tmpTag;
 
-  TaskBuilderState(this.list);
+  TaskBuilderState(this.list){
+    tmpTag = null;
+  }
 
   @override
   Widget build(BuildContext context){
@@ -39,6 +41,8 @@ class TaskBuilderState extends State<TaskBuilder> {
 
                             task.title = list.titleController.text;
                             task.description = list.descriptionController.text;
+                            task.weight = int.parse(list.weightController.text);
+                            task.tag = tmpTag;
 
                             list.add(task);
 
@@ -71,7 +75,7 @@ class TaskBuilderState extends State<TaskBuilder> {
                                       },
                                       searchLatency: Duration(milliseconds: 500),
                                       onItemSelected: (Tag tag) {
-                                        this.tag = tag;
+                                        tmpTag = tag;
                                       },
                                       itemBuilder: (BuildContext context, Tag tag,
                                           OnItemTapped onItemTapped) =>
@@ -79,13 +83,18 @@ class TaskBuilderState extends State<TaskBuilder> {
                                       componentsConfiguration: DialogComponentsConfiguration<Tag>(
                                           triggerComponent: TriggerComponent(
                                               builder: (TriggerComponentData data) {
-                                                //widget of the button that calls the menu
-                                                return Center(
-                                                    child: RaisedButton(
-                                                        onPressed: data.triggerMenu,
-                                                        child: Text("Choose Tag")
-                                                    )
-                                                );
+
+                                                if( tmpTag == null ){
+                                                  //widget of the button that calls the menu
+                                                  return Center(
+                                                      child: RaisedButton(
+                                                          onPressed: data.triggerMenu,
+                                                          child: Text("Choose Tag")
+                                                      )
+                                                  );
+                                                }else{
+                                                  return tmpTag.toMenuButtonWidget(context, data);
+                                                }
                                               }
                                           )
                                       ),
