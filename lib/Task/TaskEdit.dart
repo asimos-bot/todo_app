@@ -34,12 +34,20 @@ class TaskEditState extends State<TaskEdit> {
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.done),
-                  onPressed: (){
+                  onPressed: () async {
 
                     task.title = task.titleController.text;
                     task.description = task.descriptionController.text;
                     task.weight = int.parse(task.weightController.text);
                     task.tag = tmpTag;
+
+                    if( task.tag != null && task.checked){
+
+                      await task.tag.manager.changeTotalPoints(
+                          task.tag,
+                          task.weight
+                      );
+                    }
 
                     task.manager.update(task);
 
