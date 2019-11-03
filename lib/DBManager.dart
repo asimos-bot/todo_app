@@ -41,6 +41,7 @@ class DBManager {
             'tag INT,'
             'created_at TEXT NOT NULL,'
             'checked INT NOT NULL,'
+            'mode INT NOT NULL,'
             'FOREIGN KEY (tag) REFERENCES tags(id)'
             ')'
     );
