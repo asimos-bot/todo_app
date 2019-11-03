@@ -35,6 +35,41 @@ class TagEditState extends State<TagEdit> {
             title: Text(tag.title, overflow: TextOverflow.fade),
             actions: <Widget>[
               IconButton(
+
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                              title: Text('Are you sure you want to delete this tag?'),
+                              actions: <Widget>[
+                                FlatButton(
+                                    child: Text('Yes'),
+                                    onPressed: () async {
+
+                                      await tag.manager.delete(tag);
+
+                                      setState(() {});
+
+                                      //pop to root
+                                      Navigator.popUntil(context, (route) => route.isFirst);
+                                    }
+                                ),
+                                FlatButton(
+                                    child: Text('No'),
+                                    onPressed: () {
+
+                                      Navigator.pop(context);
+                                    }
+                                )
+                              ]
+                          );
+                        }
+                    );
+                  }
+              ),
+              IconButton(
                   icon: Icon(Icons.done),
                   onPressed: () {
 

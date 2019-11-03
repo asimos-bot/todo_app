@@ -6,6 +6,7 @@ import 'package:selection_menu/components_configurations.dart';
 import '../FormWidgets/WeightSlider.dart';
 import '../FormWidgets/TextForm.dart';
 import '../FormWidgets/ModeSwitch.dart';
+import '../globals.dart' as globals;
 
 class TaskEdit extends StatefulWidget {
 
@@ -34,6 +35,45 @@ class TaskEditState extends State<TaskEdit> {
         appBar: AppBar(
             title: Text(task.title, overflow: TextOverflow.fade),
             actions: <Widget>[
+              IconButton(
+                  hoverColor: globals.secondaryForegorundColor ,
+                  highlightColor: globals.secondaryForegorundColor ,
+                  focusColor: globals.secondaryForegorundColor,
+                  color: globals.secondaryForegorundColor,
+
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                              title: Text('Are you sure you want to delete this task?'),
+                              actions: <Widget>[
+                                FlatButton(
+                                    child: Text('Yes'),
+                                    onPressed: () async {
+
+                                      await task.manager.delete(task);
+
+                                      setState(() {});
+
+                                      //pop to root
+                                      Navigator.popUntil(context, (route) => route.isFirst);
+                                    }
+                                ),
+                                FlatButton(
+                                    child: Text('No'),
+                                    onPressed: () {
+
+                                      Navigator.pop(context);
+                                    }
+                                )
+                              ]
+                          );
+                        }
+                    );
+                  }
+              ),
               IconButton(
                   icon: Icon(Icons.done),
                   onPressed: () async {
@@ -78,7 +118,7 @@ class TaskEditState extends State<TaskEdit> {
 
                     task.manager.update(task);
 
-                    Navigator.pop(context);
+                    Navigator.of(context).pop();
                   }
               )
             ]
