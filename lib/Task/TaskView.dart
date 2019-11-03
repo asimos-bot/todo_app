@@ -46,9 +46,9 @@ class TaskViewState extends State<TaskView> {
                 child: Column(
                     children: <Widget>[
 
-                      Text(task.title,style: TextStyle(color: Colors.white)),
+                      Text(task.title,style: TextStyle(color: globals.secondaryForegorundColor)),
                       Divider(),
-                      Text(task.description,style: TextStyle(color: Colors.white)),
+                      Text(task.description,style: TextStyle(color: globals.secondaryForegorundColor)),
                       Expanded(
                           child: Center(
                               child: ClipOval(
@@ -56,10 +56,10 @@ class TaskViewState extends State<TaskView> {
                                       padding: EdgeInsets.all(4.0),
                                       color: globals.foregroundColor,
                                       child:IconButton(
-                                          hoverColor: Colors.white ,
-                                          highlightColor:Colors.white ,
-                                          focusColor: Colors.white,
-                                          color: Colors.white,
+                                          hoverColor: globals.secondaryForegorundColor ,
+                                          highlightColor: globals.secondaryForegorundColor ,
+                                          focusColor: globals.secondaryForegorundColor,
+                                          color: globals.secondaryForegorundColor,
 
                                           icon: Icon(Icons.delete),
                                           onPressed: () {
@@ -99,9 +99,9 @@ class TaskViewState extends State<TaskView> {
                           )
                       ),
                       task.tag != null ? task.tag.toSearchWidget(context, null) :
-                      Text("No Tag associated", style: TextStyle(color: Colors.white)),
-                      Text('weight: ${task.weight.toString()}', style: TextStyle(color: Colors.white)),
-                      Text(task.created_at.toIso8601String())
+                      Text("No Tag associated", style: TextStyle(color: globals.secondaryForegorundColor)),
+                      Text('weight: ${task.weight.toString()}', style: TextStyle(color: globals.secondaryForegorundColor)),
+                      Text(task.created_at.toIso8601String(), style: TextStyle(color: globals.secondaryForegorundColor))
                     ]
                 )
             )

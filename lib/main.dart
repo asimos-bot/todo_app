@@ -94,12 +94,12 @@ class TodoListState extends State<TodoList> {
             DrawerHeader(
               decoration: BoxDecoration(color: globals.foregroundColor),
               child: Center(
-                child: Text('Tags Menu',style: TextStyle(color: Colors.white, fontSize: 20, fontStyle: FontStyle.italic))
+                child: Text('Tags Menu',style: TextStyle(color: globals.secondaryForegorundColor, fontSize: 20, fontStyle: FontStyle.italic))
               )
             ),
             ListTile(
-              leading: Icon(Icons.add,color: Colors.white),
-              title: Text("Add Tag",style: TextStyle(color: Colors.white)),
+              leading: Icon(Icons.add,color: globals.secondaryForegorundColor),
+              title: Text("Add Tag",style: TextStyle(color: globals.secondaryForegorundColor)),
               onTap: () {
                 tags.clearTextControllers();
 
@@ -196,7 +196,7 @@ class TodoListState extends State<TodoList> {
         }
       ),
       //bottom bar
-      bottomNavigationBar: new BottomAppBar(
+      bottomNavigationBar: BottomAppBar(
         //background color
         color: globals.foregroundColor,
         shape: CircularNotchedRectangle(),
@@ -216,7 +216,7 @@ class TodoListState extends State<TodoList> {
                         )
                     );
                   },
-                  color: Colors.white
+                  color: globals.secondaryForegorundColor
               )
             )
           ]

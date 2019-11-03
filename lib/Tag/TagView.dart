@@ -56,9 +56,9 @@ class TagViewState extends State<TagView> {
                   child: Column(
                       children: <Widget>[
 
-                        Text(tag.title,style: TextStyle(color: Colors.white)),
+                        Text(tag.title,style: TextStyle(color: globals.secondaryForegorundColor)),
                         Divider(),
-                        Text(tag.description,style: TextStyle(color: Colors.white)),
+                        Text(tag.description,style: TextStyle(color: globals.secondaryForegorundColor)),
                         Divider(),
                         Expanded(
                             child: Center(
@@ -67,10 +67,10 @@ class TagViewState extends State<TagView> {
                                         padding: EdgeInsets.all(4.0),
                                         color: globals.foregroundColor,
                                         child:IconButton(
-                                            hoverColor: Colors.white ,
-                                            highlightColor:Colors.white ,
-                                            focusColor: Colors.white,
-                                            color: Colors.white,
+                                            hoverColor: globals.secondaryForegorundColor,
+                                            highlightColor: globals.secondaryForegorundColor,
+                                            focusColor: globals.secondaryForegorundColor,
+                                            color: globals.secondaryForegorundColor,
 
                                             icon: Icon(Icons.delete),
                                             onPressed: () {
@@ -110,9 +110,9 @@ class TagViewState extends State<TagView> {
                             )
                         ),
                         tag.toSearchWidget(context, null),
-                        Text('weight: ${tag.weight.toString()}', style: TextStyle(color: Colors.white)),
-                        Text(tag.created_at.toIso8601String()),
-                        Text(tag.total_points.toString())
+                        Text('weight: ${tag.weight.toString()}', style: TextStyle(color: globals.secondaryForegorundColor)),
+                        Text(tag.created_at.toIso8601String(), style: TextStyle(color: globals.secondaryForegorundColor)),
+                        Text(tag.total_points.toString(), style: TextStyle(color: globals.secondaryForegorundColor))
                       ]
                   )
               )

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'Controller.dart';
+import '../globals.dart' as globals;
 
 class TextForm extends StatelessWidget {
 
-  Controller controller;
+  final Controller controller;
 
   TextForm(this.controller);
 
@@ -15,13 +16,13 @@ class TextForm extends StatelessWidget {
         TextField(
 
           autofocus: true,
-          decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Title"),
+          decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegorundColor,hintText: "Title"),
           style: TextStyle(color: Colors.black),
           controller: controller.titleController,
         ),
         Divider(),
         TextField(
-            decoration: InputDecoration(filled: true, fillColor: Colors.white,hintText: "Description"),
+            decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegorundColor,hintText: "Description"),
             style: TextStyle(color: Colors.black),
             controller: controller.descriptionController
         )

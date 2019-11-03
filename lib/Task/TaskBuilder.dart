@@ -7,6 +7,7 @@ import 'package:selection_menu/components_configurations.dart';
 import '../FormWidgets/WeightSlider.dart';
 import '../FormWidgets/TextForm.dart';
 import '../FormWidgets/ModeSwitch.dart';
+import '../globals.dart' as globals;
 
 class TaskBuilder extends StatefulWidget {
 
@@ -128,7 +129,7 @@ class TaskBuilderState extends State<TaskBuilder> {
                                   }else{
 
                                     return Card(
-                                        color: Colors.white,
+                                        color: globals.secondaryForegorundColor,
                                         child: Center(
                                           child: Text("No Tag Available")
                                         )

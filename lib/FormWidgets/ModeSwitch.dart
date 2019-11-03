@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../globals.dart' as globals;
 
 class SwitchValueWrapper {
 
@@ -35,7 +36,7 @@ class ModeSwitchState extends State<ModeSwitch> {
               setState(() => tmpMode.value = newValue);
             },
           ),
-          Text(tmpMode.value ? 'habit' : 'singular', style: TextStyle(color: Colors.white))
+          Text(tmpMode.value ? 'habit' : 'singular', style: TextStyle(color: globals.secondaryForegorundColor))
         ]
     );
   }

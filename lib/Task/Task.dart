@@ -102,7 +102,7 @@ class TaskWidgetState extends State<TaskWidget> {
             : Checkbox(
               value: task.checked,
               checkColor: task.tag != null ? task.tag.color : globals.foregroundColor,
-              activeColor: Colors.white,
+              activeColor: globals.secondaryForegorundColor,
               onChanged: (bool value) async {
 
                 if( task.tag != null ){
