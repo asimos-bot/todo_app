@@ -201,7 +201,7 @@ class TodoListState extends State<TodoList> {
         color: globals.foregroundColor,
         shape: CircularNotchedRectangle(),
         //here we say we want a row to be inside the bottom bar (because the icons are in a row, just think about it)
-        child: new Row(
+        child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

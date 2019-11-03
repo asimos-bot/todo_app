@@ -41,67 +41,43 @@ class TaskViewState extends State<TaskView> {
                   )
                 ]
             ),
-            body: Container(
-                padding: EdgeInsets.all(30.0),
+            body: SingleChildScrollView(
+                padding: EdgeInsets.all(10.0),
                 child: Column(
                     children: <Widget>[
 
-                      Text(task.title,style: TextStyle(color: globals.secondaryForegorundColor)),
-                      Divider(),
-                      Text(task.description,style: TextStyle(color: globals.secondaryForegorundColor)),
-                      Expanded(
-                          child: Center(
-                              child: ClipOval(
-                                  child:Container(
-                                      padding: EdgeInsets.all(4.0),
-                                      color: globals.foregroundColor,
-                                      child:IconButton(
-                                          hoverColor: globals.secondaryForegorundColor ,
-                                          highlightColor: globals.secondaryForegorundColor ,
-                                          focusColor: globals.secondaryForegorundColor,
-                                          color: globals.secondaryForegorundColor,
-
-                                          icon: Icon(Icons.delete),
-                                          onPressed: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return AlertDialog(
-                                                      title: Text('Are you sure you want to delete this task?'),
-                                                      actions: <Widget>[
-                                                        FlatButton(
-                                                            child: Text('Yes'),
-                                                            onPressed: () async {
-
-                                                              await task.manager.delete(task);
-
-                                                              setState(() {});
-
-                                                              Navigator.pop(context);
-                                                              Navigator.pop(context);
-                                                            }
-                                                        ),
-                                                        FlatButton(
-                                                            child: Text('No'),
-                                                            onPressed: () {
-
-                                                              Navigator.pop(context);
-                                                            }
-                                                        )
-                                                      ]
-                                                  );
-                                                }
-                                            );
-                                          }
-                                      )
-                                  )
-                              )
+                      Text(
+                          task.title,
+                          textScaleFactor: 2,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: globals.secondaryForegorundColor
                           )
                       ),
-                      task.tag != null ? task.tag.toSearchWidget(context, null) :
-                      Text("No Tag associated", style: TextStyle(color: globals.secondaryForegorundColor)),
-                      Text('weight: ${task.weight.toString()}', style: TextStyle(color: globals.secondaryForegorundColor)),
-                      Text(task.created_at.toIso8601String(), style: TextStyle(color: globals.secondaryForegorundColor))
+                      Divider(),
+                      Text(
+                          task.description,
+                          style: TextStyle(
+                              color: globals.secondaryForegorundColor.withOpacity(0.8)
+                          )
+                      ),
+                      Divider(),
+                      task.tag != null ?
+                      task.tag.toSearchWidget(context, null) :
+                      Card(
+                        child: ListTile(
+                          title: Text(
+                            "No Tag associated",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: globals.backgroundColor)
+                          )
+                        )
+                      ),
+                      Divider(),
+                      Text(
+                          'weight: ${task.weight.toString()}',
+                          style: TextStyle(color: globals.secondaryForegorundColor)
+                      )
                     ]
                 )
             )
