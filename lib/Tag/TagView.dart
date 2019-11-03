@@ -34,8 +34,46 @@ class TagViewState extends State<TagView> {
 
           return Scaffold(
               appBar: AppBar(
-                  title: Text(tag.title, overflow: TextOverflow.fade),
+                  leading: IconButton(
+                        icon: Icon(Icons.search, color: globals.secondaryForegorundColor)
+                  ),
+                  title: Center(child: Text(tag.title, overflow: TextOverflow.fade, textAlign: TextAlign.center)),
                   actions: <Widget>[
+                    IconButton(
+
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                    title: Text('Are you sure you want to delete this tag?'),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                          child: Text('Yes'),
+                                          onPressed: () async {
+
+                                            await tag.manager.delete(tag);
+
+                                            setState(() {});
+
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          }
+                                      ),
+                                      FlatButton(
+                                          child: Text('No'),
+                                          onPressed: () {
+
+                                            Navigator.pop(context);
+                                          }
+                                      )
+                                    ]
+                                );
+                              }
+                          );
+                        }
+                    ),
                     IconButton(
                         icon: Icon(Icons.edit),
                         onPressed: () {
@@ -60,55 +98,6 @@ class TagViewState extends State<TagView> {
                         Divider(),
                         Text(tag.description,style: TextStyle(color: globals.secondaryForegorundColor)),
                         Divider(),
-                        Expanded(
-                            child: Center(
-                                child: ClipOval(
-                                    child:Container(
-                                        padding: EdgeInsets.all(4.0),
-                                        color: globals.foregroundColor,
-                                        child:IconButton(
-                                            hoverColor: globals.secondaryForegorundColor,
-                                            highlightColor: globals.secondaryForegorundColor,
-                                            focusColor: globals.secondaryForegorundColor,
-                                            color: globals.secondaryForegorundColor,
-
-                                            icon: Icon(Icons.delete),
-                                            onPressed: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return AlertDialog(
-                                                        title: Text('Are you sure you want to delete this tag?'),
-                                                        actions: <Widget>[
-                                                          FlatButton(
-                                                              child: Text('Yes'),
-                                                              onPressed: () async {
-
-                                                                await tag.manager.delete(tag);
-
-                                                                setState(() {});
-
-                                                                Navigator.pop(context);
-                                                                Navigator.pop(context);
-                                                              }
-                                                          ),
-                                                          FlatButton(
-                                                              child: Text('No'),
-                                                              onPressed: () {
-
-                                                                Navigator.pop(context);
-                                                              }
-                                                          )
-                                                        ]
-                                                    );
-                                                  }
-                                              );
-                                            }
-                                        )
-                                    )
-                                )
-                            )
-                        ),
                         tag.toSearchWidget(context, null),
                         Text('weight: ${tag.weight.toString()}', style: TextStyle(color: globals.secondaryForegorundColor)),
                         Text(tag.created_at.toIso8601String(), style: TextStyle(color: globals.secondaryForegorundColor)),
