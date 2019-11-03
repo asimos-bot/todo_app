@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
 //colors
-var foregroundColor = const Color(0xff9995bf);
-var backgroundColor = const Color(0xff262b3c);
+var foregroundColor = const Color(0xFF01579B);
+var backgroundColor = const Color(0xFF455A64);
 var secondaryForegorundColor = Colors.white;
