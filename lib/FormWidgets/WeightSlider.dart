@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Controller.dart';
 import 'package:flutter/services.dart';
+import '../globals.dart' as globals;
 
 class WeightSlider extends StatefulWidget {
 
@@ -41,7 +42,7 @@ class WeightSliderState extends State<WeightSlider> {
         Divider(),
         TextField(
             inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-            decoration: InputDecoration(filled: true, fillColor: Colors.white),
+            decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegorundColor),
             style: TextStyle(color: Colors.black),
             controller: controller.weightController
         )

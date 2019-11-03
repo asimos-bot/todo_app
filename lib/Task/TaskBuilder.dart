@@ -6,6 +6,8 @@ import 'package:selection_menu/selection_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 import '../FormWidgets/WeightSlider.dart';
 import '../FormWidgets/TextForm.dart';
+import '../FormWidgets/ModeSwitch.dart';
+import '../globals.dart' as globals;
 
 class TaskBuilder extends StatefulWidget {
 
@@ -21,6 +23,7 @@ class TaskBuilderState extends State<TaskBuilder> {
 
   TaskManager list;
   Tag tmpTag;
+  SwitchValueWrapper tmpMode = SwitchValueWrapper(false); //1 - habit, 0 - singular
 
   TaskBuilderState(this.list){
     tmpTag = null;
@@ -37,12 +40,35 @@ class TaskBuilderState extends State<TaskBuilder> {
                           icon: Icon(Icons.done),
                           onPressed: (){
 
+                            //check if task is not in habit mode and doesn't have a tag
+                            if( tmpMode.value == true && tmpTag == null ){
+
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text("Invalid Tag"),
+                                    content: Text("A tag can't be in habit mode and have no tag associated"),
+                                    actions: <Widget> [
+                                      FlatButton(
+                                        child: Text("Ok"),
+                                        onPressed: () => Navigator.of(context).pop()
+                                      )
+                                      ]
+                                  );
+                                }
+                              );
+
+                              return;
+                            }
+
                             var task = Task(list);
 
                             task.title = list.titleController.text;
                             task.description = list.descriptionController.text;
                             task.weight = int.parse(list.weightController.text);
                             task.tag = tmpTag;
+                            task.boolToTaskMode(tmpMode.value);
 
                             list.add(task);
 
@@ -103,7 +129,7 @@ class TaskBuilderState extends State<TaskBuilder> {
                                   }else{
 
                                     return Card(
-                                        color: Colors.white,
+                                        color: globals.secondaryForegorundColor,
                                         child: Center(
                                           child: Text("No Tag Available")
                                         )
@@ -117,7 +143,8 @@ class TaskBuilderState extends State<TaskBuilder> {
                                 }
                               }
                           ),
-                          WeightSlider(list, 1.0)
+                          WeightSlider(list, 1.0),
+                          ModeSwitch(tmpMode)
                         ]
                     )
                 )

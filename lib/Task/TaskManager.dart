@@ -31,6 +31,7 @@ class TaskManager extends Controller {
       task.weight = taskMap['weight'];
       task.created_at = DateTime.parse(taskMap['created_at']);
       task.checked = taskMap['checked'] == 1 ? true : false;
+      task.intToTaskMode(taskMap['mode']);
 
       list.add(task);
     }
@@ -51,22 +52,24 @@ class TaskManager extends Controller {
           'tag',
           'weight',
           'created_at',
-          'checked'
+          'checked',
+          'mode'
         ], where: 'id = ?', whereArgs: [id]);
 
     if(query.length == 0) return null;
 
-    Map result = query[0];
+    Map taskMap = query[0];
 
     Task task = Task(this);
 
-    task.id = result['id'];
-    task.title = result['title'];
-    task.description = result['description'];
-    task.tag = result['tag'] != null ? await tagList.get(result['tag']) : null;
-    task.weight = result['weight'];
-    task.created_at = DateTime.parse(result['created_at']);
-    task.checked = result['checked'] == 1 ? true : false;
+    task.id = taskMap['id'];
+    task.title = taskMap['title'];
+    task.description = taskMap['description'];
+    task.tag = taskMap['tag'] != null ? await tagList.get(taskMap['tag']) : null;
+    task.weight = taskMap['weight'];
+    task.created_at = DateTime.parse(taskMap['created_at']);
+    task.checked = taskMap['checked'] == 1 ? true : false;
+    task.intToTaskMode(taskMap['mode']);
 
     return task;
   }
@@ -79,7 +82,8 @@ class TaskManager extends Controller {
       'tag': task.tag!=null ? task.tag.id : null,
       'weight': task.weight,
       'created_at': DateTime.now().toIso8601String(),
-      'checked': task.checked
+      'checked': task.checked,
+      'mode': task.taskModeToInt()
     });
   }
 
@@ -96,7 +100,8 @@ class TaskManager extends Controller {
       'description': list[index].description,
       'tag': list[index].tag != null ? list[index].tag.id : null,
       'weight': list[index].weight,
-      'checked': list[index].checked
+      'checked': list[index].checked,
+      'mode': list[index].taskModeToInt()
     }, where: 'id = ?', whereArgs: [list[index].id]);
   }
 
@@ -107,7 +112,8 @@ class TaskManager extends Controller {
       'description': task.description,
       'tag': task.tag != null ? task.tag.id : null,
       'weight': task.weight,
-      'checked': task.checked
+      'checked': task.checked,
+      'mode': task.taskModeToInt()
     }, where: 'id = ?', whereArgs: [task.id]);
   }
 
@@ -115,6 +121,13 @@ class TaskManager extends Controller {
 
     await (await db).update('tasks',{
       'checked': task.checked
+    }, where: 'id = ?', whereArgs: [task.id]);
+  }
+
+  Future<void> updateMode(Task task) async {
+
+    await (await db).update('tasks',{
+      'mode': task.taskModeToInt()
     }, where: 'id = ?', whereArgs: [task.id]);
   }
 }

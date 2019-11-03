@@ -5,13 +5,20 @@ import 'package:todo_yourself/Task/TaskView.dart';
 import '../FormWidgets/Controller.dart';
 import '../globals.dart' as globals;
 
+enum TaskMode{
+  singular,
+  habit
+}
+
 class Task extends Controller {
 
   int id=-1;
 
-  Tag tag=null;
+  Tag tag;
 
   bool checked=false;
+
+  TaskMode mode=TaskMode.singular; //false=singular, true=habit
 
   //global list with all the ListEntries
   TaskManager manager;
@@ -22,6 +29,18 @@ class Task extends Controller {
   //return this entry in widget form
   //we pass the id to be sure we get the task from database, guaranteed to be updated
   Widget toWidget() => TaskWidget(this);
+
+  //turn TaskMode in boolean
+  bool taskModeToBool() => mode == TaskMode.habit ? true : false;
+
+  //turn boolean in TaskMode
+  void boolToTaskMode(bool value) => mode = value ? TaskMode.habit : TaskMode.singular;
+
+  //turn taskMode into integer
+  int taskModeToInt() => mode == TaskMode.habit ? 1 : 0;
+
+  //turn integer into taskMode
+  void intToTaskMode(int value) => mode = value == 1 ? TaskMode.habit : TaskMode.singular;
 }
 
 class TaskWidget extends StatefulWidget {
@@ -67,10 +86,23 @@ class TaskWidgetState extends State<TaskWidget> {
                     builder: (context) => TaskView(task)
                 )
             ),
-            trailing: Checkbox(
+            trailing: task.mode == TaskMode.habit ?
+              //if task is in habit mode
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () async {
+                  await task.tag.manager.changeTotalPoints(
+                      task.tag,
+                      task.weight
+                  );
+                },
+              )
+
+              //if task is in singular mode
+            : Checkbox(
               value: task.checked,
               checkColor: task.tag != null ? task.tag.color : globals.foregroundColor,
-              activeColor: Colors.white,
+              activeColor: globals.secondaryForegorundColor,
               onChanged: (bool value) async {
 
                 if( task.tag != null ){

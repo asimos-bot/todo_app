@@ -5,6 +5,7 @@ import 'package:selection_menu/selection_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 import '../FormWidgets/WeightSlider.dart';
 import '../FormWidgets/TextForm.dart';
+import '../FormWidgets/ModeSwitch.dart';
 
 class TaskEdit extends StatefulWidget {
 
@@ -13,15 +14,16 @@ class TaskEdit extends StatefulWidget {
   TaskEdit(this.task);
 
   @override
-  createState() => TaskEditState(task);
+  createState() => TaskEditState(task, SwitchValueWrapper(task.taskModeToBool()));
 }
 
 class TaskEditState extends State<TaskEdit> {
 
   Task task;
   Tag tmpTag;
+  SwitchValueWrapper tmpMode;
 
-  TaskEditState(this.task){
+  TaskEditState(this.task, this.tmpMode){
     tmpTag = task.tag;
   }
 
@@ -36,10 +38,33 @@ class TaskEditState extends State<TaskEdit> {
                   icon: Icon(Icons.done),
                   onPressed: () async {
 
+                    //check if task is not in habit mode and doesn't have a tag
+                    if( tmpMode.value == true && tmpTag == null ){
+
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                                title: Text("Invalid Tag"),
+                                content: Text("A tag can't be in habit mode and have no tag associated"),
+                                actions: <Widget> [
+                                  FlatButton(
+                                      child: Text("Ok"),
+                                      onPressed: () => Navigator.of(context).pop()
+                                  )
+                                ]
+                            );
+                          }
+                      );
+
+                      return;
+                    }
+
                     task.title = task.titleController.text;
                     task.description = task.descriptionController.text;
                     task.weight = int.parse(task.weightController.text);
                     task.tag = tmpTag;
+                    task.boolToTaskMode(tmpMode.value);
 
                     if( task.tag != null && task.checked){
 
@@ -48,6 +73,8 @@ class TaskEditState extends State<TaskEdit> {
                           task.weight
                       );
                     }
+
+                    if( task.mode == TaskMode.habit ) task.checked = false;
 
                     task.manager.update(task);
 
@@ -126,7 +153,8 @@ class TaskEditState extends State<TaskEdit> {
                         }
                       }
                     ),
-                    WeightSlider(task, task.weight.toDouble())
+                    WeightSlider(task, task.weight.toDouble()),
+                    ModeSwitch(tmpMode)
                 ]
             )
         )
