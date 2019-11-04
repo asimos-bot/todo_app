@@ -87,7 +87,7 @@ class TaskWidgetState extends State<TaskWidget> {
             ),
             onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (context) => TaskView(task)
+                    builder: (context) => TaskView(task.id, task.manager)
                 )
             ),
             trailing: task.mode == TaskMode.habit ?
