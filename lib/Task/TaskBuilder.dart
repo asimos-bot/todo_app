@@ -119,7 +119,7 @@ class TaskBuilderState extends State<TaskBuilder> {
                                                       )
                                                   );
                                                 }else{
-                                                  return tmpTag.toMenuButtonWidget(context, data);
+                                                  return tmpTag.toSearchWidget(context, ()=>data.triggerMenu());
                                                 }
                                               }
                                           )

@@ -83,7 +83,6 @@ class TaskViewState extends State<TaskView> {
                                 )
                             )
                         ),
-                        Divider(),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget> [
@@ -126,7 +125,7 @@ class TaskViewState extends State<TaskView> {
                                                 color: globals.secondaryForegroundColor
                                             ),
                                             Text(
-                                                'Priority',
+                                                'Created In',
                                                 textScaleFactor: 1.5,
                                                 style: TextStyle(color: globals.backgroundColor)
                                             ),
@@ -134,7 +133,8 @@ class TaskViewState extends State<TaskView> {
                                                 color: globals.secondaryForegroundColor
                                             ),
                                             Text(
-                                                '${task.priority.toString()}',
+                                                '${task.created_at.day}/${task.created_at.month} at'
+                                                    ' ${task.created_at.hour}:${task.created_at.minute}',
                                                 textScaleFactor: 1.5,
                                                 style: TextStyle(color: globals.backgroundColor)
                                             ),
