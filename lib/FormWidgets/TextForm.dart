@@ -19,12 +19,14 @@ class TextForm extends StatelessWidget {
           decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegroundColor,hintText: "Title"),
           style: TextStyle(color: Colors.black),
           controller: controller.titleController,
+          maxLength: 40
         ),
         Divider(),
         TextField(
-            decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegroundColor,hintText: "Description"),
-            style: TextStyle(color: Colors.black),
-            controller: controller.descriptionController
+          decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegroundColor,hintText: "Description"),
+          style: TextStyle(color: Colors.black),
+          controller: controller.descriptionController,
+          maxLength: 255
         )
       ]
     );

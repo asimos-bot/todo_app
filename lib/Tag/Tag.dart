@@ -27,8 +27,16 @@ class Tag extends Controller {
         child: ListTile(
           leading: toCircleAvatar(),
           onTap: data.triggerMenu,
-          title: Text(title),
-          subtitle: Text(description, overflow: TextOverflow.fade)
+          title: Text(
+            title,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1
+          ),
+          subtitle: Text(
+            description,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2
+          )
         )
       );
   }
@@ -39,8 +47,16 @@ class Tag extends Controller {
         child: ListTile(
           leading: toCircleAvatar(),
           onTap: onItemTapped,
-          title: Text(title),
-          subtitle: Text(description, overflow: TextOverflow.fade)
+          title: Text(
+            title,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1
+          ),
+          subtitle: Text(
+            description,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2
+          )
         )
       );
   }
@@ -50,8 +66,16 @@ class Tag extends Controller {
     return Card(
       child: ListTile(
         leading: toCircleAvatar(),
-        title: Text(title),
-        subtitle: Text(description, overflow: TextOverflow.fade),
+        title: Text(
+          title,
+          overflow: TextOverflow.ellipsis,
+          maxLines:1
+        ),
+        subtitle: Text(
+          description,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+        ),
         onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
                 builder: (context) => TagView(id, manager)

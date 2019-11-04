@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_list_drag_and_drop/drag_and_drop_list.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:todo_yourself/Task/Task.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
@@ -138,6 +139,8 @@ class TodoListState extends State<TodoList> {
   @mustCallSuper
   void initState() {
 
+    super.initState();
+
     //TODO: for debugging only, comment it later
     Sqflite.devSetDebugModeOn(true);
 
@@ -151,8 +154,6 @@ class TodoListState extends State<TodoList> {
 
     tags.taskManager = tasks;
     tasks.tagManager = tags;
-
-    super.initState();
   }
 
   @override
@@ -169,6 +170,12 @@ class TodoListState extends State<TodoList> {
 
   @override
   Widget build(BuildContext context) {
+
+    //disable screen rotation
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+    ]);
 
     return Scaffold(
       //slide bar

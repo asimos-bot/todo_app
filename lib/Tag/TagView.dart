@@ -155,7 +155,7 @@ class TagViewState extends State<TagView> {
                               return Expanded(
                                 child: ListView.builder(
                                   itemCount: tasks.length,
-                                  itemBuilder: (context, index) => tasks[index].toWidget(null)
+                                  itemBuilder: (context, index) => tasks[index].toWidget((){setState((){});})
                                 )
                               );
                             }

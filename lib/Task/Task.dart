@@ -69,7 +69,8 @@ class TaskWidgetState extends State<TaskWidget> {
             leading: task.tag != null ? task.tag.toCircleAvatar() : null,
             title: Text(
                 task.title,
-                overflow: TextOverflow.fade,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: task.checked ? TextStyle(
                     decoration: TextDecoration.lineThrough,
                     color: Colors.black.withOpacity(0.4)
@@ -77,7 +78,8 @@ class TaskWidgetState extends State<TaskWidget> {
             ),
             subtitle: Text(
                 task.description,
-                overflow: TextOverflow.fade,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
                 style: task.checked ? TextStyle(
                     decoration: TextDecoration.lineThrough,
                     color: Colors.black.withOpacity(0.4)
@@ -98,7 +100,7 @@ class TaskWidgetState extends State<TaskWidget> {
                       task.weight
                   );
 
-                  if(callback != null)callback();
+                  if(callback != null) callback();
                 },
               )
 
@@ -122,7 +124,7 @@ class TaskWidgetState extends State<TaskWidget> {
                 //update checked field in database
                 await task.manager.updateChecked(task);
 
-                if(callback!=null)callback();
+                if(callback!=null) callback();
               },
             )
         )
