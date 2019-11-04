@@ -34,140 +34,146 @@ class TagViewState extends State<TagView> {
           Tag tag = snapshot.data;
 
           return Scaffold(
-              appBar: AppBar(
-                  title: Center(child:
-                    Text(
-                        tag.title,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center
-                    )
+            appBar: AppBar(
+                title: Center(child:
+                  Text(
+                      tag.title,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center
+                  )
+                ),
+                actions: <Widget>[
+                  IconButton(
+                      icon: Icon(Icons.search, color: globals.secondaryForegroundColor)
                   ),
-                  actions: <Widget>[
-                    IconButton(
-                        icon: Icon(Icons.search, color: globals.secondaryForegroundColor)
-                    ),
-                    IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
+                  IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
 
-                          tag.updateTextControllers();
+                        tag.updateTextControllers();
 
-                          Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => TagEdit(tag)
-                              )
-                          );
-                        }
-                    )
-                  ]
-              ),
-              body: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                      children: <Widget>[
-
-                        Text(
-                            tag.title,
-                            textScaleFactor: 2,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: globals.secondaryForegroundColor
+                        Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => TagEdit(tag)
                             )
-                        ),
-                        Divider(),
-                        Text(
-                            tag.description,
-                            style: TextStyle(color: globals.secondaryForegroundColor.withOpacity(0.8))
-                        ),
-                        Divider(),
-                        tag.toSearchWidget(context, null),
-                        Row(
+                        );
+                      }
+                  )
+                ]
+            ),
+            body: CustomScrollView(
+              slivers: <Widget>[
+
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    <Widget>[
+                      Text(
+                        tag.title,
+                        textScaleFactor: 2,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: globals.secondaryForegroundColor
+                        )
+                      ),
+                      Divider(),
+                      Text(
+                          tag.description,
+                          style: TextStyle(color: globals.secondaryForegroundColor.withOpacity(0.8))
+                      ),
+                      Divider(),
+                      tag.toSearchWidget(context, null)
+                    ]
+                  )
+                ),
+                SliverGrid.count(
+                  crossAxisCount: 2,
+                  children: <Widget> [
+                    Card(
+                        color: globals.secondaryForegroundColor,
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget> [
-                            Expanded(
-                              child: Card(
-                                color: globals.secondaryForegroundColor,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: <Widget> [
-                                    Divider(
-                                      color: globals.secondaryForegroundColor
-                                    ),
-                                    Text(
-                                        'Weight',
-                                        textScaleFactor: 1.5,
-                                        style: TextStyle(color: globals.backgroundColor)
-                                    ),
-                                    Divider(
-                                      color: globals.secondaryForegroundColor
-                                    ),
-                                    Text(
-                                        '${tag.weight.toString()}',
-                                        textScaleFactor: 1.5,
-                                        style: TextStyle(color: globals.backgroundColor)
-                                    ),
-                                    Divider(
-                                      color: globals.secondaryForegroundColor
-                                    )
-                                  ]
-                                )
-                              )
+                            Divider(
+                              color: globals.secondaryForegroundColor
                             ),
-                            Expanded(
-                              child: Card(
-                                color: globals.secondaryForegroundColor,
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: <Widget> [
-                                      Divider(
-                                          color: globals.secondaryForegroundColor
-                                      ),
-                                      Text(
-                                          'Points',
-                                          textScaleFactor: 1.5,
-                                          style: TextStyle(color: globals.backgroundColor)
-                                      ),
-                                      Divider(
-                                          color: globals.secondaryForegroundColor
-                                      ),
-                                      Text(
-                                          '${tag.total_points.toString()}',
-                                          textScaleFactor: 1.5,
-                                          style: TextStyle(color: globals.backgroundColor)
-                                      ),
-                                      Divider(
-                                          color: globals.secondaryForegroundColor
-                                      )
-                                    ]
-                                )
-                              )
+                            Text(
+                                'Weight',
+                                textScaleFactor: 1.5,
+                                style: TextStyle(color: globals.backgroundColor)
+                            ),
+                            Divider(
+                              color: globals.secondaryForegroundColor
+                            ),
+                            Text(
+                                '${tag.weight.toString()}',
+                                textScaleFactor: 1.5,
+                                style: TextStyle(color: globals.backgroundColor)
+                            ),
+                            Divider(
+                              color: globals.secondaryForegroundColor
                             )
                           ]
-                        ),
-                        FutureBuilder(
-                          future: tag.manager.getTasks(tag),
-                          builder: (context, snapshot) {
-
-                            if( snapshot.connectionState == ConnectionState.done ){
-
-                              List<Task> tasks = snapshot.data;
-
-                              return Expanded(
-                                child: ListView.builder(
-                                  itemCount: tasks.length,
-                                  itemBuilder: (context, index) => tasks[index].toWidget((){setState((){});})
-                                )
-                              );
-                            }
-
-                            return Center(
-                              child: CircularProgressIndicator()
-                            );
-                          }
                         )
-                      ]
-                  )
-              )
+                    ),
+                    Card(
+                        color: globals.secondaryForegroundColor,
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget> [
+                              Divider(
+                                  color: globals.secondaryForegroundColor
+                              ),
+                              Text(
+                                  'Points',
+                                  textScaleFactor: 1.5,
+                                  style: TextStyle(color: globals.backgroundColor)
+                              ),
+                              Divider(
+                                  color: globals.secondaryForegroundColor
+                              ),
+                              Text(
+                                  '${tag.total_points.toString()}',
+                                  textScaleFactor: 1.5,
+                                  style: TextStyle(color: globals.backgroundColor)
+                              ),
+                              Divider(
+                                  color: globals.secondaryForegroundColor
+                              )
+                            ]
+                        )
+                    )
+                  ]
+                ),
+                FutureBuilder(
+                  future: tag.manager.getTasks(tag),
+                  builder: (context, snapshot) {
+
+                    if( snapshot.connectionState == ConnectionState.done ){
+
+                      List<Task> tasks = snapshot.data;
+
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+
+                              return tasks[index].toWidget(()=>setState((){}));
+                            },
+                            childCount: tasks.length
+                        )
+                      );
+                    }
+
+                    return SliverList(
+                      delegate: SliverChildListDelegate(
+                        <Widget> [
+                          CircularProgressIndicator()
+                        ]
+                      ),
+                    );
+                  }
+                )
+              ]
+            )
           );
         }
 
