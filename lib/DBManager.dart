@@ -20,6 +20,7 @@ class DBManager {
             'color INT NOT NULL,'
             'weight INT NOT NULL,'
             'created_at TEXT NOT NULL,'
+            'priority INT UNIQUE,'
             'total_points INT NOT NULL'
         ')'
     );
@@ -34,6 +35,7 @@ class DBManager {
             'created_at TEXT NOT NULL,'
             'checked INT NOT NULL,'
             'mode INT NOT NULL,'
+            'priority INT,'
             'FOREIGN KEY (tag) REFERENCES tags(id)'
         ')'
     );

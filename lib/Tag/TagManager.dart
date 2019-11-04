@@ -12,6 +12,7 @@ class TagManager extends Controller {
 
   Future<Database> db;
   int length=-1;
+  int highestPriority=0;
 
   TagManager(this.db);
 
@@ -19,7 +20,7 @@ class TagManager extends Controller {
 
     List<Tag> list = [];
 
-    List<Map> queryResult = await (await db).rawQuery('SELECT * FROM tags');
+    List<Map> queryResult = await (await db).rawQuery('SELECT * FROM tags ORDER BY priority DESC');
 
     for(int i=0; i < queryResult.length; i++){
 
@@ -33,11 +34,16 @@ class TagManager extends Controller {
       tag.color = Color(tagMap['color']);
       tag.created_at = DateTime.parse(tagMap['created_at']);
       tag.total_points = tagMap['total_points'];
+      tag.priority = tagMap['priority'];
+
+      if( tag.priority > highestPriority ) highestPriority = tag.priority;
 
       list.add(tag);
     }
 
     length = list.length;
+
+    list.sort(( greater, smaller ) => greater.priority > smaller.priority ? 1 : -1);
 
     return list;
   }
@@ -53,7 +59,8 @@ class TagManager extends Controller {
           'weight',
           'color',
           'created_at',
-          'total_points'
+          'total_points',
+          'priority'
         ], where: 'id = ?', whereArgs: [id]);
 
     if(query.length == 0) return null;
@@ -69,11 +76,15 @@ class TagManager extends Controller {
     tag.color = Color(tagMap['color']);
     tag.created_at = DateTime.parse(tagMap['created_at']);
     tag.total_points = tagMap['total_points'];
+    tag.priority = tagMap['priority'];
 
     return tag;
   }
 
   Future<void> add(Tag tag) async {
+
+    //put this task in highest priority
+
 
     await (await db).insert('tags', {
       'title': tag.title,
@@ -81,7 +92,8 @@ class TagManager extends Controller {
       'color': tag.color.value,
       'weight': tag.weight,
       'created_at': DateTime.now().toIso8601String(),
-      'total_points': tag.total_points
+      'total_points': tag.total_points,
+      'priority': highestPriority += 1
     });
   }
 
@@ -105,7 +117,8 @@ class TagManager extends Controller {
       'description': tag.description,
       'color': tag.color.value,
       'weight': tag.weight,
-      'total_points': tag.total_points
+      'total_points': tag.total_points,
+      'priority': tag.priority
     }, where: 'id = ?', whereArgs: [tag.id]);
   }
 

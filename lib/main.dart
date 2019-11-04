@@ -55,13 +55,24 @@ class TodoListState extends State<TodoList> {
     return list.length > 1 ? DragAndDropList<Task>(
       list,
       itemBuilder: (BuildContext context, item) => item.toWidget(null),
-      onDragFinish: (before, after) {
+      onDragFinish: (before, after) async {
+
+        list[before].priority += list[after].priority;
+        list[after].priority = list[before].priority - list[after].priority;
+        list[before].priority -= list[after].priority;
+
+        tasks.updatePriority(list[before]);
+        tasks.updatePriority(list[after]);
+
         list.insert(after, list.removeAt(before));
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
       tilt: 0.01,
-    ) : ListView.builder(itemCount: list.length, itemBuilder: (context, index) => list[index].toWidget(null));
+    ) : ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (context, index) => list[index].toWidget(null)
+    );
   }
 
   Future<Widget> _buildTagList() async {

@@ -9,6 +9,8 @@ class TaskManager extends Controller {
   TagManager tagManager;
   int length=-1;
 
+  int highestPriority=0;
+
   Future<Database> db;
 
   TaskManager(this.db);
@@ -17,7 +19,7 @@ class TaskManager extends Controller {
 
     List<Task> list = [];
 
-    List<Map> queryResult = await (await db).rawQuery('SELECT * FROM tasks');
+    List<Map> queryResult = await (await db).rawQuery('SELECT * FROM tasks ORDER BY priority DESC');
 
     for(int i=0; i < queryResult.length; i++){
 
@@ -32,11 +34,16 @@ class TaskManager extends Controller {
       task.created_at = DateTime.parse(taskMap['created_at']);
       task.checked = taskMap['checked'] == 1 ? true : false;
       task.intToTaskMode(taskMap['mode']);
+      task.priority = taskMap['priority'];
+
+      if( task.priority > highestPriority ) highestPriority = task.priority;
 
       list.add(task);
     }
 
     length = list.length;
+
+    list.sort(( greater, smaller ) => greater.priority > smaller.priority ? 1 : -1);
 
     return list;
   }
@@ -53,7 +60,8 @@ class TaskManager extends Controller {
           'weight',
           'created_at',
           'checked',
-          'mode'
+          'mode',
+          'priority'
         ], where: 'id = ?', whereArgs: [id]);
 
     if(query.length == 0) return null;
@@ -70,6 +78,7 @@ class TaskManager extends Controller {
     task.created_at = DateTime.parse(taskMap['created_at']);
     task.checked = taskMap['checked'] == 1 ? true : false;
     task.intToTaskMode(taskMap['mode']);
+    task.priority = taskMap['priority'];
 
     return task;
   }
@@ -83,8 +92,11 @@ class TaskManager extends Controller {
       'weight': task.weight,
       'created_at': DateTime.now().toIso8601String(),
       'checked': task.checked,
-      'mode': task.taskModeToInt()
+      'mode': task.taskModeToInt(),
+      'priority': highestPriority + 1
     });
+
+    highestPriority += 1;
   }
 
   Future<void> delete(Task task) async {
@@ -113,7 +125,8 @@ class TaskManager extends Controller {
       'tag': task.tag != null ? task.tag.id : null,
       'weight': task.weight,
       'checked': task.checked,
-      'mode': task.taskModeToInt()
+      'mode': task.taskModeToInt(),
+      'priority': task.priority
     }, where: 'id = ?', whereArgs: [task.id]);
   }
 
@@ -128,6 +141,13 @@ class TaskManager extends Controller {
 
     await (await db).update('tasks',{
       'mode': task.taskModeToInt()
+    }, where: 'id = ?', whereArgs: [task.id]);
+  }
+
+  Future<void> updatePriority(Task task) async {
+
+    await (await db).update('tasks',{
+     'priority': task.priority
     }, where: 'id = ?', whereArgs: [task.id]);
   }
 }

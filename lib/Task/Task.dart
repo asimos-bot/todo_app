@@ -94,6 +94,7 @@ class TaskWidgetState extends State<TaskWidget> {
               //if task is in habit mode
               IconButton(
                 icon: Icon(Icons.add),
+                color: task.tag != null ? task.tag.color : globals.foregroundColor,
                 onPressed: () async {
                   await task.tag.manager.changeTotalPoints(
                       task.tag,

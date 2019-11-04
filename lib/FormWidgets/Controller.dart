@@ -7,6 +7,7 @@ abstract class Controller {
 
   int weight=1;
   DateTime created_at;
+  int priority=-1;
 
   final titleController = TextEditingController(text: "");
   final descriptionController = TextEditingController(text: "");
