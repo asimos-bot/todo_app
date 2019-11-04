@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
 import 'package:sqflite/sqflite.dart';
 import '../FormWidgets/Controller.dart';
+import '../Task/TaskManager.dart';
+import '../Task/Task.dart';
 
 //manage database and list at the same time
 class TagManager extends Controller {
+
+  TaskManager taskManager;
 
   Future<Database> db;
   int length=-1;
@@ -135,5 +139,43 @@ class TagManager extends Controller {
       'points': tag.total_points,
       'tag': tag.id
     });
+  }
+
+  Future<List<Task>> getTasks(Tag tag) async {
+
+    List<Task> list = [];
+
+    List<Map> query = await (await db).query(
+        'tasks',
+        columns: [
+          'id',
+          'title',
+          'description',
+          'weight',
+          'created_at',
+          'checked',
+          'mode'
+        ], where: 'tag = ?', whereArgs: [tag.id]);
+
+    for(int i=0; i < query.length; i++){
+
+      Map taskMap = query[i];
+      Task task = Task(taskManager);
+
+      task.title = taskMap['title'];
+      task.description = taskMap['description'];
+      task.id = taskMap['id'];
+      task.tag = tag;
+      task.weight = taskMap['weight'];
+      task.created_at = DateTime.parse(taskMap['created_at']);
+      task.checked = taskMap['checked'] == 1 ? true : false;
+      task.intToTaskMode(taskMap['mode']);
+
+      list.add(task);
+    }
+
+    length = list.length;
+
+    return list;
   }
 }

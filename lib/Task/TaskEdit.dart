@@ -36,10 +36,10 @@ class TaskEditState extends State<TaskEdit> {
             title: Text(task.title, overflow: TextOverflow.fade),
             actions: <Widget>[
               IconButton(
-                  hoverColor: globals.secondaryForegorundColor ,
-                  highlightColor: globals.secondaryForegorundColor ,
-                  focusColor: globals.secondaryForegorundColor,
-                  color: globals.secondaryForegorundColor,
+                  hoverColor: globals.secondaryForegroundColor ,
+                  highlightColor: globals.secondaryForegroundColor ,
+                  focusColor: globals.secondaryForegroundColor,
+                  color: globals.secondaryForegroundColor,
 
                   icon: Icon(Icons.delete),
                   onPressed: () {
@@ -129,12 +129,12 @@ class TaskEditState extends State<TaskEdit> {
                     TextForm(task),
                     Divider(),
                     FutureBuilder(
-                      future: task.manager.tagList.list(),
+                      future: task.manager.tagManager.list(),
                       builder: (context, snapshot) {
 
                         if (snapshot.connectionState == ConnectionState.done) {
 
-                          if (task.manager.tagList.length > 0) {
+                          if (task.manager.tagManager.length > 0) {
 
                             //appear when there are tags to select
                             return SelectionMenu<Tag>(

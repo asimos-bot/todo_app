@@ -51,14 +51,14 @@ class TaskViewState extends State<TaskView> {
                           textScaleFactor: 2,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              color: globals.secondaryForegorundColor
+                              color: globals.secondaryForegroundColor
                           )
                       ),
                       Divider(),
                       Text(
                           task.description,
                           style: TextStyle(
-                              color: globals.secondaryForegorundColor.withOpacity(0.8)
+                              color: globals.secondaryForegroundColor.withOpacity(0.8)
                           )
                       ),
                       Divider(),
@@ -76,7 +76,7 @@ class TaskViewState extends State<TaskView> {
                       Divider(),
                       Text(
                           'weight: ${task.weight.toString()}',
-                          style: TextStyle(color: globals.secondaryForegorundColor)
+                          style: TextStyle(color: globals.secondaryForegroundColor)
                       )
                     ]
                 )

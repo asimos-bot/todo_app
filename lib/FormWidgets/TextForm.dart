@@ -16,13 +16,13 @@ class TextForm extends StatelessWidget {
         TextField(
 
           autofocus: true,
-          decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegorundColor,hintText: "Title"),
+          decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegroundColor,hintText: "Title"),
           style: TextStyle(color: Colors.black),
           controller: controller.titleController,
         ),
         Divider(),
         TextField(
-            decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegorundColor,hintText: "Description"),
+            decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegroundColor,hintText: "Description"),
             style: TextStyle(color: Colors.black),
             controller: controller.descriptionController
         )

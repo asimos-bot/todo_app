@@ -42,7 +42,7 @@ class WeightSliderState extends State<WeightSlider> {
         Divider(),
         TextField(
             inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-            decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegorundColor),
+            decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegroundColor),
             style: TextStyle(color: Colors.black),
             controller: controller.weightController
         )

@@ -53,14 +53,14 @@ class TodoListState extends State<TodoList> {
 
     return list.length > 1 ? DragAndDropList<Task>(
       list,
-      itemBuilder: (BuildContext context, item) => item.toWidget(),
+      itemBuilder: (BuildContext context, item) => item.toWidget(null),
       onDragFinish: (before, after) {
         list.insert(after, list.removeAt(before));
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
       tilt: 0.01,
-    ) : ListView.builder(itemCount: list.length, itemBuilder: (context, index) => list[index].toWidget());
+    ) : ListView.builder(itemCount: list.length, itemBuilder: (context, index) => list[index].toWidget(null));
   }
 
   Future<Widget> _buildTagList() async {
@@ -94,12 +94,12 @@ class TodoListState extends State<TodoList> {
             DrawerHeader(
               decoration: BoxDecoration(color: globals.foregroundColor),
               child: Center(
-                child: Text('Tags Menu',style: TextStyle(color: globals.secondaryForegorundColor, fontSize: 20, fontStyle: FontStyle.italic))
+                child: Text('Tags Menu',style: TextStyle(color: globals.secondaryForegroundColor, fontSize: 20, fontStyle: FontStyle.italic))
               )
             ),
             ListTile(
-              leading: Icon(Icons.add,color: globals.secondaryForegorundColor),
-              title: Text("Add Tag",style: TextStyle(color: globals.secondaryForegorundColor)),
+              leading: Icon(Icons.add,color: globals.secondaryForegroundColor),
+              title: Text("Add Tag",style: TextStyle(color: globals.secondaryForegroundColor)),
               onTap: () {
                 tags.clearTextControllers();
 
@@ -147,7 +147,10 @@ class TodoListState extends State<TodoList> {
     db = DBManager();
 
     tags = TagManager(db.db);
-    tasks = TaskManager(db.db, tags);
+    tasks = TaskManager(db.db);
+
+    tags.taskManager = tasks;
+    tasks.tagManager = tags;
 
     super.initState();
   }
@@ -216,7 +219,7 @@ class TodoListState extends State<TodoList> {
                         )
                     );
                   },
-                  color: globals.secondaryForegorundColor
+                  color: globals.secondaryForegroundColor
               )
             )
           ]

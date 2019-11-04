@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_yourself/Tag/TagEdit.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
 import 'TagManager.dart';
+import '../Task/Task.dart';
 import '../globals.dart' as globals;
 
 class TagView extends StatefulWidget {
@@ -43,7 +44,7 @@ class TagViewState extends State<TagView> {
                   ),
                   actions: <Widget>[
                     IconButton(
-                        icon: Icon(Icons.search, color: globals.secondaryForegorundColor)
+                        icon: Icon(Icons.search, color: globals.secondaryForegroundColor)
                     ),
                     IconButton(
                         icon: Icon(Icons.edit),
@@ -60,7 +61,7 @@ class TagViewState extends State<TagView> {
                     )
                   ]
               ),
-              body: SingleChildScrollView(
+              body: Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
                       children: <Widget>[
@@ -70,13 +71,13 @@ class TagViewState extends State<TagView> {
                             textScaleFactor: 2,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: globals.secondaryForegorundColor
+                              color: globals.secondaryForegroundColor
                             )
                         ),
                         Divider(),
                         Text(
                             tag.description,
-                            style: TextStyle(color: globals.secondaryForegorundColor.withOpacity(0.8))
+                            style: TextStyle(color: globals.secondaryForegroundColor.withOpacity(0.8))
                         ),
                         Divider(),
                         tag.toSearchWidget(context, null),
@@ -85,18 +86,28 @@ class TagViewState extends State<TagView> {
                           children: <Widget> [
                             Expanded(
                               child: Card(
+                                color: globals.secondaryForegroundColor,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: <Widget> [
+                                    Divider(
+                                      color: globals.secondaryForegroundColor
+                                    ),
                                     Text(
                                         'Weight',
                                         textScaleFactor: 1.5,
                                         style: TextStyle(color: globals.backgroundColor)
                                     ),
+                                    Divider(
+                                      color: globals.secondaryForegroundColor
+                                    ),
                                     Text(
                                         '${tag.weight.toString()}',
                                         textScaleFactor: 1.5,
                                         style: TextStyle(color: globals.backgroundColor)
+                                    ),
+                                    Divider(
+                                      color: globals.secondaryForegroundColor
                                     )
                                   ]
                                 )
@@ -104,24 +115,55 @@ class TagViewState extends State<TagView> {
                             ),
                             Expanded(
                               child: Card(
+                                color: globals.secondaryForegroundColor,
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: <Widget> [
+                                      Divider(
+                                          color: globals.secondaryForegroundColor
+                                      ),
                                       Text(
                                           'Points',
                                           textScaleFactor: 1.5,
                                           style: TextStyle(color: globals.backgroundColor)
                                       ),
+                                      Divider(
+                                          color: globals.secondaryForegroundColor
+                                      ),
                                       Text(
                                           '${tag.total_points.toString()}',
                                           textScaleFactor: 1.5,
                                           style: TextStyle(color: globals.backgroundColor)
+                                      ),
+                                      Divider(
+                                          color: globals.secondaryForegroundColor
                                       )
                                     ]
                                 )
                               )
                             )
                           ]
+                        ),
+                        FutureBuilder(
+                          future: tag.manager.getTasks(tag),
+                          builder: (context, snapshot) {
+
+                            if( snapshot.connectionState == ConnectionState.done ){
+
+                              List<Task> tasks = snapshot.data;
+
+                              return Expanded(
+                                child: ListView.builder(
+                                  itemCount: tasks.length,
+                                  itemBuilder: (context, index) => tasks[index].toWidget(null)
+                                )
+                              );
+                            }
+
+                            return Center(
+                              child: CircularProgressIndicator()
+                            );
+                          }
                         )
                       ]
                   )

@@ -28,7 +28,7 @@ class Task extends Controller {
 
   //return this entry in widget form
   //we pass the id to be sure we get the task from database, guaranteed to be updated
-  Widget toWidget() => TaskWidget(this);
+  Widget toWidget(Function callback) => TaskWidget(this, callback);
 
   //turn TaskMode in boolean
   bool taskModeToBool() => mode == TaskMode.habit ? true : false;
@@ -46,18 +46,20 @@ class Task extends Controller {
 class TaskWidget extends StatefulWidget {
 
   final Task task;
+  final Function callback;
 
-  TaskWidget(this.task);
+  TaskWidget(this.task, this.callback);
 
   @override
-  createState() => TaskWidgetState(task);
+  createState() => TaskWidgetState(task, callback);
 }
 
 class TaskWidgetState extends State<TaskWidget> {
 
   Task task;
+  Function callback;
 
-  TaskWidgetState(this.task);
+  TaskWidgetState(this.task, this.callback);
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +97,8 @@ class TaskWidgetState extends State<TaskWidget> {
                       task.tag,
                       task.weight
                   );
+
+                  if(callback != null)callback();
                 },
               )
 
@@ -102,7 +106,7 @@ class TaskWidgetState extends State<TaskWidget> {
             : Checkbox(
               value: task.checked,
               checkColor: task.tag != null ? task.tag.color : globals.foregroundColor,
-              activeColor: globals.secondaryForegorundColor,
+              activeColor: globals.secondaryForegroundColor,
               onChanged: (bool value) async {
 
                 if( task.tag != null ){
@@ -117,6 +121,8 @@ class TaskWidgetState extends State<TaskWidget> {
 
                 //update checked field in database
                 await task.manager.updateChecked(task);
+
+                if(callback!=null)callback();
               },
             )
         )

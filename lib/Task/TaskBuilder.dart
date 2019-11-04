@@ -83,12 +83,12 @@ class TaskBuilderState extends State<TaskBuilder> {
                           TextForm(list),
                           Divider(),
                           FutureBuilder(
-                              future: list.tagList.list(),
+                              future: list.tagManager.list(),
                               builder: (context, snapshot) {
 
                                 if( snapshot.connectionState == ConnectionState.done ){
 
-                                  if( list.tagList.length > 0 ) {
+                                  if( list.tagManager.length > 0 ) {
 
                                     return SelectionMenu<Tag>(
                                       itemsList: snapshot.data,
@@ -129,7 +129,7 @@ class TaskBuilderState extends State<TaskBuilder> {
                                   }else{
 
                                     return Card(
-                                        color: globals.secondaryForegorundColor,
+                                        color: globals.secondaryForegroundColor,
                                         child: Center(
                                           child: Text("No Tag Available")
                                         )

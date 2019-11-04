@@ -6,12 +6,12 @@ import '../FormWidgets/Controller.dart';
 //manage database and list at the same time
 class TaskManager extends Controller {
 
-  TagManager tagList;
+  TagManager tagManager;
   int length=-1;
 
   Future<Database> db;
 
-  TaskManager(this.db, this.tagList);
+  TaskManager(this.db);
 
   Future<List<Task>> list() async {
 
@@ -27,7 +27,7 @@ class TaskManager extends Controller {
       task.title = taskMap['title'];
       task.description = taskMap['description'];
       task.id = taskMap['id'];
-      task.tag = taskMap['tag'] != null ? await tagList.get(taskMap['tag']) : null;
+      task.tag = taskMap['tag'] != null ? await tagManager.get(taskMap['tag']) : null;
       task.weight = taskMap['weight'];
       task.created_at = DateTime.parse(taskMap['created_at']);
       task.checked = taskMap['checked'] == 1 ? true : false;
@@ -65,7 +65,7 @@ class TaskManager extends Controller {
     task.id = taskMap['id'];
     task.title = taskMap['title'];
     task.description = taskMap['description'];
-    task.tag = taskMap['tag'] != null ? await tagList.get(taskMap['tag']) : null;
+    task.tag = taskMap['tag'] != null ? await tagManager.get(taskMap['tag']) : null;
     task.weight = taskMap['weight'];
     task.created_at = DateTime.parse(taskMap['created_at']);
     task.checked = taskMap['checked'] == 1 ? true : false;

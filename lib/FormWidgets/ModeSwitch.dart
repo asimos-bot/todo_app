@@ -36,7 +36,7 @@ class ModeSwitchState extends State<ModeSwitch> {
               setState(() => tmpMode.value = newValue);
             },
           ),
-          Text(tmpMode.value ? 'habit' : 'singular', style: TextStyle(color: globals.secondaryForegorundColor))
+          Text(tmpMode.value ? 'habit' : 'singular', style: TextStyle(color: globals.secondaryForegroundColor))
         ]
     );
   }

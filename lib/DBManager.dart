@@ -1,13 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_list_drag_and_drop/drag_and_drop_list.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
-import 'package:todo_yourself/Task/Task.dart';
-import 'package:todo_yourself/Tag/Tag.dart';
-import 'package:todo_yourself/Task/TaskBuilder.dart';
-import 'package:todo_yourself/Tag/TagBuilder.dart';
-import 'package:todo_yourself/Task/TaskManager.dart';
-import 'package:todo_yourself/Tag/TagManager.dart';
 
 class DBManager {
 
@@ -29,7 +21,7 @@ class DBManager {
             'weight INT NOT NULL,'
             'created_at TEXT NOT NULL,'
             'total_points INT NOT NULL'
-            ')'
+        ')'
     );
 
     await db.execute(
@@ -43,7 +35,7 @@ class DBManager {
             'checked INT NOT NULL,'
             'mode INT NOT NULL,'
             'FOREIGN KEY (tag) REFERENCES tags(id)'
-            ')'
+        ')'
     );
 
     await db.execute(
@@ -52,7 +44,7 @@ class DBManager {
             'created_at TEXT NOT NULL,'
             'points INT NOT NULL,'
             'FOREIGN KEY (tag) REFERENCES tags(id)'
-            ')'
+        ')'
     );
   }
 
