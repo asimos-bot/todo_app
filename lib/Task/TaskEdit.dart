@@ -146,7 +146,7 @@ class TaskEditState extends State<TaskEdit> {
                                     .toLowerCase()
                                     .contains(query);
                               },
-                              searchLatency: Duration(milliseconds: 500),
+                              searchLatency: Duration(milliseconds: 1),
                               onItemSelected: (Tag tag) {
                                 tmpTag = tag;
                               },
@@ -170,7 +170,7 @@ class TaskEditState extends State<TaskEdit> {
 
                                         }else{
 
-                                          return tmpTag.toMenuButtonWidget(context, data);
+                                          return tmpTag.toSearchWidget(context, () => data.triggerMenu() );
                                         }
                                       }
                                   )

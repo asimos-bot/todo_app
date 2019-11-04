@@ -22,25 +22,6 @@ class Tag extends Controller {
     );
   }
 
-  Widget toMenuButtonWidget(context, data){
-    return Card(
-        child: ListTile(
-          leading: toCircleAvatar(),
-          onTap: data.triggerMenu,
-          title: Text(
-            title,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1
-          ),
-          subtitle: Text(
-            description,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2
-          )
-        )
-      );
-  }
-
   Widget toSearchWidget(context, onItemTapped){
 
     return Card(
