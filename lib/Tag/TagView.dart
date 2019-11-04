@@ -38,7 +38,7 @@ class TagViewState extends State<TagView> {
                   title: Center(child:
                     Text(
                         tag.title,
-                        overflow: TextOverflow.fade,
+                        overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center
                     )
                   ),

@@ -33,7 +33,7 @@ class TaskEditState extends State<TaskEdit> {
 
     return Scaffold(
         appBar: AppBar(
-            title: Text(task.title, overflow: TextOverflow.fade),
+            title: Text(task.title, overflow: TextOverflow.ellipsis),
             actions: <Widget>[
               IconButton(
                   hoverColor: globals.secondaryForegroundColor ,
