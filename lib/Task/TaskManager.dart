@@ -43,7 +43,7 @@ class TaskManager extends Controller {
 
     length = list.length;
 
-    list.sort(( greater, smaller ) => greater.priority > smaller.priority ? 1 : -1);
+    list.sort(( greater, smaller ) => greater.priority < smaller.priority ? 1 : -1);
 
     return list;
   }
@@ -93,10 +93,8 @@ class TaskManager extends Controller {
       'created_at': DateTime.now().toIso8601String(),
       'checked': task.checked,
       'mode': task.taskModeToInt(),
-      'priority': highestPriority + 1
+      'priority': ++highestPriority
     });
-
-    highestPriority += 1;
   }
 
   Future<void> delete(Task task) async {
@@ -113,7 +111,8 @@ class TaskManager extends Controller {
       'tag': list[index].tag != null ? list[index].tag.id : null,
       'weight': list[index].weight,
       'checked': list[index].checked,
-      'mode': list[index].taskModeToInt()
+      'mode': list[index].taskModeToInt(),
+      'priority': list[index]
     }, where: 'id = ?', whereArgs: [list[index].id]);
   }
 
@@ -144,10 +143,13 @@ class TaskManager extends Controller {
     }, where: 'id = ?', whereArgs: [task.id]);
   }
 
-  Future<void> updatePriority(Task task) async {
+  Future<void> updatePriority(List<Task> tasks, int begin, int end) async {
 
-    await (await db).update('tasks',{
-     'priority': task.priority
-    }, where: 'id = ?', whereArgs: [task.id]);
+    for(int i=begin; i <= end; i++){
+
+      await (await db).update('tasks',{
+        'priority': end-i+1
+      }, where: 'id = ?', whereArgs: [tasks[i].id]);
+    }
   }
 }

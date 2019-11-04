@@ -1,5 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
+import 'Task/TaskManager.dart';
+import 'Tag/TagManager.dart';
 
 class DBManager {
 
@@ -20,7 +22,7 @@ class DBManager {
             'color INT NOT NULL,'
             'weight INT NOT NULL,'
             'created_at TEXT NOT NULL,'
-            'priority INT UNIQUE,'
+            'priority INT,'
             'total_points INT NOT NULL'
         ')'
     );

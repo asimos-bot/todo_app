@@ -43,7 +43,7 @@ class TagManager extends Controller {
 
     length = list.length;
 
-    list.sort(( greater, smaller ) => greater.priority > smaller.priority ? 1 : -1);
+    list.sort(( greater, smaller ) => greater.priority < smaller.priority ? 1 : -1);
 
     return list;
   }
@@ -93,7 +93,7 @@ class TagManager extends Controller {
       'weight': tag.weight,
       'created_at': DateTime.now().toIso8601String(),
       'total_points': tag.total_points,
-      'priority': highestPriority += 1
+      'priority': ++highestPriority
     });
   }
 
@@ -190,5 +190,15 @@ class TagManager extends Controller {
     length = list.length;
 
     return list;
+  }
+
+  Future<void> updatePriority(List<Tag> tags, int begin, int end) async {
+
+    for(int i=begin; i <= end; i++){
+
+      await (await db).update('tags',{
+        'priority': end-i+1
+      }, where: 'id = ?', whereArgs: [tags[i].id]);
+    }
   }
 }

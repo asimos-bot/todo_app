@@ -74,10 +74,69 @@ class TaskViewState extends State<TaskView> {
                         )
                       ),
                       Divider(),
-                      Text(
-                          'weight: ${task.weight.toString()}',
-                          style: TextStyle(color: globals.secondaryForegroundColor)
-                      )
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget> [
+                            Expanded(
+                                child: Card(
+                                    color: globals.secondaryForegroundColor,
+                                    child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: <Widget> [
+                                          Divider(
+                                              color: globals.secondaryForegroundColor
+                                          ),
+                                          Text(
+                                              'Weight',
+                                              textScaleFactor: 1.5,
+                                              style: TextStyle(color: globals.backgroundColor)
+                                          ),
+                                          Divider(
+                                              color: globals.secondaryForegroundColor
+                                          ),
+                                          Text(
+                                              '${task.weight.toString()}',
+                                              textScaleFactor: 1.5,
+                                              style: TextStyle(color: globals.backgroundColor)
+                                          ),
+                                          Divider(
+                                              color: globals.secondaryForegroundColor
+                                          )
+                                        ]
+                                    )
+                                )
+                            ),
+                            Expanded(
+                                child: Card(
+                                    color: globals.secondaryForegroundColor,
+                                    child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: <Widget> [
+                                          Divider(
+                                              color: globals.secondaryForegroundColor
+                                          ),
+                                          Text(
+                                              'Priority',
+                                              textScaleFactor: 1.5,
+                                              style: TextStyle(color: globals.backgroundColor)
+                                          ),
+                                          Divider(
+                                              color: globals.secondaryForegroundColor
+                                          ),
+                                          Text(
+                                              '${task.priority.toString()}',
+                                              textScaleFactor: 1.5,
+                                              style: TextStyle(color: globals.backgroundColor)
+                                          ),
+                                          Divider(
+                                              color: globals.secondaryForegroundColor
+                                          )
+                                        ]
+                                    )
+                                )
+                            )
+                          ]
+                      ),
                     ]
                 )
             )
