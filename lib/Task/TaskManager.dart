@@ -152,4 +152,37 @@ class TaskManager extends Controller {
       }, where: 'id = ?', whereArgs: [tasks[i].id]);
     }
   }
+
+  Future<List<Task>> query(String queryStr) async {
+
+    List<Task> list = [];
+
+    List<Map> queryResult = await (await db).rawQuery('SELECT * FROM tasks WHERE title LIKE \'%${queryStr}%\' ORDER BY priority DESC');
+
+    for(int i=0; i < queryResult.length; i++){
+
+      Map taskMap = queryResult[i];
+      Task task = Task(this);
+
+      task.title = taskMap['title'];
+      task.description = taskMap['description'];
+      task.id = taskMap['id'];
+      task.tag = taskMap['tag'] != null ? await tagManager.get(taskMap['tag']) : null;
+      task.weight = taskMap['weight'];
+      task.created_at = DateTime.parse(taskMap['created_at']);
+      task.checked = taskMap['checked'] == 1 ? true : false;
+      task.intToTaskMode(taskMap['mode']);
+      task.priority = taskMap['priority'];
+
+      if( task.priority > highestPriority ) highestPriority = task.priority;
+
+      list.add(task);
+    }
+
+    length = list.length;
+
+    list.sort(( greater, smaller ) => greater.priority < smaller.priority ? 1 : -1);
+
+    return list;
+  }
 }

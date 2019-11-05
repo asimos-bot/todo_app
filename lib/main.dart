@@ -41,16 +41,22 @@ class TodoApp extends StatelessWidget {
 class TodoList extends StatefulWidget {
 
   @override
-  createState() => new TodoListState();
+  createState() => new TodoListState(TextEditingController());
 }
 
 //describe states of todoList
 class TodoListState extends State<TodoList> {
 
+  bool searchMode = false;
+
+  TextEditingController taskSearchController;
+
+  TodoListState(this.taskSearchController);
+
   //build whole list of tasks
   Future<Widget> _buildTaskList() async {
 
-    List<Task> list = await tasks.list();
+    List<Task> list = await tasks.query(taskSearchController.text);
 
     return list.length > 1 ? DragAndDropList<Task>(
       list,
@@ -148,6 +154,11 @@ class TodoListState extends State<TodoList> {
 
     super.initState();
 
+    taskSearchController.addListener((){
+
+      setState((){});
+    });
+
     //TODO: for debugging only, comment it later
     Sqflite.devSetDebugModeOn(true);
 
@@ -189,7 +200,29 @@ class TodoListState extends State<TodoList> {
       drawer: _buildDrawer(),
       //top bar
       appBar: AppBar(
-          title: Text('Your tasks')
+          title: searchMode ?
+              TextField(
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search),
+                  hintText: 'Search...'
+                ),
+                controller: taskSearchController,
+              )
+              : Text('Your tasks'),
+          actions: <Widget> [
+            IconButton(
+              icon: Icon(
+                  searchMode ? Icons.close : Icons.search,
+                  color: globals.secondaryForegroundColor
+              ),
+              onPressed: (){
+
+                if(searchMode) taskSearchController.value = new TextEditingController.fromValue(new TextEditingValue(text: '')).value;
+
+                setState(() =>searchMode = !searchMode);
+              },
+            )
+          ]
       ),
       //content in the middle of the screen
       body: FutureBuilder(

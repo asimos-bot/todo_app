@@ -79,7 +79,7 @@ class TaskWidgetState extends State<TaskWidget> {
             subtitle: Text(
                 task.description,
                 overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+                maxLines: 1,
                 style: task.checked ? TextStyle(
                     decoration: TextDecoration.lineThrough,
                     color: Colors.black.withOpacity(0.4)

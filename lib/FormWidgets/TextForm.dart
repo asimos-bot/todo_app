@@ -15,7 +15,6 @@ class TextForm extends StatelessWidget {
       children: <Widget> [
         TextField(
 
-          autofocus: true,
           decoration: InputDecoration(
               filled: true,
               fillColor: globals.secondaryForegroundColor,
