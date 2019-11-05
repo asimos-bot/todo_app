@@ -192,13 +192,46 @@ class TagManager extends Controller {
     return list;
   }
 
-  Future<void> updatePriority(List<Tag> tags, int begin, int end) async {
+  Future<void> updatePriority(List<Tag> tags, int before, int after) async {
 
-    for(int i=begin; i <= end; i++){
+    if(before==after) return;
 
-      await (await db).update('tags',{
-        'priority': end-i+1
-      }, where: 'id = ?', whereArgs: [tags[i].id]);
+    int afterPriority = tags[after].priority;
+
+    Batch batch = (await db).batch();
+
+    //remove
+    if( before < after ){
+
+      for(int i = after; i > before; i--){
+
+        tags[i].priority = tags[i-1].priority;
+
+        batch.update('tasks',{
+          'priority': tags[i].priority
+        }, where: 'id = ?', whereArgs: [tags[i].id]);
+      }
+
+    }else{
+
+      for(int i = after; i < before; i++){
+
+        tags[i].priority = tags[i+1].priority;
+
+        batch.update('tasks',{
+          'priority': tags[i].priority
+        }, where: 'id = ?', whereArgs: [tags[i].id]);
+      }
     }
+
+    tags[before].priority = afterPriority;
+
+    batch.update('tasks',{
+      'priority': tags[before].priority
+    }, where: 'id = ?', whereArgs: [tags[before].id]);
+
+    await batch.commit(noResult: true);
+
+    tags.insert(after, tags.removeAt(before));
   }
 }

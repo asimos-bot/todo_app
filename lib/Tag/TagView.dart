@@ -13,14 +13,33 @@ class TagView extends StatefulWidget {
   TagView(this.tag, this.manager);
 
   @override
-  createState() => TagViewState(manager.get(tag));
+  createState() => TagViewState(manager.get(tag), TextEditingController());
 }
 
 class TagViewState extends State<TagView> {
 
   Future<Tag> futureTag;
 
-  TagViewState(this.futureTag);
+  TextEditingController taskSearchController;
+
+  bool searchMode = false;
+
+  TagViewState(this.futureTag, this.taskSearchController);
+
+  @override
+  @mustCallSuper
+  void initState(){
+
+    super.initState();
+
+    taskSearchController.addListener((){
+
+      if(taskSearchController.text!=''){
+
+        setState((){});
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context){
@@ -35,7 +54,15 @@ class TagViewState extends State<TagView> {
 
           return Scaffold(
             appBar: AppBar(
-                title: Center(child:
+                title: Center(
+                  child: searchMode ?
+                  TextField(
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        hintText: 'Search...'
+                    ),
+                    controller: taskSearchController,
+                  ) :
                   Text(
                       tag.title,
                       overflow: TextOverflow.ellipsis,
@@ -44,7 +71,18 @@ class TagViewState extends State<TagView> {
                 ),
                 actions: <Widget>[
                   IconButton(
-                      icon: Icon(Icons.search, color: globals.secondaryForegroundColor)
+                    icon: Icon(
+                        searchMode ? Icons.close : Icons.search,
+                        color: globals.secondaryForegroundColor
+                    ),
+                    onPressed: (){
+
+                      if(searchMode) taskSearchController.value = new TextEditingController.fromValue(new TextEditingValue(text: '')).value;
+
+                      searchMode = !searchMode;
+
+                      setState((){});
+                    },
                   ),
                   IconButton(
                       icon: Icon(Icons.edit),
@@ -67,6 +105,7 @@ class TagViewState extends State<TagView> {
                 SliverList(
                   delegate: SliverChildListDelegate(
                     <Widget>[
+                      Divider(),
                       Text(
                         tag.title,
                         textScaleFactor: 2,
@@ -146,7 +185,9 @@ class TagViewState extends State<TagView> {
                   ]
                 ),
                 FutureBuilder(
-                  future: tag.manager.getTasks(tag),
+                  future: taskSearchController.text == '' ?
+                    tag.manager.getTasks(tag) :
+                    tag.manager.taskManager.query(taskSearchController.text, tag.id),
                   builder: (context, snapshot) {
 
                     if( snapshot.connectionState == ConnectionState.done ){

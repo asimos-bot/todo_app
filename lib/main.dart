@@ -56,16 +56,14 @@ class TodoListState extends State<TodoList> {
   //build whole list of tasks
   Future<Widget> _buildTaskList() async {
 
-    List<Task> list = await tasks.query(taskSearchController.text);
+    List<Task> list = await ( taskSearchController.text == '' ? tasks.list() : tasks.query(taskSearchController.text, null) );
 
     return list.length > 1 ? DragAndDropList<Task>(
       list,
       itemBuilder: (BuildContext context, item) => item.toWidget(null),
-      onDragFinish: (before, after) {
+      onDragFinish: (before, after) async {
 
-        list.insert(after, list.removeAt(before));
-
-        tasks.updatePriority(list, before < after ? before : after, after > before ? after : before);
+        await tasks.updatePriority(list, before, after);
       },
       canBeDraggedTo: (one, two) => true,
       dragElevation: 8.0,
@@ -86,10 +84,9 @@ class TodoListState extends State<TodoList> {
 
           return item.toWidget(context);
         },
-        onDragFinish: (before, after) {
+        onDragFinish: (before, after) async {
 
-          list.insert(after, list.removeAt(before));
-          tags.updatePriority(list, before < after ? before : after, after > before ? after : before);
+          await tags.updatePriority(list, before, after);
         },
         canBeDraggedTo: (one, two) => true,
         dragElevation: 8.0,
@@ -156,7 +153,10 @@ class TodoListState extends State<TodoList> {
 
     taskSearchController.addListener((){
 
-      setState((){});
+      if(taskSearchController.text!=''){
+
+        setState((){});
+      }
     });
 
     //TODO: for debugging only, comment it later
@@ -219,7 +219,9 @@ class TodoListState extends State<TodoList> {
 
                 if(searchMode) taskSearchController.value = new TextEditingController.fromValue(new TextEditingValue(text: '')).value;
 
-                setState(() =>searchMode = !searchMode);
+                searchMode = !searchMode;
+
+                setState((){});
               },
             )
           ]

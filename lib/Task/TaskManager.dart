@@ -143,21 +143,60 @@ class TaskManager extends Controller {
     }, where: 'id = ?', whereArgs: [task.id]);
   }
 
-  Future<void> updatePriority(List<Task> tasks, int begin, int end) async {
+  Future<void> updatePriority(List<Task> tasks, int before, int after) async {
 
-    for(int i=begin; i <= end; i++){
+    if(before == after) return;
 
-      await (await db).update('tasks',{
-        'priority': end-i+1
-      }, where: 'id = ?', whereArgs: [tasks[i].id]);
+    int afterPriority = tasks[after].priority;
+
+    Batch batch = (await db).batch();
+
+    //remove
+    if( before < after ){
+
+      for(int i = after; i > before; i--){
+
+        tasks[i].priority = tasks[i-1].priority;
+
+        batch.update('tasks',{
+          'priority': tasks[i].priority
+        }, where: 'id = ?', whereArgs: [tasks[i].id]);
+      }
+
+    }else{
+
+      for(int i = after; i < before; i++){
+
+        tasks[i].priority = tasks[i+1].priority;
+
+        batch.update('tasks',{
+          'priority': tasks[i].priority
+        }, where: 'id = ?', whereArgs: [tasks[i].id]);
+      }
     }
+
+    tasks[before].priority = afterPriority;
+
+    batch.update('tasks',{
+      'priority': tasks[before].priority
+    }, where: 'id = ?', whereArgs: [tasks[before].id]);
+
+    await batch.commit(noResult: true);
+
+    tasks.insert(after, tasks.removeAt(before));
   }
 
-  Future<List<Task>> query(String queryStr) async {
+  Future<List<Task>> query(String queryStr, int tag) async {
 
     List<Task> list = [];
 
-    List<Map> queryResult = await (await db).rawQuery('SELECT * FROM tasks WHERE title LIKE \'%${queryStr}%\' ORDER BY priority DESC');
+    String searchStr = tag == null ?
+    'SELECT * FROM tasks WHERE title LIKE \'%$queryStr%\' ORDER BY priority DESC' :
+    'SELECT * FROM tasks WHERE title LIKE \'%$queryStr%\' AND tag = ${tag.toString()} ORDER BY priority DESC';
+
+    print("search string: $searchStr");
+
+    List<Map> queryResult = await (await db).rawQuery(searchStr);
 
     for(int i=0; i < queryResult.length; i++){
 
