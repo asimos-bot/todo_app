@@ -87,6 +87,7 @@ class TagViewState extends State<TagView> {
                 ),
                 SliverGrid.count(
                   crossAxisCount: 2,
+                  childAspectRatio: 1.6,
                   children: <Widget> [
                     Card(
                         color: globals.secondaryForegroundColor,
