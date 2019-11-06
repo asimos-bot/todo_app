@@ -107,22 +107,25 @@ class TagViewState extends State<TagView> {
                     SliverList(
                       delegate: SliverChildListDelegate(
                         <Widget>[
-                          Divider(),
-                          Text(
-                            tag.title,
-                            textScaleFactor: 2,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: globals.secondaryForegroundColor
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child:Text(
+                              tag.title,
+                              textScaleFactor: 2,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: globals.secondaryForegroundColor
+                              )
                             )
                           ),
-                          Divider(),
-                          Text(
-                              tag.description,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: globals.secondaryForegroundColor.withOpacity(0.8))
+                          Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                                tag.description,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: globals.secondaryForegroundColor.withOpacity(0.8))
+                            )
                           ),
-                          Divider(),
                           tag.toSearchWidget(context, null)
                         ]
                       )
@@ -219,7 +222,7 @@ class TagViewState extends State<TagView> {
                     )
                   ]
                   ),
-                  //TODO: CHART OF THIS TAG
+                  //TODO: add individual chart here
                 ]
             )
           );

@@ -56,20 +56,25 @@ class TaskViewState extends State<TaskView> {
                   child: Column(
                       children: <Widget>[
 
-                        Text(
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
                             task.title,
                             textScaleFactor: 2,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: globals.secondaryForegroundColor
                             )
+                          )
                         ),
-                        Divider(),
-                        Text(
-                            task.description,
-                            style: TextStyle(
-                                color: globals.secondaryForegroundColor.withOpacity(0.8)
-                            )
+                        Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                              task.description,
+                              style: TextStyle(
+                                  color: globals.secondaryForegroundColor.withOpacity(0.8)
+                              )
+                          )
                         ),
                         Divider(),
                         task.tag != null ?

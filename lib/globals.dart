@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 //colors
-var foregroundColor = const Color(0xFF01579B);
-var backgroundColor = const Color(0xFF455A64);
-var secondaryForegroundColor = Colors.white;
+Color primaryForegroundColor = const Color(0xFF01579B);
+Color backgroundColor = const Color(0xFF455A64);
+Color secondaryForegroundColor = Colors.white;
+Color thirdForegroundColor = const Color(0xff23b6e6);
+Color forthForegroundColor = const Color(0xff35aebb);
+
+//settings
+const int maxNumberOfPointsEntriesPerTag=3;

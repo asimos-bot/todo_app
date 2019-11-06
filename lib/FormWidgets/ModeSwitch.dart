@@ -44,8 +44,8 @@ class ModeSwitchState extends State<ModeSwitch> {
                 )
               ),
               Switch(
-                inactiveTrackColor: globals.foregroundColor,
-                activeTrackColor: globals.foregroundColor,
+                inactiveTrackColor: globals.primaryForegroundColor,
+                activeTrackColor: globals.primaryForegroundColor,
                 activeColor: Colors.white,
                 value: tmpMode.value,
                 onChanged: (bool newValue) async {
