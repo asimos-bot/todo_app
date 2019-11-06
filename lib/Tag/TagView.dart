@@ -117,6 +117,7 @@ class TagViewState extends State<TagView> {
                       Divider(),
                       Text(
                           tag.description,
+                          textAlign: TextAlign.center,
                           style: TextStyle(color: globals.secondaryForegroundColor.withOpacity(0.8))
                       ),
                       Divider(),

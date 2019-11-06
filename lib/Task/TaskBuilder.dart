@@ -114,6 +114,9 @@ class TaskBuilderState extends State<TaskBuilder> {
                                                   //widget of the button that calls the menu
                                                   return Center(
                                                       child: RaisedButton(
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(30.0),
+                                                          ),
                                                           color: globals.secondaryForegroundColor,
                                                           onPressed: data.triggerMenu,
                                                           child: Text("Choose Tag")

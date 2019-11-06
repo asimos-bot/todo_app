@@ -64,6 +64,9 @@ class TagBuilderState extends State<TagBuilder> {
                   TextForm(list),
                   Divider(),
                   RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
                     color: globals.secondaryForegroundColor,
                     child: Text('Choose Color'),
                     onPressed: (){

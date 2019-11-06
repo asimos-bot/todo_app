@@ -163,6 +163,9 @@ class TaskEditState extends State<TaskEdit> {
                                           //when no tag is selected for this task
                                           return Center(
                                               child: RaisedButton(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(30.0),
+                                                  ),
                                                   color: globals.secondaryForegroundColor,
                                                   onPressed: data.triggerMenu,
                                                   child: Text("Choose Tag")

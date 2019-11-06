@@ -19,9 +19,11 @@ class TagEditState extends State<TagEdit> {
 
   Tag tag;
 
-  Color pickerColor = Color(0xff443a49);
+  Color pickerColor;
 
-  TagEditState(this.tag);
+  TagEditState(this.tag){
+    pickerColor = tag.color;
+  }
 
   void changeColor(Color color){
 
@@ -90,8 +92,12 @@ class TagEditState extends State<TagEdit> {
                 children: <Widget>[
                   TextForm(tag),
                   Divider(),
-                  RaisedButton(
+                  Center(
+                    child: RaisedButton(
 
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                      ),
                       color: globals.secondaryForegroundColor,
                       child: Text('Choose Color'),
                       onPressed: (){
@@ -125,6 +131,7 @@ class TagEditState extends State<TagEdit> {
                             )
                         );
                       }
+                    )
                   ),
                   Divider(),
                   WeightSlider(tag, tag.weight.toDouble())
