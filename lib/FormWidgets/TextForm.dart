@@ -13,29 +13,45 @@ class TextForm extends StatelessWidget {
 
     return Column(
       children: <Widget> [
-        TextField(
-
-          decoration: InputDecoration(
-              filled: true,
-              fillColor: globals.secondaryForegroundColor,
-              hintText: "Title",
-              counterText: ''
-          ),
-          style: TextStyle(color: Colors.black),
-          controller: controller.titleController,
-          maxLength: 40
+        Padding(
+          padding: EdgeInsets.all(10.0),
+          child: TextField(
+            decoration: InputDecoration(
+                filled: true,
+                fillColor: globals.secondaryForegroundColor,
+                hintText: "Title",
+                counterText: '',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(30)
+                  )
+                )
+            ),
+            style: TextStyle(
+                color: Colors.black,
+            ),
+            controller: controller.titleController,
+            maxLength: 40
+          )
         ),
-        Divider(),
-        TextField(
-          decoration: InputDecoration(
-              filled: true,
-              fillColor: globals.secondaryForegroundColor,
-              hintText: "Description",
-              counterText: ''
-          ),
-          style: TextStyle(color: Colors.black),
-          controller: controller.descriptionController,
-          maxLength: 255
+        Padding(
+          padding: EdgeInsets.all(10.0),
+          child: TextField(
+            decoration: InputDecoration(
+                filled: true,
+                fillColor: globals.secondaryForegroundColor,
+                hintText: "Description",
+                counterText: '',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(30)
+                  )
+                )
+            ),
+            style: TextStyle(color: Colors.black),
+            controller: controller.descriptionController,
+            maxLength: 255
+          )
         )
       ]
     );

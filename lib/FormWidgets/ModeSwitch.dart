@@ -27,17 +27,45 @@ class ModeSwitchState extends State<ModeSwitch> {
   @override
   Widget build(BuildContext context) {
 
-    return Row(
-        children: <Widget> [
-          Switch(
-            value: tmpMode.value,
-            onChanged: (bool newValue) async {
+    return Padding(
+        padding: EdgeInsets.all(10),
+        child: Card(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget> [
+              SizedBox(
+                width: 55,
+                child: Text(
+                    tmpMode.value ? '' : 'singular',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: globals.backgroundColor
+                    )
+                )
+              ),
+              Switch(
+                inactiveTrackColor: globals.foregroundColor,
+                activeTrackColor: globals.foregroundColor,
+                activeColor: Colors.white,
+                value: tmpMode.value,
+                onChanged: (bool newValue) async {
 
-              setState(() => tmpMode.value = newValue);
-            },
-          ),
-          Text(tmpMode.value ? 'habit' : 'singular', style: TextStyle(color: globals.secondaryForegroundColor))
-        ]
+                  setState(() => tmpMode.value = newValue);
+                },
+              ),
+              SizedBox(
+                width: 55,
+                child: Text(
+                    tmpMode.value ? 'habit' : '',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: globals.backgroundColor
+                    )
+                )
+              )
+            ]
+        )
+      )
     );
   }
 }

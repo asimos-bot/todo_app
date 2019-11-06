@@ -163,6 +163,7 @@ class TaskEditState extends State<TaskEdit> {
                                           //when no tag is selected for this task
                                           return Center(
                                               child: RaisedButton(
+                                                  color: globals.secondaryForegroundColor,
                                                   onPressed: data.triggerMenu,
                                                   child: Text("Choose Tag")
                                               )
@@ -179,10 +180,17 @@ class TaskEditState extends State<TaskEdit> {
                           } else {
 
                             //appears when there is not tag to select
-                            return Card(
-                                child: Center(
+                            return Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Card(
+                                child: Container(
+                                  width: 200,
+                                  height: 50,
+                                  child: Center(
                                     child: Text("No Tag Available")
+                                  )
                                 )
+                              )
                             );
                           }
                         } else {

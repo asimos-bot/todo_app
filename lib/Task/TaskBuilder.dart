@@ -114,6 +114,7 @@ class TaskBuilderState extends State<TaskBuilder> {
                                                   //widget of the button that calls the menu
                                                   return Center(
                                                       child: RaisedButton(
+                                                          color: globals.secondaryForegroundColor,
                                                           onPressed: data.triggerMenu,
                                                           child: Text("Choose Tag")
                                                       )
@@ -128,12 +129,18 @@ class TaskBuilderState extends State<TaskBuilder> {
 
                                   }else{
 
-                                    return Card(
-                                        color: globals.secondaryForegroundColor,
-                                        child: Center(
-                                          child: Text("No Tag Available")
+                                    return Padding(
+                                        padding: EdgeInsets.all(10.0),
+                                        child: Card(
+                                            child: Container(
+                                                width: 200,
+                                                height: 50,
+                                                child: Center(
+                                                    child: Text("No Tag Available")
+                                                )
+                                            )
                                         )
-                                      );
+                                    );
                                   }
                                 }else{
 

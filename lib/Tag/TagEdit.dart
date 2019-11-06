@@ -3,6 +3,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
 import '../FormWidgets/WeightSlider.dart';
 import '../FormWidgets/TextForm.dart';
+import 'package:todo_yourself/globals.dart' as globals;
 
 class TagEdit extends StatefulWidget {
 
@@ -91,6 +92,7 @@ class TagEditState extends State<TagEdit> {
                   Divider(),
                   RaisedButton(
 
+                      color: globals.secondaryForegroundColor,
                       child: Text('Choose Color'),
                       onPressed: (){
                         showDialog(

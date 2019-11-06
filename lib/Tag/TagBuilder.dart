@@ -64,6 +64,7 @@ class TagBuilderState extends State<TagBuilder> {
                   TextForm(list),
                   Divider(),
                   RaisedButton(
+                    color: globals.secondaryForegroundColor,
                     child: Text('Choose Color'),
                     onPressed: (){
                       showDialog(

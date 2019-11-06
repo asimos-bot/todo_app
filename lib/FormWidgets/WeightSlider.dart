@@ -28,7 +28,7 @@ class WeightSliderState extends State<WeightSlider> {
     return Column(
       children: <Widget>[
         Slider(
-            activeColor: Colors.indigoAccent,
+            activeColor: globals.foregroundColor,
             min: -50,
             max: 50,
             onChanged: (newWeight) {
@@ -40,11 +40,24 @@ class WeightSliderState extends State<WeightSlider> {
             value: currentSliderValue
         ),
         Divider(),
-        TextField(
-            inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-            decoration: InputDecoration(filled: true, fillColor: globals.secondaryForegroundColor),
-            style: TextStyle(color: Colors.black),
-            controller: controller.weightController
+        Container(
+          width: 60,
+          child: TextField(
+              enabled: false,
+              textAlign: TextAlign.center,
+              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: globals.secondaryForegroundColor,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(30)
+                  )
+                )
+              ),
+              style: TextStyle(color: Colors.black),
+              controller: controller.weightController
+          )
         )
       ],
     );
