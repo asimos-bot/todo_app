@@ -36,7 +36,7 @@ class Tag extends Controller {
           subtitle: Text(
             description,
             overflow: TextOverflow.ellipsis,
-            maxLines: 2
+            maxLines: 1
           )
         )
       );
@@ -55,7 +55,7 @@ class Tag extends Controller {
         subtitle: Text(
           description,
           overflow: TextOverflow.ellipsis,
-          maxLines: 2,
+          maxLines: 1,
         ),
         onTap: () => Navigator.of(context).push(
             MaterialPageRoute(

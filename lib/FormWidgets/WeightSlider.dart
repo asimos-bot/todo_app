@@ -28,7 +28,7 @@ class WeightSliderState extends State<WeightSlider> {
     return Column(
       children: <Widget>[
         Slider(
-            activeColor: globals.foregroundColor,
+            activeColor: globals.secondaryForegroundColor,
             min: -50,
             max: 50,
             onChanged: (newWeight) {
