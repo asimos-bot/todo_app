@@ -50,7 +50,8 @@ class TextForm extends StatelessWidget {
             ),
             style: TextStyle(color: Colors.black),
             controller: controller.descriptionController,
-            maxLength: 255
+            maxLength: 255,
+            maxLines: null
           )
         )
       ]
