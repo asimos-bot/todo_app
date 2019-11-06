@@ -16,6 +16,7 @@ class TextForm extends StatelessWidget {
         Padding(
           padding: EdgeInsets.all(10.0),
           child: TextField(
+            autofocus: true,
             decoration: InputDecoration(
                 filled: true,
                 fillColor: globals.secondaryForegroundColor,
