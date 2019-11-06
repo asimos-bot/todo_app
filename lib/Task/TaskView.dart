@@ -133,7 +133,7 @@ class TaskViewState extends State<TaskView> {
                                                 color: globals.secondaryForegroundColor
                                             ),
                                             Text(
-                                                '${task.created_at.day}/${task.created_at.month} at'
+                                                '${task.created_at.day}/${task.created_at.month}/${task.created_at.year.toString().substring(2,4)}'
                                                     ' ${task.created_at.hour}:${task.created_at.minute}',
                                                 textScaleFactor: 1.5,
                                                 style: TextStyle(color: globals.backgroundColor)

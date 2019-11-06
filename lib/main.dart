@@ -108,7 +108,14 @@ class TodoListState extends State<TodoList> {
             DrawerHeader(
               decoration: BoxDecoration(color: globals.foregroundColor),
               child: Center(
-                child: Text('Tags Menu',style: TextStyle(color: globals.secondaryForegroundColor, fontSize: 20, fontStyle: FontStyle.italic))
+                child: Text(
+                    'Tags Menu',
+                    style: TextStyle(
+                        color: globals.secondaryForegroundColor,
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic
+                    )
+                )
               )
             ),
             ListTile(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'TagManager.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class TagMaster extends StatefulWidget {
 
@@ -20,6 +21,12 @@ class TagMasterState extends State<TagMaster>{
   @override
   Widget build(BuildContext context) {
 
-    return Text("Todo: really fancy stuff");
+    return LineChart(
+      LineChartData(
+        gridData: FlGridData(
+
+        )
+      )
+    );
   }
 }
