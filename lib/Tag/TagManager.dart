@@ -135,14 +135,47 @@ class TagManager extends Controller {
     await update(list[index]);
   }
 
+  Future<void> deleteOlderPoint(Tag tag) async {
+
+    getPoints(tag.id).then((points) async {
+
+      if( points.length == 0 ) return;
+
+      DateTime oldestPointDateTime=DateTime.parse(points[0]['created_at']);
+
+      for(int i=1; i < points.length; i++){
+
+        DateTime current = DateTime.parse(points[i]['created_at']);
+
+        if( current.isBefore(oldestPointDateTime) ) oldestPointDateTime = current;
+      }
+
+      await (await db).delete(
+        'points',
+        where: 'created_at = ?',
+        whereArgs: [oldestPointDateTime.toIso8601String()],
+      );
+    });
+  }
+
   Future<void> changeTotalPoints(Tag tag, int change) async {
 
     //change in primary memory
     tag.total_points += change;
 
+    if( tag.number_of_point_entries >= globals.maxNumberOfPointsEntriesPerTag ){
+
+      await deleteOlderPoint(tag);
+
+    }else{
+
+      tag.number_of_point_entries++;
+    }
+
     //change in secondary memory
     await (await db).update('tags', {
-      'total_points': tag.total_points
+      'total_points': tag.total_points,
+      'number_of_point_entries': tag.number_of_point_entries
     }, where: 'id = ?', whereArgs: [tag.id]);
 
     //create entry in points table
