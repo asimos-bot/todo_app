@@ -99,123 +99,128 @@ class TagViewState extends State<TagView> {
                   )
                 ]
             ),
-            body: CustomScrollView(
-              slivers: <Widget>[
+            body: PageView(
+                children: <Widget> [
+                  CustomScrollView(
+                  slivers: <Widget>[
 
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    <Widget>[
-                      Divider(),
-                      Text(
-                        tag.title,
-                        textScaleFactor: 2,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: globals.secondaryForegroundColor
-                        )
-                      ),
-                      Divider(),
-                      Text(
-                          tag.description,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: globals.secondaryForegroundColor.withOpacity(0.8))
-                      ),
-                      Divider(),
-                      tag.toSearchWidget(context, null)
-                    ]
-                  )
-                ),
-                SliverGrid.count(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.6,
-                  children: <Widget> [
-                    Card(
-                        color: globals.secondaryForegroundColor,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget> [
-                            Divider(
-                              color: globals.secondaryForegroundColor
-                            ),
-                            Text(
-                                'Weight',
-                                textScaleFactor: 1.5,
-                                style: TextStyle(color: globals.backgroundColor)
-                            ),
-                            Divider(
-                              color: globals.secondaryForegroundColor
-                            ),
-                            Text(
-                                '${tag.weight.toString()}',
-                                textScaleFactor: 1.5,
-                                style: TextStyle(color: globals.backgroundColor)
-                            ),
-                            Divider(
-                              color: globals.secondaryForegroundColor
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        <Widget>[
+                          Divider(),
+                          Text(
+                            tag.title,
+                            textScaleFactor: 2,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: globals.secondaryForegroundColor
                             )
-                          ]
-                        )
+                          ),
+                          Divider(),
+                          Text(
+                              tag.description,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: globals.secondaryForegroundColor.withOpacity(0.8))
+                          ),
+                          Divider(),
+                          tag.toSearchWidget(context, null)
+                        ]
+                      )
                     ),
-                    Card(
-                        color: globals.secondaryForegroundColor,
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget> [
-                              Divider(
+                    SliverGrid.count(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1.6,
+                      children: <Widget> [
+                        Card(
+                            color: globals.secondaryForegroundColor,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget> [
+                                Divider(
                                   color: globals.secondaryForegroundColor
-                              ),
-                              Text(
-                                  'Points',
-                                  textScaleFactor: 1.5,
-                                  style: TextStyle(color: globals.backgroundColor)
-                              ),
-                              Divider(
+                                ),
+                                Text(
+                                    'Weight',
+                                    textScaleFactor: 1.5,
+                                    style: TextStyle(color: globals.backgroundColor)
+                                ),
+                                Divider(
                                   color: globals.secondaryForegroundColor
-                              ),
-                              Text(
-                                  '${tag.total_points.toString()}',
-                                  textScaleFactor: 1.5,
-                                  style: TextStyle(color: globals.backgroundColor)
-                              ),
-                              Divider(
+                                ),
+                                Text(
+                                    '${tag.weight.toString()}',
+                                    textScaleFactor: 1.5,
+                                    style: TextStyle(color: globals.backgroundColor)
+                                ),
+                                Divider(
                                   color: globals.secondaryForegroundColor
-                              )
-                            ]
+                                )
+                              ]
+                            )
+                        ),
+                        Card(
+                            color: globals.secondaryForegroundColor,
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget> [
+                                  Divider(
+                                      color: globals.secondaryForegroundColor
+                                  ),
+                                  Text(
+                                      'Points',
+                                      textScaleFactor: 1.5,
+                                      style: TextStyle(color: globals.backgroundColor)
+                                  ),
+                                  Divider(
+                                      color: globals.secondaryForegroundColor
+                                  ),
+                                  Text(
+                                      '${tag.total_points.toString()}',
+                                      textScaleFactor: 1.5,
+                                      style: TextStyle(color: globals.backgroundColor)
+                                  ),
+                                  Divider(
+                                      color: globals.secondaryForegroundColor
+                                  )
+                                ]
+                            )
                         )
+                      ]
+                    ),
+                    FutureBuilder(
+                      future: taskSearchController.text == '' ?
+                        tag.manager.getTasks(tag) :
+                        tag.manager.taskManager.query(taskSearchController.text, tag.id),
+                      builder: (context, snapshot) {
+
+                        if( snapshot.connectionState == ConnectionState.done ){
+
+                          List<Task> tasks = snapshot.data;
+
+                          return SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+
+                                  return tasks[index].toWidget(()=>setState((){}));
+                                },
+                                childCount: tasks.length
+                            )
+                          );
+                        }
+
+                        return SliverList(
+                          delegate: SliverChildListDelegate(
+                            <Widget> [
+                              CircularProgressIndicator()
+                            ]
+                          ),
+                        );
+                      }
                     )
                   ]
-                ),
-                FutureBuilder(
-                  future: taskSearchController.text == '' ?
-                    tag.manager.getTasks(tag) :
-                    tag.manager.taskManager.query(taskSearchController.text, tag.id),
-                  builder: (context, snapshot) {
-
-                    if( snapshot.connectionState == ConnectionState.done ){
-
-                      List<Task> tasks = snapshot.data;
-
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-
-                              return tasks[index].toWidget(()=>setState((){}));
-                            },
-                            childCount: tasks.length
-                        )
-                      );
-                    }
-
-                    return SliverList(
-                      delegate: SliverChildListDelegate(
-                        <Widget> [
-                          CircularProgressIndicator()
-                        ]
-                      ),
-                    );
-                  }
-                )
-              ]
+                  ),
+                  //TODO: CHART OF THIS TAG
+                ]
             )
           );
         }

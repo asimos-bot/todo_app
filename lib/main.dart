@@ -9,6 +9,7 @@ import 'package:todo_yourself/Task/TaskBuilder.dart';
 import 'package:todo_yourself/Tag/TagBuilder.dart';
 import 'package:todo_yourself/Task/TaskManager.dart';
 import 'package:todo_yourself/Tag/TagManager.dart';
+import 'Tag/TagMaster.dart';
 import 'DBManager.dart';
 import 'globals.dart' as globals;
 
@@ -109,6 +110,17 @@ class TodoListState extends State<TodoList> {
               child: Center(
                 child: Text('Tags Menu',style: TextStyle(color: globals.secondaryForegroundColor, fontSize: 20, fontStyle: FontStyle.italic))
               )
+            ),
+            ListTile(
+              leading: Icon(Icons.data_usage,color: globals.secondaryForegroundColor),
+              title: Text("Visualize",style: TextStyle(color: globals.secondaryForegroundColor)),
+              onTap: (){
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => TagMaster(tags)
+                    )
+                );
+              },
             ),
             ListTile(
               leading: Icon(Icons.add,color: globals.secondaryForegroundColor),
