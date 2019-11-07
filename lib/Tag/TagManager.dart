@@ -269,7 +269,7 @@ class TagManager extends Controller {
 
   Future<List<Map>> getPoints(int tag) async {
 
-    return await (await db).query(
+    return List.from(await (await db).query(
         'points',
         columns: [
           'points',
@@ -277,14 +277,14 @@ class TagManager extends Controller {
         ],
         where: 'tag = ?',
         whereArgs: [tag]
-    );
+    ));
   }
 
   List<FlSpot> pointsToSpots(List<Map> points, DateTime start) {
 
     points.sort((greater, smaller) => DateTime.parse(greater['created_at']).isAfter(DateTime.parse(smaller['created_at'])) ? 1:-1);
 
-    List<FlSpot> spots = [FlSpot(0,0)];
+    List<FlSpot> spots = [];
 
     for(int i=0; i < points.length; i++){
 
@@ -293,6 +293,6 @@ class TagManager extends Controller {
       spots.add(FlSpot(diff.inSeconds.toDouble(), points[i]['points'].toDouble()));
     }
 
-    return spots;
+    return List.unmodifiable(spots);
   }
 }

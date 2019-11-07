@@ -3,6 +3,7 @@ import 'package:todo_yourself/Tag/TagEdit.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
 import 'TagManager.dart';
 import '../Task/Task.dart';
+import 'TagChart.dart';
 import '../globals.dart' as globals;
 
 class TagView extends StatefulWidget {
@@ -222,7 +223,7 @@ class TagViewState extends State<TagView> {
                     )
                   ]
                   ),
-                  //TODO: add individual chart here
+                  TagChart(tag.manager.getPoints(tag.id), tag)
                 ]
             )
           );
