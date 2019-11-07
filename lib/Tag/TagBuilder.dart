@@ -66,6 +66,10 @@ class TagBuilderState extends State<TagBuilder> {
                   RaisedButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
+                      side: BorderSide(
+                          color: pickerColor,
+                          width: 4
+                      )
                     ),
                     color: globals.secondaryForegroundColor,
                     child: Text('Choose Color'),

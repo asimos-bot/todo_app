@@ -32,7 +32,7 @@ class TodoApp extends StatelessWidget {
     return new MaterialApp(
       title: 'ToDo Yourself', //title which appear when we minimize the app
       home: new TodoList(), //actual app stuff
-      theme: ThemeData(primaryColor: globals.foregroundColor, scaffoldBackgroundColor: globals.backgroundColor)
+      theme: ThemeData(primaryColor: globals.primaryForegroundColor, scaffoldBackgroundColor: globals.backgroundColor)
     );
   }
 }
@@ -86,9 +86,7 @@ class TodoListState extends State<TodoList> {
         },
         onDragFinish: (before, after) async {
 
-          print("after: $after before: $before length: ${tags.length}");
-
-          //await tags.updatePriority(list, before, after);
+          await tags.updatePriority(list, before, after);
         },
         canBeDraggedTo: (one, two) => true,
         dragElevation: 8.0,
@@ -100,12 +98,12 @@ class TodoListState extends State<TodoList> {
   Widget _buildDrawer() {
     return Drawer(
       child: Container(
-        decoration: BoxDecoration(color: globals.foregroundColor),
+        decoration: BoxDecoration(color: globals.primaryForegroundColor),
         child: Column(  //Column
         //padding: EdgeInsets.zero,
           children: <Widget> [
             DrawerHeader(
-              decoration: BoxDecoration(color: globals.foregroundColor),
+              decoration: BoxDecoration(color: globals.primaryForegroundColor),
               child: Center(
                 child: Text('Tags Menu',style: TextStyle(color: globals.secondaryForegroundColor, fontSize: 20, fontStyle: FontStyle.italic))
               )
@@ -252,7 +250,7 @@ class TodoListState extends State<TodoList> {
       //bottom bar
       bottomNavigationBar: BottomAppBar(
         //background color
-        color: globals.foregroundColor,
+        color: globals.primaryForegroundColor,
         shape: CircularNotchedRectangle(),
         //here we say we want a row to be inside the bottom bar (because the icons are in a row, just think about it)
         child: Row(

@@ -94,7 +94,7 @@ class TaskWidgetState extends State<TaskWidget> {
               //if task is in habit mode
               IconButton(
                 icon: Icon(Icons.add),
-                color: task.tag != null ? task.tag.color : globals.foregroundColor,
+                color: task.tag != null ? task.tag.color : globals.primaryForegroundColor,
                 onPressed: () async {
                   await task.tag.manager.changeTotalPoints(
                       task.tag,
@@ -108,7 +108,7 @@ class TaskWidgetState extends State<TaskWidget> {
               //if task is in singular mode
             : Checkbox(
               value: task.checked,
-              checkColor: task.tag != null ? task.tag.color : globals.foregroundColor,
+              checkColor: task.tag != null ? task.tag.color : globals.primaryForegroundColor,
               activeColor: globals.secondaryForegroundColor,
               onChanged: (bool value) async {
 
