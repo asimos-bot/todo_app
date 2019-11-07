@@ -58,8 +58,18 @@ class TagViewState extends State<TagView> {
                 title: Center(
                   child: searchMode ?
                   TextField(
+                    style: TextStyle(
+                      color: globals.secondaryForegroundColor
+                    ),
                     decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: globals.secondaryForegroundColor
+                        ),
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(
+                          color: globals.secondaryForegroundColor
+                        ),
                         hintText: 'Search...'
                     ),
                     controller: taskSearchController,

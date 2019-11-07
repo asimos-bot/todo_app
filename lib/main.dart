@@ -33,7 +33,15 @@ class TodoApp extends StatelessWidget {
     return new MaterialApp(
       title: 'ToDo Yourself', //title which appear when we minimize the app
       home: new TodoList(), //actual app stuff
-      theme: ThemeData(primaryColor: globals.primaryForegroundColor, scaffoldBackgroundColor: globals.backgroundColor)
+      theme: ThemeData(
+          primaryColor: globals.primaryForegroundColor,
+          scaffoldBackgroundColor: globals.backgroundColor,
+          primaryTextTheme: TextTheme(
+            title: TextStyle(
+              color: globals.secondaryForegroundColor
+            )
+          )
+      )
     );
   }
 }
@@ -221,9 +229,19 @@ class TodoListState extends State<TodoList> {
       appBar: AppBar(
           title: searchMode ?
               TextField(
+                style: TextStyle(
+                  color: globals.secondaryForegroundColor
+                ),
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  hintText: 'Search...'
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: globals.secondaryForegroundColor,
+                  ),
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(
+                    color: globals.secondaryForegroundColor
+                  ),
+                  hintText: 'Search...',
                 ),
                 controller: taskSearchController,
               )
