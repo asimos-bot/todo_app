@@ -239,7 +239,7 @@ class TagManager extends Controller {
 
         tags[i].priority = tags[i-1].priority;
 
-        batch.update('tasks',{
+        batch.update('tags',{
           'priority': tags[i].priority
         }, where: 'id = ?', whereArgs: [tags[i].id]);
       }
@@ -250,7 +250,7 @@ class TagManager extends Controller {
 
         tags[i].priority = tags[i+1].priority;
 
-        batch.update('tasks',{
+        batch.update('tags',{
           'priority': tags[i].priority
         }, where: 'id = ?', whereArgs: [tags[i].id]);
       }
@@ -258,7 +258,7 @@ class TagManager extends Controller {
 
     tags[before].priority = afterPriority;
 
-    batch.update('tasks',{
+    batch.update('tags',{
       'priority': tags[before].priority
     }, where: 'id = ?', whereArgs: [tags[before].id]);
 
