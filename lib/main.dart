@@ -87,9 +87,7 @@ class TodoListState extends State<TodoList> {
         },
         onDragFinish: (before, after) async {
 
-          print("after: $after before: $before length: ${tags.length}");
-
-          //await tags.updatePriority(list, before, after);
+          await tags.updatePriority(list, before, after);
         },
         canBeDraggedTo: (one, two) => true,
         dragElevation: 8.0,
