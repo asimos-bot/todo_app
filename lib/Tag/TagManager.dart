@@ -4,6 +4,8 @@ import 'package:sqflite/sqflite.dart';
 import '../FormWidgets/Controller.dart';
 import '../Task/TaskManager.dart';
 import '../Task/Task.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:todo_yourself/globals.dart' as globals;
 
 //manage database and list at the same time
 class TagManager extends Controller {
@@ -35,6 +37,7 @@ class TagManager extends Controller {
       tag.created_at = DateTime.parse(tagMap['created_at']);
       tag.total_points = tagMap['total_points'];
       tag.priority = tagMap['priority'];
+      tag.number_of_point_entries = tagMap['number_of_point_entries'];
 
       if( tag.priority > highestPriority ) highestPriority = tag.priority;
 
@@ -60,7 +63,8 @@ class TagManager extends Controller {
           'color',
           'created_at',
           'total_points',
-          'priority'
+          'priority',
+          'number_of_point_entries'
         ], where: 'id = ?', whereArgs: [id]);
 
     if(query.length == 0) return null;
@@ -77,6 +81,7 @@ class TagManager extends Controller {
     tag.created_at = DateTime.parse(tagMap['created_at']);
     tag.total_points = tagMap['total_points'];
     tag.priority = tagMap['priority'];
+    tag.number_of_point_entries = tagMap['number_of_point_entries'];
 
     return tag;
   }
@@ -93,7 +98,8 @@ class TagManager extends Controller {
       'weight': tag.weight,
       'created_at': DateTime.now().toIso8601String(),
       'total_points': tag.total_points,
-      'priority': ++highestPriority
+      'priority': ++highestPriority,
+      'number_of_point_entries': tag.number_of_point_entries
     });
   }
 
@@ -118,7 +124,8 @@ class TagManager extends Controller {
       'color': tag.color.value,
       'weight': tag.weight,
       'total_points': tag.total_points,
-      'priority': tag.priority
+      'priority': tag.priority,
+      'number_of_point_entries': tag.number_of_point_entries
     }, where: 'id = ?', whereArgs: [tag.id]);
   }
 
@@ -128,12 +135,27 @@ class TagManager extends Controller {
     await update(list[index]);
   }
 
-  Future<int> calculateTotalPoints(Tag tag) async {
+  Future<void> deleteOlderPoint(Tag tag) async {
 
-    return Sqflite.firstIntValue(await (await db).rawQuery(
-        'SELECT COALESCE(SUM(points), 0) FROM points WHERE tag = ?',
-        [tag.id]
-    ));
+    getPoints(tag.id).then((points) async {
+
+      if( points.length == 0 ) return;
+
+      DateTime oldestPointDateTime=DateTime.parse(points[0]['created_at']);
+
+      for(int i=1; i < points.length; i++){
+
+        DateTime current = DateTime.parse(points[i]['created_at']);
+
+        if( current.isBefore(oldestPointDateTime) ) oldestPointDateTime = current;
+      }
+
+      await (await db).delete(
+        'points',
+        where: 'created_at = ?',
+        whereArgs: [oldestPointDateTime.toIso8601String()],
+      );
+    });
   }
 
   Future<void> changeTotalPoints(Tag tag, int change) async {
@@ -141,9 +163,19 @@ class TagManager extends Controller {
     //change in primary memory
     tag.total_points += change;
 
+    if( tag.number_of_point_entries >= globals.maxNumberOfPointsEntriesPerTag ){
+
+      await deleteOlderPoint(tag);
+
+    }else{
+
+      tag.number_of_point_entries++;
+    }
+
     //change in secondary memory
     await (await db).update('tags', {
-      'total_points': tag.total_points
+      'total_points': tag.total_points,
+      'number_of_point_entries': tag.number_of_point_entries
     }, where: 'id = ?', whereArgs: [tag.id]);
 
     //create entry in points table
@@ -233,5 +265,34 @@ class TagManager extends Controller {
     await batch.commit(noResult: true);
 
     tags.insert(after, tags.removeAt(before));
+  }
+
+  Future<List<Map>> getPoints(int tag) async {
+
+    return List.from(await (await db).query(
+        'points',
+        columns: [
+          'points',
+          'created_at'
+        ],
+        where: 'tag = ?',
+        whereArgs: [tag]
+    ));
+  }
+
+  List<FlSpot> pointsToSpots(List<Map> points, DateTime start) {
+
+    points.sort((greater, smaller) => DateTime.parse(greater['created_at']).isAfter(DateTime.parse(smaller['created_at'])) ? 1:-1);
+
+    List<FlSpot> spots = [];
+
+    for(int i=0; i < points.length; i++){
+
+      Duration diff = DateTime.parse(points[i]['created_at']).difference(start);
+
+      spots.add(FlSpot(diff.inSeconds.toDouble(), points[i]['points'].toDouble()));
+    }
+
+    return List.unmodifiable(spots);
   }
 }

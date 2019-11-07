@@ -23,7 +23,8 @@ class DBManager {
             'weight INT NOT NULL,'
             'created_at TEXT NOT NULL,'
             'priority INT,'
-            'total_points INT NOT NULL'
+            'total_points INT NOT NULL,'
+            'number_of_point_entries INT NOT NULL'
         ')'
     );
 

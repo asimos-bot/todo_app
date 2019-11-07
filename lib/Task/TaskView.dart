@@ -56,20 +56,25 @@ class TaskViewState extends State<TaskView> {
                   child: Column(
                       children: <Widget>[
 
-                        Text(
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
                             task.title,
                             textScaleFactor: 2,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: globals.secondaryForegroundColor
                             )
+                          )
                         ),
-                        Divider(),
-                        Text(
-                            task.description,
-                            style: TextStyle(
-                                color: globals.secondaryForegroundColor.withOpacity(0.8)
-                            )
+                        Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                              task.description,
+                              style: TextStyle(
+                                  color: globals.secondaryForegroundColor.withOpacity(0.8)
+                              )
+                          )
                         ),
                         Divider(),
                         task.tag != null ?
@@ -133,7 +138,7 @@ class TaskViewState extends State<TaskView> {
                                                 color: globals.secondaryForegroundColor
                                             ),
                                             Text(
-                                                '${task.created_at.day}/${task.created_at.month} at'
+                                                '${task.created_at.day}/${task.created_at.month}/${task.created_at.year.toString().substring(2,4)}'
                                                     ' ${task.created_at.hour}:${task.created_at.minute}',
                                                 textScaleFactor: 1.5,
                                                 style: TextStyle(color: globals.backgroundColor)
