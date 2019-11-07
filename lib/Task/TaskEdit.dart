@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:todo_yourself/Task/Task.dart';
 import '../Tag/Tag.dart';
-import 'package:selection_menu/selection_menu.dart';
-import 'package:selection_menu/components_configurations.dart';
 import '../FormWidgets/WeightSlider.dart';
 import '../FormWidgets/TextForm.dart';
 import '../FormWidgets/ModeSwitch.dart';
+import '../Tag/TagSearchDialog.dart';
 import '../globals.dart' as globals;
 
 class TaskEdit extends StatefulWidget {
@@ -137,49 +136,8 @@ class TaskEditState extends State<TaskEdit> {
                           if (task.manager.tagManager.length > 0) {
 
                             //appear when there are tags to select
-                            return SelectionMenu<Tag>(
-                              itemsList: snapshot.data,
-                              itemSearchMatcher: (String query, Tag tag) {
-                                query = query.trim().toLowerCase();
-                                return tag.title.toLowerCase().trim().contains(
-                                    query) || tag.description.trim()
-                                    .toLowerCase()
-                                    .contains(query);
-                              },
-                              searchLatency: Duration(milliseconds: 1),
-                              onItemSelected: (Tag tag) {
-                                tmpTag = tag;
-                              },
-                              itemBuilder:
-                                  (BuildContext context, Tag tag, OnItemTapped onItemTapped) => tag.toSearchWidget(context, onItemTapped),
+                            return TagSearchDialog(snapshot.data, (tag) => tmpTag = tag);
 
-                              componentsConfiguration: DialogComponentsConfiguration<Tag>(
-                                  triggerComponent: TriggerComponent(
-                                      builder: (TriggerComponentData data) {
-                                        //widget of the button that calls the menu
-
-                                        if( tmpTag == null ) {
-
-                                          //when no tag is selected for this task
-                                          return Center(
-                                              child: RaisedButton(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(30.0),
-                                                  ),
-                                                  color: globals.secondaryForegroundColor,
-                                                  onPressed: data.triggerMenu,
-                                                  child: Text("Choose Tag")
-                                              )
-                                          );
-
-                                        }else{
-
-                                          return tmpTag.toSearchWidget(context, () => data.triggerMenu() );
-                                        }
-                                      }
-                                  )
-                              ),
-                            );
                           } else {
 
                             //appears when there is not tag to select

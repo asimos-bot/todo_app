@@ -2,30 +2,29 @@ import 'package:flutter/material.dart';
 import '../Tag/Tag.dart';
 import 'package:todo_yourself/Task/Task.dart';
 import 'package:todo_yourself/Task/TaskManager.dart';
-import 'package:selection_menu/selection_menu.dart';
-import 'package:selection_menu/components_configurations.dart';
 import '../FormWidgets/WeightSlider.dart';
 import '../FormWidgets/TextForm.dart';
 import '../FormWidgets/ModeSwitch.dart';
+import '../Tag/TagSearchDialog.dart';
 import '../globals.dart' as globals;
 
 class TaskBuilder extends StatefulWidget {
 
-  final TaskManager list;
+  final TaskManager manager;
 
-  TaskBuilder(this.list);
+  TaskBuilder(this.manager);
 
   @override
-  createState() => TaskBuilderState(list);
+  createState() => TaskBuilderState(manager);
 }
 
 class TaskBuilderState extends State<TaskBuilder> {
 
-  TaskManager list;
+  TaskManager manager;
   Tag tmpTag;
   SwitchValueWrapper tmpMode = SwitchValueWrapper(false); //1 - habit, 0 - singular
 
-  TaskBuilderState(this.list){
+  TaskBuilderState(this.manager){
     tmpTag = null;
   }
 
@@ -62,15 +61,15 @@ class TaskBuilderState extends State<TaskBuilder> {
                               return;
                             }
 
-                            var task = Task(list);
+                            var task = Task(manager);
 
-                            task.title = list.titleController.text;
-                            task.description = list.descriptionController.text;
-                            task.weight = int.parse(list.weightController.text);
+                            task.title = manager.titleController.text;
+                            task.description = manager.descriptionController.text;
+                            task.weight = int.parse(manager.weightController.text);
                             task.tag = tmpTag;
                             task.boolToTaskMode(tmpMode.value);
 
-                            list.add(task);
+                            manager.add(task);
 
                             Navigator.pop(context);
                           }
@@ -80,55 +79,17 @@ class TaskBuilderState extends State<TaskBuilder> {
                 body: Form(
                     child: ListView(
                         children: <Widget>[
-                          TextForm(list),
+                          TextForm(manager),
                           Divider(),
                           FutureBuilder(
-                              future: list.tagManager.list(),
+                              future: manager.tagManager.list(),
                               builder: (context, snapshot) {
 
                                 if( snapshot.connectionState == ConnectionState.done ){
 
-                                  if( list.tagManager.length > 0 ) {
+                                  if( manager.tagManager.length > 0 ) {
 
-                                    return SelectionMenu<Tag>(
-                                      itemsList: snapshot.data,
-                                      itemSearchMatcher: (String query, Tag tag) {
-                                        query = query.trim().toLowerCase();
-                                        return tag.title.toLowerCase().trim().contains(
-                                            query) || tag.description.trim()
-                                            .toLowerCase()
-                                            .contains(query);
-                                      },
-                                      searchLatency: Duration(milliseconds: 500),
-                                      onItemSelected: (Tag tag) {
-                                        tmpTag = tag;
-                                      },
-                                      itemBuilder: (BuildContext context, Tag tag,
-                                          OnItemTapped onItemTapped) =>
-                                          tag.toSearchWidget(context, onItemTapped),
-                                      componentsConfiguration: DialogComponentsConfiguration<Tag>(
-                                          triggerComponent: TriggerComponent(
-                                              builder: (TriggerComponentData data) {
-
-                                                if( tmpTag == null ){
-                                                  //widget of the button that calls the menu
-                                                  return Center(
-                                                      child: RaisedButton(
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(30.0),
-                                                          ),
-                                                          color: globals.secondaryForegroundColor,
-                                                          onPressed: data.triggerMenu,
-                                                          child: Text("Choose Tag")
-                                                      )
-                                                  );
-                                                }else{
-                                                  return tmpTag.toSearchWidget(context, ()=>data.triggerMenu());
-                                                }
-                                              }
-                                          )
-                                      ),
-                                    );
+                                    return TagSearchDialog(snapshot.data, (tag) => tmpTag = tag);
 
                                   }else{
 
@@ -153,7 +114,7 @@ class TaskBuilderState extends State<TaskBuilder> {
                                 }
                               }
                           ),
-                          WeightSlider(list, 1.0),
+                          WeightSlider(manager, 1.0),
                           ModeSwitch(tmpMode)
                         ]
                     )
