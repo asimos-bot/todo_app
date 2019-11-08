@@ -5,7 +5,7 @@ import 'package:todo_yourself/Task/TaskManager.dart';
 import '../FormWidgets/WeightSlider.dart';
 import '../FormWidgets/TextForm.dart';
 import '../FormWidgets/ModeSwitch.dart';
-import '../Tag/TagSearchDialog.dart';
+import '../Tag/TagSearch.dart';
 import '../globals.dart' as globals;
 
 class TaskBuilder extends StatefulWidget {
@@ -21,11 +21,11 @@ class TaskBuilder extends StatefulWidget {
 class TaskBuilderState extends State<TaskBuilder> {
 
   TaskManager manager;
-  Tag tmpTag;
+  TagWrapper tmpTag;
   SwitchValueWrapper tmpMode = SwitchValueWrapper(false); //1 - habit, 0 - singular
 
   TaskBuilderState(this.manager){
-    tmpTag = null;
+    tmpTag = TagWrapper(null);
   }
 
   @override
@@ -66,7 +66,7 @@ class TaskBuilderState extends State<TaskBuilder> {
                             task.title = manager.titleController.text;
                             task.description = manager.descriptionController.text;
                             task.weight = int.parse(manager.weightController.text);
-                            task.tag = tmpTag;
+                            task.tag = tmpTag.tag;
                             task.boolToTaskMode(tmpMode.value);
 
                             manager.add(task);
@@ -89,7 +89,7 @@ class TaskBuilderState extends State<TaskBuilder> {
 
                                   if( manager.tagManager.length > 0 ) {
 
-                                    return TagSearchDialog(snapshot.data, (tag) => tmpTag = tag);
+                                    return TagSearch(snapshot.data, tmpTag, ()=>setState((){}));
 
                                   }else{
 

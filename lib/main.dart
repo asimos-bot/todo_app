@@ -124,7 +124,7 @@ class TodoListState extends State<TodoList> {
                 )
               )
             ),
-            ListTile(
+            /*ListTile(
               leading: Icon(Icons.data_usage,color: globals.secondaryForegroundColor),
               title: Text("Visualize",style: TextStyle(color: globals.secondaryForegroundColor)),
               onTap: (){
@@ -134,7 +134,7 @@ class TodoListState extends State<TodoList> {
                     )
                 );
               },
-            ),
+            ),*/
             ListTile(
               leading: Icon(Icons.add,color: globals.secondaryForegroundColor),
               title: Text("Add Tag",style: TextStyle(color: globals.secondaryForegroundColor)),

@@ -28,7 +28,9 @@ class Tag extends Controller {
     return Card(
         child: ListTile(
           leading: toCircleAvatar(),
-          onTap: onItemTapped,
+          onTap: (){
+            if(onItemTapped != null) onItemTapped(this);
+          },
           title: Text(
             title,
             overflow: TextOverflow.ellipsis,

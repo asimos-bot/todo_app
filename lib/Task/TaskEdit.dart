@@ -4,7 +4,7 @@ import '../Tag/Tag.dart';
 import '../FormWidgets/WeightSlider.dart';
 import '../FormWidgets/TextForm.dart';
 import '../FormWidgets/ModeSwitch.dart';
-import '../Tag/TagSearchDialog.dart';
+import '../Tag/TagSearch.dart';
 import '../globals.dart' as globals;
 
 class TaskEdit extends StatefulWidget {
@@ -20,11 +20,11 @@ class TaskEdit extends StatefulWidget {
 class TaskEditState extends State<TaskEdit> {
 
   Task task;
-  Tag tmpTag;
+  TagWrapper tmpTag;
   SwitchValueWrapper tmpMode;
 
   TaskEditState(this.task, this.tmpMode){
-    tmpTag = task.tag;
+    tmpTag = TagWrapper(task.tag);
   }
 
   @override
@@ -102,7 +102,7 @@ class TaskEditState extends State<TaskEdit> {
                     task.title = task.titleController.text;
                     task.description = task.descriptionController.text;
                     task.weight = int.parse(task.weightController.text);
-                    task.tag = tmpTag;
+                    task.tag = tmpTag.tag;
                     task.boolToTaskMode(tmpMode.value);
 
                     if( task.tag != null && task.checked){
@@ -136,7 +136,7 @@ class TaskEditState extends State<TaskEdit> {
                           if (task.manager.tagManager.length > 0) {
 
                             //appear when there are tags to select
-                            return TagSearchDialog(snapshot.data, (tag) => tmpTag = tag);
+                            return TagSearch(snapshot.data, tmpTag, ()=>setState((){}));
 
                           } else {
 
