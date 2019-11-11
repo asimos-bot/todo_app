@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_yourself/Task/Task.dart';
-import '../Tag/Tag.dart';
-import '../FormWidgets/WeightSlider.dart';
+import '../FormWidgets/FormSlider.dart';
 import '../FormWidgets/TextForm.dart';
 import '../FormWidgets/ModeSwitch.dart';
 import '../Tag/TagSearch.dart';
@@ -162,7 +161,7 @@ class TaskEditState extends State<TaskEdit> {
                         }
                       }
                     ),
-                    WeightSlider(task, task.weight.toDouble()),
+                    FormSlider(task, task.weight.toDouble()),
                     ModeSwitch(tmpMode)
                 ]
             )

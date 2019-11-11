@@ -9,3 +9,5 @@ Color forthForegroundColor = const Color(0xff35aebb);
 
 //settings
 const int maxNumberOfPointsEntriesPerTag=3;
+const int chartPastSpanDays = 30;
+const int chartFutureSpanDays = 30;

@@ -3,24 +3,24 @@ import 'Controller.dart';
 import 'package:flutter/services.dart';
 import '../globals.dart' as globals;
 
-class WeightSlider extends StatefulWidget {
+class FormSlider extends StatefulWidget {
 
   final Controller controller;
   final initialSliderValue;
 
-  WeightSlider(this.controller, this.initialSliderValue);
+  FormSlider(this.controller, this.initialSliderValue);
 
   @override
-  createState() => WeightSliderState(controller, initialSliderValue);
+  createState() => FormSliderState(controller, initialSliderValue);
 }
 
-class WeightSliderState extends State<WeightSlider> {
+class FormSliderState extends State<FormSlider> {
 
   Controller controller;
 
   double currentSliderValue;
 
-  WeightSliderState(this.controller, this.currentSliderValue);
+  FormSliderState(this.controller, this.currentSliderValue);
 
   @override
   Widget build(BuildContext context) {

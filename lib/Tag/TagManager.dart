@@ -158,32 +158,78 @@ class TagManager extends Controller {
     });
   }
 
+  Future<void> createPointEntry(int id, int total_points, DateTime date) async {
+
+    //create entry in points table
+    await (await db).insert('points', {
+      'created_at': date.toIso8601String(),
+      'points': total_points,
+      'tag': id
+    });
+  }
+
   Future<void> changeTotalPoints(Tag tag, int change) async {
 
     //change in primary memory
     tag.total_points += change;
 
-    if( tag.number_of_point_entries >= globals.maxNumberOfPointsEntriesPerTag ){
+    DateTime now = DateTime.now();
+    DateTime currentDate = DateTime(now.year, now.month, now.day);
 
-      await deleteOlderPoint(tag);
+    //check for a points entry for this tag with the current date
+    await (await db).query(
+      'points',
+      columns: [
+        'tag',
+        'created_at',
+        'points'
+      ],
+      where: 'tag = ? AND created_at = ?',
+      whereArgs: [tag.id, currentDate.toIso8601String()]
+    ).then((List<Map> point) async {
 
-    }else{
+      if( point.length == 0 ){
 
-      tag.number_of_point_entries++;
-    }
+        if( tag.number_of_point_entries >= globals.maxNumberOfPointsEntriesPerTag ){
 
-    //change in secondary memory
-    await (await db).update('tags', {
-      'total_points': tag.total_points,
-      'number_of_point_entries': tag.number_of_point_entries
-    }, where: 'id = ?', whereArgs: [tag.id]);
+          deleteOlderPoint(tag);
 
-    //create entry in points table
-    await (await db).insert('points', {
-      'created_at': DateTime.now().toIso8601String(),
-      'points': tag.total_points,
-      'tag': tag.id
+        }else{
+
+          tag.number_of_point_entries++;
+        }
+
+        //create point
+        await (await db).insert(
+          'points',
+          {
+            'points' : tag.total_points,
+            'created_at': currentDate.toIso8601String(),
+            'tag': tag.id
+          }
+        );
+
+      }else {
+
+        //update point
+        await (await db).update(
+            'points',
+            {
+              'points': point[0]['points'] + change
+            },
+            where: 'tag = ? AND created_at = ?',
+            whereArgs: [tag.id, currentDate.toIso8601String()]
+        );
+      }
+
+      //update tag
+      await (await db).update('tags', {
+        'total_points': tag.total_points,
+        'number_of_point_entries': tag.number_of_point_entries
+      }, where: 'id = ?', whereArgs: [tag.id]);
+
     });
+
   }
 
   Future<List<Task>> getTasks(Tag tag) async {
@@ -269,7 +315,10 @@ class TagManager extends Controller {
 
   Future<List<Map>> getPoints(int tag) async {
 
-    return List.from(await (await db).query(
+    DateTime now = DateTime.now();
+    DateTime currentDate = DateTime(now.year, now.month, now.day);
+
+    List<Map> points = await (await db).query(
         'points',
         columns: [
           'points',
@@ -277,7 +326,29 @@ class TagManager extends Controller {
         ],
         where: 'tag = ?',
         whereArgs: [tag]
-    ));
+
+    );
+
+    return points.where((point) {
+
+      Duration diff = DateTime.parse(point['created_at']).difference(currentDate);
+
+      if( diff.inDays > 30 ){
+
+        db.then((database){
+          database.delete(
+              'points',
+              where: 'tag = ? AND created_at = ?',
+              whereArgs: [point['tag'], point['created_at']]
+          );
+        });
+
+        return false;
+      }
+
+      return true;
+
+    }).toList();
   }
 
   List<FlSpot> pointsToSpots(List<Map> points, DateTime start) {
@@ -290,7 +361,7 @@ class TagManager extends Controller {
 
       Duration diff = DateTime.parse(points[i]['created_at']).difference(start);
 
-      spots.add(FlSpot(diff.inSeconds.toDouble(), points[i]['points'].toDouble()));
+      spots.add(FlSpot(diff.inDays.toDouble(), points[i]['points'].toDouble()));
     }
 
     return List.unmodifiable(spots);

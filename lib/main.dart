@@ -111,20 +111,23 @@ class TodoListState extends State<TodoList> {
         child: Column(  //Column
         //padding: EdgeInsets.zero,
           children: <Widget> [
-            DrawerHeader(
-              decoration: BoxDecoration(color: globals.primaryForegroundColor),
-              child: Center(
-                child: Text(
-                    'Tags Menu',
-                    style: TextStyle(
-                        color: globals.secondaryForegroundColor,
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic
-                    )
+            SizedBox(
+              height: 100,
+              child: DrawerHeader(
+                decoration: BoxDecoration(color: globals.primaryForegroundColor),
+                child: Center(
+                  child: Text(
+                      'Tags Menu',
+                      style: TextStyle(
+                          color: globals.secondaryForegroundColor,
+                          fontSize: 20,
+                          fontStyle: FontStyle.italic
+                      )
+                  )
                 )
               )
             ),
-            /*ListTile(
+            ListTile(
               leading: Icon(Icons.data_usage,color: globals.secondaryForegroundColor),
               title: Text("Visualize",style: TextStyle(color: globals.secondaryForegroundColor)),
               onTap: (){
@@ -134,7 +137,7 @@ class TodoListState extends State<TodoList> {
                     )
                 );
               },
-            ),*/
+            ),
             ListTile(
               leading: Icon(Icons.add,color: globals.secondaryForegroundColor),
               title: Text("Add Tag",style: TextStyle(color: globals.secondaryForegroundColor)),

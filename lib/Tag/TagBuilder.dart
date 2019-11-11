@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:todo_yourself/Tag/Tag.dart';
 import 'package:todo_yourself/Tag/TagManager.dart';
-import '../FormWidgets/WeightSlider.dart';
+import '../FormWidgets/FormSlider.dart';
 import '../FormWidgets/TextForm.dart';
 import '../globals.dart' as globals;
 
@@ -106,7 +106,7 @@ class TagBuilderState extends State<TagBuilder> {
                     }
                   ),
                   Divider(),
-                  WeightSlider(list, 1.0)
+                  FormSlider(list, 1.0)
                 ]
               )
             )

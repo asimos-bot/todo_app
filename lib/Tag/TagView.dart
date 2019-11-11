@@ -233,7 +233,7 @@ class TagViewState extends State<TagView> {
                     )
                   ]
                   ),
-                  //TagChart(tag.manager.getPoints(tag.id), tag)
+                  TagChart(tag.manager.getPoints(tag.id), tag)
                 ]
             )
           );

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import '../Tag/Tag.dart';
 import 'package:todo_yourself/Task/Task.dart';
 import 'package:todo_yourself/Task/TaskManager.dart';
-import '../FormWidgets/WeightSlider.dart';
+import '../FormWidgets/FormSlider.dart';
 import '../FormWidgets/TextForm.dart';
 import '../FormWidgets/ModeSwitch.dart';
 import '../Tag/TagSearch.dart';
-import '../globals.dart' as globals;
 
 class TaskBuilder extends StatefulWidget {
 
@@ -114,7 +112,7 @@ class TaskBuilderState extends State<TaskBuilder> {
                                 }
                               }
                           ),
-                          WeightSlider(manager, 1.0),
+                          FormSlider(manager, 1.0),
                           ModeSwitch(tmpMode)
                         ]
                     )
