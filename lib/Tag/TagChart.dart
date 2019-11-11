@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'TagManager.dart';
 import 'Tag.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:todo_yourself/globals.dart' as globals;
@@ -80,6 +79,7 @@ class TagChartState extends State<TagChart> {
         LineChartData(
             minX: 0,
             minY: 0,
+            maxX: globals.chartPastSpanDays + globals.chartFutureSpanDays.toDouble(),
             lineBarsData: [
               LineChartBarData(
                   spots: points,

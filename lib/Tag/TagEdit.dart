@@ -49,14 +49,43 @@ class TagEditState extends State<TagEdit> {
                               actions: <Widget>[
                                 FlatButton(
                                     child: Text('Yes'),
-                                    onPressed: () async {
+                                    onPressed: () {
 
-                                      await tag.manager.delete(tag);
+                                      Navigator.pop(context);
 
-                                      setState(() {});
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
 
-                                      //pop to root
-                                      Navigator.popUntil(context, (route) => route.isFirst);
+                                          return AlertDialog(
+                                            title: Text("Also delete tasks associated with this tag?"),
+                                            actions: <Widget> [
+                                              FlatButton(
+                                                child: Text("Yes"),
+                                                onPressed: () async {
+
+                                                  await tag.manager.delete(tag, true);
+
+                                                  setState((){});
+
+                                                  Navigator.popUntil(context, (route) => route.isFirst);
+                                                },
+                                              ),
+                                              FlatButton(
+                                                child: Text("No"),
+                                                onPressed: () async {
+
+                                                  await tag.manager.delete(tag, false);
+
+                                                  setState((){});
+
+                                                  Navigator.popUntil(context, (route) => route.isFirst);
+                                                },
+                                              )
+                                            ]
+                                          );
+                                        }
+                                      );
                                     }
                                 ),
                                 FlatButton(

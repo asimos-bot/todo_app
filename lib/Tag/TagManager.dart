@@ -103,16 +103,24 @@ class TagManager extends Controller {
     });
   }
 
-  Future<void> delete(Tag tag) async {
+  Future<void> delete(Tag tag, bool deleteTasks) async {
 
-    //update tasks which reference to this tag
-    await (await db).update('tasks', {
-      'tag': null
-    }, where: 'tag = ?', whereArgs: [tag.id]);
+    if( deleteTasks ){
 
+      await (await db).delete('tasks', where: 'tag = ?', whereArgs: [tag.id]);
+
+    }else{
+
+      //update tasks which reference to this tag
+      await (await db).update('tasks', {
+        'tag': null
+      }, where: 'tag = ?', whereArgs: [tag.id]);
+
+    }
     //delete points which reference to this tag
     await (await db).delete('points', where: 'tag = ?', whereArgs: [tag.id]);
 
+    //delete tag
     await (await db).delete('tags', where: 'id = ?', whereArgs: [tag.id]);
   }
 
@@ -333,7 +341,7 @@ class TagManager extends Controller {
 
       Duration diff = DateTime.parse(point['created_at']).difference(currentDate);
 
-      if( diff.inDays > 30 ){
+      if( diff.inDays > globals.chartPastSpanDays ){
 
         db.then((database){
           database.delete(
@@ -355,7 +363,7 @@ class TagManager extends Controller {
 
     points.sort((greater, smaller) => DateTime.parse(greater['created_at']).isAfter(DateTime.parse(smaller['created_at'])) ? 1:-1);
 
-    List<FlSpot> spots = [];
+    List<FlSpot> spots = [FlSpot(0, points[0]['points'].toDouble())];
 
     for(int i=0; i < points.length; i++){
 
@@ -363,6 +371,8 @@ class TagManager extends Controller {
 
       spots.add(FlSpot(diff.inDays.toDouble(), points[i]['points'].toDouble()));
     }
+
+    spots.add(FlSpot(globals.chartPastSpanDays + globals.chartFutureSpanDays.toDouble(), points[points.length-1]['points'].toDouble()));
 
     return List.unmodifiable(spots);
   }
