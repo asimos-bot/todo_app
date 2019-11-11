@@ -363,7 +363,7 @@ class TagManager extends Controller {
 
     points.sort((greater, smaller) => DateTime.parse(greater['created_at']).isAfter(DateTime.parse(smaller['created_at'])) ? 1:-1);
 
-    List<FlSpot> spots = [FlSpot(0, points[0]['points'].toDouble())];
+    List<FlSpot> spots = [FlSpot(0, points.length > 0 ? points.first['points'].toDouble() : 0)];
 
     for(int i=0; i < points.length; i++){
 
@@ -372,7 +372,7 @@ class TagManager extends Controller {
       spots.add(FlSpot(diff.inDays.toDouble(), points[i]['points'].toDouble()));
     }
 
-    spots.add(FlSpot(globals.chartPastSpanDays + globals.chartFutureSpanDays.toDouble(), points[points.length-1]['points'].toDouble()));
+    spots.add(FlSpot(globals.chartPastSpanDays.toDouble(), points.length > 0 ? points.last['points'].toDouble() : 0));
 
     return List.unmodifiable(spots);
   }

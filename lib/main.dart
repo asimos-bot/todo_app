@@ -222,7 +222,9 @@ class TodoListState extends State<TodoList> {
     //disable screen rotation
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
     ]);
 
     return Scaffold(
