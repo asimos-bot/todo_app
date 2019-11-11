@@ -24,7 +24,6 @@ class DBManager {
             'created_at TEXT NOT NULL,'
             'priority INT,'
             'total_points INT NOT NULL,'
-            'number_of_point_entries INT NOT NULL'
         ')'
     );
 

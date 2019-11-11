@@ -9,7 +9,6 @@ class Tag extends Controller {
 
   Color color;
   int total_points=0;
-  int number_of_point_entries=0;
 
   //global list with all the tags
   TagManager manager;

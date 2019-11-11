@@ -84,7 +84,7 @@ class TagChartState extends State<TagChart> {
             maxX: globals.chartPastSpanDays + globals.chartFutureSpanDays.toDouble(),
             clipToBorder: false,
             gridData: FlGridData(
-                show: true,
+                show: false,
                 drawVerticalGrid: true,
                 getDrawingHorizontalGridLine: (value) {
                   return FlLine(
@@ -101,7 +101,7 @@ class TagChartState extends State<TagChart> {
             ),
             //BORDER
             borderData: FlBorderData(
-                show: true,
+                show: false,
                 border: Border.all(color: globals.secondaryBackgroundColor, width: 1)
             ),
             //ACTUAL CURVES
@@ -162,6 +162,7 @@ class TagChartState extends State<TagChart> {
               tooltipBgColor: globals.secondaryForegroundColor,
               tooltipRoundedRadius: 4,
               tooltipPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+              tooltipBottomMargin: 0,
 
               getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
 
@@ -177,7 +178,7 @@ class TagChartState extends State<TagChart> {
                 }).toList();
               }
             )
-          )
+          ),
         )
     );
   }

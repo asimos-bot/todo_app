@@ -111,6 +111,7 @@ class TagViewState extends State<TagView> {
                 ]
             ),
             body: PageView(
+                physics: BouncingScrollPhysics(),
                 children: <Widget> [
                   CustomScrollView(
                   slivers: <Widget>[

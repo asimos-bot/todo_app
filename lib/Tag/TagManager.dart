@@ -37,7 +37,6 @@ class TagManager extends Controller {
       tag.created_at = DateTime.parse(tagMap['created_at']);
       tag.total_points = tagMap['total_points'];
       tag.priority = tagMap['priority'];
-      tag.number_of_point_entries = tagMap['number_of_point_entries'];
 
       if( tag.priority > highestPriority ) highestPriority = tag.priority;
 
@@ -63,8 +62,7 @@ class TagManager extends Controller {
           'color',
           'created_at',
           'total_points',
-          'priority',
-          'number_of_point_entries'
+          'priority'
         ], where: 'id = ?', whereArgs: [id]);
 
     if(query.length == 0) return null;
@@ -81,7 +79,6 @@ class TagManager extends Controller {
     tag.created_at = DateTime.parse(tagMap['created_at']);
     tag.total_points = tagMap['total_points'];
     tag.priority = tagMap['priority'];
-    tag.number_of_point_entries = tagMap['number_of_point_entries'];
 
     return tag;
   }
@@ -98,8 +95,7 @@ class TagManager extends Controller {
       'weight': tag.weight,
       'created_at': DateTime.now().toIso8601String(),
       'total_points': tag.total_points,
-      'priority': ++highestPriority,
-      'number_of_point_entries': tag.number_of_point_entries
+      'priority': ++highestPriority
     });
   }
 
@@ -133,7 +129,6 @@ class TagManager extends Controller {
       'weight': tag.weight,
       'total_points': tag.total_points,
       'priority': tag.priority,
-      'number_of_point_entries': tag.number_of_point_entries
     }, where: 'id = ?', whereArgs: [tag.id]);
   }
 
@@ -198,15 +193,6 @@ class TagManager extends Controller {
 
       if( point.length == 0 ){
 
-        if( tag.number_of_point_entries >= globals.maxNumberOfPointsEntriesPerTag ){
-
-          deleteOlderPoint(tag);
-
-        }else{
-
-          tag.number_of_point_entries++;
-        }
-
         //create point
         await (await db).insert(
           'points',
@@ -232,8 +218,7 @@ class TagManager extends Controller {
 
       //update tag
       await (await db).update('tags', {
-        'total_points': tag.total_points,
-        'number_of_point_entries': tag.number_of_point_entries
+        'total_points': tag.total_points
       }, where: 'id = ?', whereArgs: [tag.id]);
 
     });

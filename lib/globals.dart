@@ -9,6 +9,5 @@ Color thirdForegroundColor = const Color(0xff00a0e6);
 Color forthForegroundColor = const Color(0xff50aebb);
 
 //settings
-const int maxNumberOfPointsEntriesPerTag=3;
 const int chartPastSpanDays = 30;
 const int chartFutureSpanDays = 0;
