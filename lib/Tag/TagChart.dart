@@ -19,11 +19,6 @@ class TagChartState extends State<TagChart> {
   final Future<List<Map>> futurePoints;
   final Tag tag;
 
-  List<Color> gradientColors = [
-    globals.thirdForegroundColor,
-    globals.forthForegroundColor
-  ];
-
   TagChartState(this.futurePoints, this.tag);
 
   @override
@@ -83,8 +78,8 @@ class TagChartState extends State<TagChart> {
         LineChartData(
             minX: 0,
             minY: 0,
-            maxY: highest_point == 0 ? 1 : highest_point*1.2,
             maxX: globals.chartPastSpanDays + globals.chartFutureSpanDays.toDouble(),
+            maxY: highest_point == 0 ? 1 : highest_point*1.2,
             clipToBorder: false,
             gridData: FlGridData(
                 show: false,
@@ -113,7 +108,8 @@ class TagChartState extends State<TagChart> {
                   spots: points,
                   isCurved: true,
                   preventCurveOverShooting: true,
-                  colors: gradientColors,
+                  colors: [tag.color],
+                  colorStops: null,
                   barWidth: 5,
                   isStrokeCapRound: true,
 
@@ -123,8 +119,7 @@ class TagChartState extends State<TagChart> {
                   ),
                   belowBarData: BarAreaData(
                     show: true,
-                    colors:
-                    gradientColors.reversed.map((color) => color.withOpacity(0.3)).toList(),
+                    colors: [tag.color.withOpacity(0.3)],
                   )
               )
             ],
