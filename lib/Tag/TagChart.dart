@@ -39,13 +39,23 @@ class TagChartState extends State<TagChart> {
 
           DateTime now = DateTime.now();
 
+          List<FlSpot> spots = tag.manager.pointsToSpots(
+              points,
+              DateTime(now.year, now.month, now.day).subtract(Duration(days: 30))
+          );
+
+          //get highest point
+          int highest_point = (){
+            int highest=spots[0].y.toInt();
+            for(int i=1; i < spots.length; i++) highest = spots[i].y.toInt() > highest ? spots[i].y.toInt() : highest;
+            return highest;
+          }();
+
           return Padding(
-                  padding: EdgeInsets.fromLTRB(23.0, 10.0, 23.0, 10.0),
+                  padding: EdgeInsets.fromLTRB(27.0, 10.0, 27.0, 10.0),
                   child: getCurveChart(
-                    tag.manager.pointsToSpots(
-                      points,
-                      DateTime(now.year, now.month, now.day).subtract(Duration(days: 30))
-                    )
+                    spots,
+                    highest_point
                   )
                 );
         }
@@ -64,23 +74,16 @@ class TagChartState extends State<TagChart> {
     return "${date.day}/${date.month}";
   }
 
-  Widget getCurveChart(List<FlSpot> points){
+  Widget getCurveChart(List<FlSpot> points, int highest_point){
 
     DateTime now = DateTime.now();
     DateTime currentDate = DateTime(now.year, now.month, now.day);
-
-    //get highest point
-    int highest_point = (){
-      int highest=points[0].y.toInt();
-      for(int i=1; i < points.length; i++) highest = points[i].y.toInt() > highest ? points[i].y.toInt() : highest;
-      return highest;
-    }();
 
     return LineChart(
         LineChartData(
             minX: 0,
             minY: 0,
-            maxY: highest_point*1.2,
+            maxY: highest_point == 0 ? 1 : highest_point*1.2,
             maxX: globals.chartPastSpanDays + globals.chartFutureSpanDays.toDouble(),
             clipToBorder: false,
             gridData: FlGridData(
@@ -141,7 +144,7 @@ class TagChartState extends State<TagChart> {
 
                 daysAgo = globals.chartPastSpanDays - daysAgo;
 
-                if( daysAgo % 7 !=0 ) return '';
+                if( daysAgo % 10 !=0 ) return '';
 
                 return daysAgoToDate(currentDate, daysAgo.toInt());
               }

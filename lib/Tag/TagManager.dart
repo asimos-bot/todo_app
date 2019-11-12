@@ -324,19 +324,49 @@ class TagManager extends Controller {
 
     return points.where((point) {
 
-      Duration diff = DateTime.parse(point['created_at']).difference(currentDate);
+      DateTime currentPointDateTime = DateTime.parse(point['created_at']);
 
+      Duration diff = currentPointDateTime.difference(currentDate);
+
+      //if point is older than 30 days
       if( diff.inDays > globals.chartPastSpanDays ){
 
-        db.then((database){
-          database.delete(
+        String plusOneString = currentPointDateTime.add(Duration(days: 1)).toIso8601String();
+
+        //if there is a point in the day after just delete the elder point
+        if( points.where((x) => x['created_at'] == plusOneString).toList().length > 0 ) {
+
+          db.then((database) {
+            database.delete(
+                'points',
+                where: 'tag = ? AND created_at = ?',
+                whereArgs: [point['tag'], point['created_at']]
+            );
+          });
+
+          return false;
+
+        //else move it to the next day (in database and in list)
+        }else{
+
+          //move in database
+          db.then((database) {
+
+            database.update(
               'points',
+              {
+                'created_at': plusOneString
+              },
               where: 'tag = ? AND created_at = ?',
               whereArgs: [point['tag'], point['created_at']]
-          );
-        });
+            );
+          });
 
-        return false;
+          //move in list
+          point['created_at'] = plusOneString;
+
+          return true;
+        }
       }
 
       return true;
@@ -350,7 +380,7 @@ class TagManager extends Controller {
 
     List<FlSpot> spots = [FlSpot(0, points.length > 0 ? points.first['points'].toDouble() : 0)];
 
-    for(int i=0; i < points.length; i++){
+    for(int i=1; i < points.length; i++){
 
       Duration diff = DateTime.parse(points[i]['created_at']).difference(start);
 

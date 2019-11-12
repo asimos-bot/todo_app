@@ -226,7 +226,9 @@ class TagViewState extends State<TagView> {
                         return SliverList(
                           delegate: SliverChildListDelegate(
                             <Widget> [
-                              CircularProgressIndicator()
+                              Center(
+                                child: CircularProgressIndicator()
+                              )
                             ]
                           ),
                         );
