@@ -137,7 +137,7 @@ class TagMasterState extends State<TagMaster>{
 
                   return TouchedSpotIndicatorData(
                     FlLine(color: globals.secondaryForegroundColor, strokeWidth: 4),
-                    FlDotData(dotSize: 8, dotColor: globals.secondaryForegroundColor),
+                    FlDotData(dotSize: 4, dotColor: globals.secondaryForegroundColor),
                   );
                 }).toList();
               },
@@ -145,17 +145,16 @@ class TagMasterState extends State<TagMaster>{
                   tooltipBgColor: globals.secondaryForegroundColor,
                   tooltipRoundedRadius: 4,
                   tooltipPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                  tooltipBottomMargin: 0,
-
+                  tooltipBottomMargin: -128,
                   getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
 
                     return touchedBarSpots.map((barSpot){
 
                       return LineTooltipItem(
-                          barSpot.y.toInt().toString() + '\n' + daysAgoToDate(currentDate, globals.chartPastSpanDays - barSpot.x.toInt()),
+                          barSpot.y.toInt().toString(),
                           TextStyle(
-                              color: globals.backgroundColor,
-                              fontWeight: FontWeight.bold
+                            color: barSpot.bar.colors[0],
+                            fontWeight: FontWeight.bold
                           )
                       );
                     }).toList();
@@ -182,9 +181,13 @@ class TagMasterState extends State<TagMaster>{
 
           if( snapshot.connectionState == ConnectionState.done ){
 
-            return Padding(
-              padding: EdgeInsets.fromLTRB(27.0, 10.0, 27.0, 10.0),
-              child: getLineChart(snapshot.data)
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(27.0, 10.0, 27.0, 10.0),
+                child: getLineChart(snapshot.data)
+              )
             );
           }
 
