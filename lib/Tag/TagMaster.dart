@@ -137,7 +137,7 @@ class TagMasterState extends State<TagMaster>{
 
                   return TouchedSpotIndicatorData(
                     FlLine(color: globals.secondaryForegroundColor, strokeWidth: 4),
-                    FlDotData(dotSize: 4, dotColor: globals.secondaryForegroundColor),
+                    FlDotData(dotSize: 0, dotColor: globals.secondaryForegroundColor),
                   );
                 }).toList();
               },
@@ -145,7 +145,7 @@ class TagMasterState extends State<TagMaster>{
                   tooltipBgColor: globals.secondaryForegroundColor,
                   tooltipRoundedRadius: 4,
                   tooltipPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                  tooltipBottomMargin: -128,
+                  tooltipBottomMargin: -(curves.length * 20 - 8).toDouble(),
                   getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
 
                     return touchedBarSpots.map((barSpot){

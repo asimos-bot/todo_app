@@ -152,7 +152,7 @@ class TagChartState extends State<TagChart> {
 
                 return TouchedSpotIndicatorData(
                   FlLine(color: globals.secondaryForegroundColor, strokeWidth: 4),
-                  FlDotData(dotSize: 8, dotColor: globals.secondaryForegroundColor),
+                  FlDotData(dotSize: 0, dotColor: globals.secondaryForegroundColor),
                 );
               }).toList();
             },
@@ -160,7 +160,7 @@ class TagChartState extends State<TagChart> {
               tooltipBgColor: globals.secondaryForegroundColor,
               tooltipRoundedRadius: 4,
               tooltipPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-              tooltipBottomMargin: 0,
+              tooltipBottomMargin: -26,
 
               getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
 
