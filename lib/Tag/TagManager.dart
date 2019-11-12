@@ -391,4 +391,44 @@ class TagManager extends Controller {
 
     return List.unmodifiable(spots);
   }
+
+  Future<List<FlSpot>> masterChartSpots(DateTime start) async {
+
+    //get all tags
+    List<Tag> tags = await list();
+
+    List<FlSpot> spots = List.generate(globals.chartPastSpanDays, (index) => null);
+
+    //get tag spots and add them to list
+    for(int i=0; i < tags.length; i++){
+
+      //get tag spots
+      List<FlSpot> tagSpots = pointsToSpots(await getPoints(tags[i].id), start);
+
+      //iterate through tagSpots
+      for(int j=0; j < tagSpots.length; j++){
+
+        //add to indexes in spots
+        if( spots[tagSpots[j].x.toInt()] == null ) spots[tagSpots[j].x.toInt()] = FlSpot(0,0);
+
+        spots[tagSpots[j].x.toInt()] = FlSpot(tagSpots[j].x, tagSpots[j].y.toInt() + spots[tagSpots[j].x.toInt()].y);
+      }
+    }
+
+    //return list with valid spots
+    spots = spots.where((spot) => spot.y != null).toList();
+
+    if( spots.length == 1 ){
+
+      spots.insert(0, FlSpot(0, spots[0].y));
+      spots.add(FlSpot(30, spots[1].y));
+    }
+
+    if( spots.length == 0 ){
+
+      spots=[FlSpot(0,0), FlSpot(30,0)];
+    }
+
+    return List.unmodifiable(spots);
+  }
 }

@@ -46,11 +46,19 @@ class TagChartState extends State<TagChart> {
             return highest;
           }();
 
+          //get lowest point
+          int lowest_point = (){
+            int lowest=spots[0].y.toInt();
+            for(int i=1; i < spots.length; i++) lowest = spots[i].y.toInt() < lowest ? spots[i].y.toInt() : lowest;
+            return lowest;
+          }();
+
           return Padding(
                   padding: EdgeInsets.fromLTRB(27.0, 10.0, 27.0, 10.0),
                   child: getCurveChart(
                     spots,
-                    highest_point
+                    highest_point,
+                    lowest_point
                   )
                 );
         }
@@ -69,7 +77,7 @@ class TagChartState extends State<TagChart> {
     return "${date.day}/${date.month}";
   }
 
-  Widget getCurveChart(List<FlSpot> points, int highest_point){
+  Widget getCurveChart(List<FlSpot> points, int highest_point, int lowest_point){
 
     DateTime now = DateTime.now();
     DateTime currentDate = DateTime(now.year, now.month, now.day);
@@ -77,7 +85,7 @@ class TagChartState extends State<TagChart> {
     return LineChart(
         LineChartData(
             minX: 0,
-            minY: 0,
+            minY: lowest_point >= 0 ? 0 : lowest_point*1.2,
             maxX: globals.chartPastSpanDays + globals.chartFutureSpanDays.toDouble(),
             maxY: highest_point == 0 ? 1 : highest_point*1.2,
             clipToBorder: false,
@@ -106,8 +114,7 @@ class TagChartState extends State<TagChart> {
             lineBarsData: [
               LineChartBarData(
                   spots: points,
-                  isCurved: true,
-                  preventCurveOverShooting: true,
+                  isCurved: false,
                   colors: [tag.color],
                   colorStops: null,
                   barWidth: 5,
@@ -152,7 +159,7 @@ class TagChartState extends State<TagChart> {
 
                 return TouchedSpotIndicatorData(
                   FlLine(color: globals.secondaryForegroundColor, strokeWidth: 4),
-                  FlDotData(dotSize: 0, dotColor: globals.secondaryForegroundColor),
+                  FlDotData(dotSize: 3, dotColor: globals.secondaryForegroundColor),
                 );
               }).toList();
             },

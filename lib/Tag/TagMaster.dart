@@ -18,9 +18,17 @@ class TagMasterState extends State<TagMaster>{
 
   DateTime currentDate;
 
-  int highest_y=-1;
+  int highest_y;
+  int lowest_y;
 
   TagManager manager;
+
+  bool master = false;
+
+  List<Color> gradientColors = [
+    globals.thirdForegroundColor,
+    globals.forthForegroundColor
+  ];
 
   TagMasterState(this.manager){
 
@@ -40,12 +48,13 @@ class TagMasterState extends State<TagMaster>{
 
     List<FlSpot> spots = manager.pointsToSpots(await manager.getPoints(tag.id), currentDate.subtract(Duration(days: 30)));
 
-    for(int i=0; i<spots.length; i++) if( highest_y < spots[i].y ) highest_y = spots[i].y.toInt();
+    for(int i=0; i<spots.length; i++) if( highest_y == null || highest_y < spots[i].y ) highest_y = spots[i].y.toInt();
+
+    for(int i=0; i<spots.length; i++) if( lowest_y == null || lowest_y > spots[i].y ) lowest_y = spots[i].y.toInt();
 
     return LineChartBarData(
         spots: spots,
-        isCurved: true,
-        preventCurveOverShooting: true,
+        isCurved: false,
         colors: [tag.color],
         colorStops: null,
         barWidth: 5,
@@ -56,13 +65,17 @@ class TagMasterState extends State<TagMaster>{
           show: false,
         ),
         belowBarData: BarAreaData(
-          show: true,
+          show: false,
           colors: [tag.color.withOpacity(0.3)],
         )
     );
   }
 
   Future<List<LineChartBarData>> getCurvesList() async {
+
+    highest_y=null;
+
+    lowest_y=null;
 
     List<Tag> tags = await manager.list();
 
@@ -73,6 +86,9 @@ class TagMasterState extends State<TagMaster>{
       curves.add(await getCurveFromTag(tags[i]));
     }
 
+    if(highest_y==null) highest_y =1;
+    if(lowest_y==null) lowest_y =0;
+
     return curves;
   }
 
@@ -81,7 +97,7 @@ class TagMasterState extends State<TagMaster>{
     return LineChart(
         LineChartData(
           minX: 0,
-          minY: 0,
+          minY: lowest_y >= 0 ? 0 : lowest_y*1.2,
           maxX: globals.chartPastSpanDays + globals.chartFutureSpanDays.toDouble(),
           maxY: highest_y == 0 ? 1 : highest_y*1.2,
           clipToBorder: false,
@@ -137,7 +153,7 @@ class TagMasterState extends State<TagMaster>{
 
                   return TouchedSpotIndicatorData(
                     FlLine(color: globals.secondaryForegroundColor, strokeWidth: 4),
-                    FlDotData(dotSize: 0, dotColor: globals.secondaryForegroundColor),
+                    FlDotData(dotSize: 3, dotColor: globals.secondaryForegroundColor),
                   );
                 }).toList();
               },
@@ -145,7 +161,7 @@ class TagMasterState extends State<TagMaster>{
                   tooltipBgColor: globals.secondaryForegroundColor,
                   tooltipRoundedRadius: 4,
                   tooltipPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                  tooltipBottomMargin: -(curves.length * 20 - 8).toDouble(),
+                  tooltipBottomMargin: ((-curves.length.toDouble()))* 20 + 8,
                   getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
 
                     return touchedBarSpots.map((barSpot){
@@ -165,18 +181,64 @@ class TagMasterState extends State<TagMaster>{
     );
   }
 
+  Future<List<LineChartBarData>> getMasterCurve() async {
+
+    List<FlSpot> spots = await manager.masterChartSpots(currentDate.subtract(Duration(days: 30)));
+
+    highest_y=null;
+    lowest_y=null;
+
+    for(int i=0; i<spots.length; i++) if( highest_y == null || highest_y < spots[i].y ) highest_y = spots[i].y.toInt();
+
+    for(int i=0; i<spots.length; i++) if( lowest_y == null || lowest_y > spots[i].y ) lowest_y = spots[i].y.toInt();
+
+    return [LineChartBarData(
+        spots: spots,
+        isCurved: true,
+        preventCurveOverShooting: true,
+        colors: gradientColors,
+        barWidth: 5,
+        isStrokeCapRound: true,
+
+        //make dots invisible
+        dotData: const FlDotData(
+          show: false,
+        ),
+        belowBarData: BarAreaData(
+          show: true,
+          colors: gradientColors.reversed.map((color) => color.withOpacity(0.3)).toList(),
+        )
+    )];
+  }
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text("Master Chart")
-        )
+          child: Text(
+              "Master Chart",
+              textAlign: TextAlign.left,
+          ),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+                Icons.transform,
+                color: globals.secondaryForegroundColor
+            ),
+            onPressed: (){
+              master = !master;
+
+              setState((){});
+            },
+          )
+        ],
       ),
       body: FutureBuilder(
 
-        future: getCurvesList(),
+        future: master ? getMasterCurve() : getCurvesList(),
         builder: (context, snapshot) {
 
           if( snapshot.connectionState == ConnectionState.done ){
