@@ -78,7 +78,7 @@ class TaskViewState extends State<TaskView> {
                         ),
                         Divider(),
                         task.tag != null ?
-                        task.tag.toSearchWidget(context, null) :
+                        task.tag.toSearchWidget(context, (){}) :
                         Card(
                             child: ListTile(
                                 title: Text(
