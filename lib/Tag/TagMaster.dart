@@ -61,8 +61,10 @@ class TagMasterState extends State<TagMaster>{
         isStrokeCapRound: true,
 
         //make dots invisible
-        dotData: const FlDotData(
-          show: false,
+        dotData: FlDotData(
+          show: true,
+          dotColor: tag.color,
+          dotSize: globals.chartDotSize,
         ),
         belowBarData: BarAreaData(
           show: false,
@@ -204,8 +206,10 @@ class TagMasterState extends State<TagMaster>{
         isStrokeCapRound: true,
 
         //make dots invisible
-        dotData: const FlDotData(
-          show: false,
+        dotData: FlDotData(
+          show: true,
+          dotColor: globals.thirdForegroundColor,
+          dotSize: globals.chartDotSize,
         ),
         belowBarData: BarAreaData(
           show: true,

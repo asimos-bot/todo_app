@@ -11,3 +11,4 @@ Color forthForegroundColor = const Color(0xff50aebb);
 //settings
 const int chartPastSpanDays = 30;
 const int chartFutureSpanDays = 0;
+const double chartDotSize = 5;

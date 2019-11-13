@@ -87,7 +87,7 @@ class TagChartState extends State<TagChart> {
             minX: 0,
             minY: lowest_point >= 0 ? 0 : lowest_point*1.2,
             maxX: globals.chartPastSpanDays + globals.chartFutureSpanDays.toDouble(),
-            maxY: highest_y.abs() + (highest_y.abs() + lowest_y.abs())*0.2,
+            maxY: highest_point.abs() + (highest_point.abs() + lowest_point.abs())*0.2,
             clipToBorder: false,
             gridData: FlGridData(
                 show: false,
@@ -121,8 +121,10 @@ class TagChartState extends State<TagChart> {
                   isStrokeCapRound: true,
 
                   //make dots invisible
-                  dotData: const FlDotData(
-                    show: false,
+                  dotData: FlDotData(
+                    show: true,
+                    dotColor: tag.color,
+                    dotSize: globals.chartDotSize,
                   ),
                   belowBarData: BarAreaData(
                     show: true,
