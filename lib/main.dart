@@ -1,111 +1,323 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_list_drag_and_drop/drag_and_drop_list.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:flutter/services.dart';
+import 'dart:async';
+import 'package:todo_yourself/Task/Task.dart';
+import 'package:todo_yourself/Tag/Tag.dart';
+import 'package:todo_yourself/Task/TaskBuilder.dart';
+import 'package:todo_yourself/Tag/TagBuilder.dart';
+import 'package:todo_yourself/Task/TaskManager.dart';
+import 'package:todo_yourself/Tag/TagManager.dart';
+import 'Tag/TagMaster.dart';
+import 'DBManager.dart';
+import 'globals.dart' as globals;
 
-void main() => runApp(MyApp());
+DBManager db;
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+TaskManager tasks;
+TagManager tags;
+
+//builders
+var taskBuilder;
+var tagBuilder;
+
+void main() => runApp(new TodoApp());
+
+//Main widget
+class TodoApp extends StatelessWidget {
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+  Widget build(BuildContext context){
+
+    return new MaterialApp(
+      title: 'ToDo Yourself', //title which appear when we minimize the app
+      home: new TodoList(), //actual app stuff
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+          primaryColor: globals.primaryForegroundColor,
+          scaffoldBackgroundColor: globals.backgroundColor,
+          primaryTextTheme: TextTheme(
+            title: TextStyle(
+              color: globals.secondaryForegroundColor
+            )
+          )
+      )
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+//the content of the main widget
+class TodoList extends StatefulWidget {
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  createState() => new TodoListState(TextEditingController());
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+//describe states of todoList
+class TodoListState extends State<TodoList> {
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  bool searchMode = false;
+
+  TextEditingController taskSearchController;
+
+  TodoListState(this.taskSearchController);
+
+  //build whole list of tasks
+  Future<Widget> _buildTaskList() async {
+
+    List<Task> list = await ( taskSearchController.text == '' ? tasks.list() : tasks.query(taskSearchController.text, null) );
+
+    return list.length > 1 ? DragAndDropList<Task>(
+      list,
+      itemBuilder: (BuildContext context, item) => item.toWidget(null),
+      onDragFinish: (before, after) async {
+
+        await tasks.updatePriority(list, before, after);
+      },
+      canBeDraggedTo: (one, two) => true,
+      dragElevation: 8.0,
+      tilt: 0.01,
+    ) : ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (context, index) => list[index].toWidget(null)
+    );
+  }
+
+  Future<Widget> _buildTagList() async {
+
+    List<Tag> list = await tags.list();
+
+    return list.length > 1 ? DragAndDropList<Tag>(
+        list,
+        itemBuilder: (BuildContext context, item) {
+
+          return item.toWidget(context);
+        },
+        onDragFinish: (before, after) async {
+
+          await tags.updatePriority(list, before, after);
+        },
+        canBeDraggedTo: (one, two) => true,
+        dragElevation: 8.0,
+        tilt: 0.01
+      //if one or none tag is present
+    ) : ListView.builder(itemCount: list.length, itemBuilder: (context, index) => list[index].toWidget(context) );
+  }
+
+  Widget _buildDrawer() {
+    return Drawer(
+      child: Container(
+        decoration: BoxDecoration(color: globals.primaryForegroundColor),
+        child: Column(  //Column
+        //padding: EdgeInsets.zero,
+          children: <Widget> [
+            SizedBox(
+              height: 100,
+              child: DrawerHeader(
+                decoration: BoxDecoration(color: globals.primaryForegroundColor),
+                child: Center(
+                  child: Text(
+                      'Tags Menu',
+                      style: TextStyle(
+                          color: globals.secondaryForegroundColor,
+                          fontSize: 20,
+                          fontStyle: FontStyle.italic
+                      )
+                  )
+                )
+              )
+            ),
+            ListTile(
+              leading: Icon(Icons.data_usage,color: globals.secondaryForegroundColor),
+              title: Text("Visualize",style: TextStyle(color: globals.secondaryForegroundColor)),
+              onTap: (){
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => TagMaster(tags)
+                    )
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.add,color: globals.secondaryForegroundColor),
+              title: Text("Add Tag",style: TextStyle(color: globals.secondaryForegroundColor)),
+              onTap: () {
+                tags.clearTextControllers();
+
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => TagBuilder(tags)
+                    )
+                );
+              },
+            ),
+            Container(
+              child: Expanded(
+                child: FutureBuilder(
+                  future: _buildTagList(),
+                  builder: (context, snapshot) {
+
+                    if( snapshot.connectionState == ConnectionState.done ){
+
+                      return snapshot.data;
+                    }else{
+                      return Center(
+                        child: CircularProgressIndicator()
+                      );
+                    }
+                  }
+                )
+              )
+            )
+          ]
+        )
+      )
+    );
+  }
+
+  @override
+  @mustCallSuper
+  void initState() {
+
+    super.initState();
+
+    taskSearchController.addListener((){
+
+      if(taskSearchController.text!=''){
+
+        setState((){});
+      }
     });
+
+    //TODO: for debugging only, comment it later
+    Sqflite.devSetDebugModeOn(true);
+
+    taskBuilder = new TaskBuilder(tasks);
+    tagBuilder = new TagBuilder(tags);
+
+    db = DBManager();
+
+    tags = TagManager(db.db);
+    tasks = TaskManager(db.db);
+
+    tags.taskManager = tasks;
+    tasks.tagManager = tags;
+  }
+
+  @override
+  @mustCallSuper
+  void dispose() async {
+
+    await db.dispose();
+
+    tags.dispose();
+    tasks.dispose();
+
+    taskSearchController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
+    //disable screen rotation
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
+    ]);
+
     return Scaffold(
+      //slide bar
+      drawer: _buildDrawer(),
+      //top bar
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+          title: searchMode ?
+              TextField(
+                style: TextStyle(
+                  color: globals.secondaryForegroundColor
+                ),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: globals.secondaryForegroundColor,
+                  ),
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(
+                    color: globals.secondaryForegroundColor
+                  ),
+                  hintText: 'Search...',
+                ),
+                controller: taskSearchController,
+              )
+              : Text('Your tasks'),
+          actions: <Widget> [
+            IconButton(
+              icon: Icon(
+                  searchMode ? Icons.close : Icons.search,
+                  color: globals.secondaryForegroundColor
+              ),
+              onPressed: (){
+
+                if(searchMode) taskSearchController.value = new TextEditingController.fromValue(new TextEditingValue(text: '')).value;
+
+                searchMode = !searchMode;
+
+                setState((){});
+              },
+            )
+          ]
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+      //content in the middle of the screen
+      body: FutureBuilder(
+        future: _buildTaskList(),
+        builder: (context, snapshot) {
+          if( snapshot.connectionState == ConnectionState.done ){
+
+              if( snapshot.hasError ) {
+                print(snapshot.error);
+                return Text("Error: check debug output");
+              }
+
+              return snapshot.data;
+
+          } else {
+            return
+                Center(
+                  child: CircularProgressIndicator()
+                );
+          }
+        }
+      ),
+      //bottom bar
+      bottomNavigationBar: BottomAppBar(
+        //background color
+        color: globals.primaryForegroundColor,
+        shape: CircularNotchedRectangle(),
+        //here we say we want a row to be inside the bottom bar (because the icons are in a row, just think about it)
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
+            Expanded(
+              child: IconButton(icon: Icon(Icons.add),
+                  onPressed: () {
+                    tasks.clearTextControllers();
+
+                    Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => TaskBuilder(tasks)
+                        )
+                    );
+                  },
+                  color: globals.secondaryForegroundColor
+              )
+            )
+          ]
+        )
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
