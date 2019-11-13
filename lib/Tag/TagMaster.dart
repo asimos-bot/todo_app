@@ -46,7 +46,7 @@ class TagMasterState extends State<TagMaster>{
 
   Future<LineChartBarData> getCurveFromTag(Tag tag) async {
 
-    List<FlSpot> spots = manager.pointsToSpots(await manager.getPoints(tag.id), currentDate.subtract(Duration(days: 30)));
+    List<FlSpot> spots = manager.pointsToSpots(await manager.getPoints(tag.id), currentDate.subtract(Duration(days: globals.chartPastSpanDays)));
 
     for(int i=0; i<spots.length; i++) if( highest_y == null || highest_y < spots[i].y ) highest_y = spots[i].y.toInt();
 
@@ -97,9 +97,9 @@ class TagMasterState extends State<TagMaster>{
     return LineChart(
         LineChartData(
           minX: 0,
-          minY: lowest_y >= 0 ? 0 : lowest_y*1.2,
+          minY: lowest_y >= 0 ? 0 : lowest_y * 1.2,
           maxX: globals.chartPastSpanDays + globals.chartFutureSpanDays.toDouble(),
-          maxY: highest_y == 0 ? 1 : highest_y*1.2,
+          maxY: highest_y == 0 ? 1 : highest_y * 1.2,
           clipToBorder: false,
           gridData: FlGridData(
               show: false,
@@ -161,13 +161,17 @@ class TagMasterState extends State<TagMaster>{
                   tooltipBgColor: globals.secondaryForegroundColor,
                   tooltipRoundedRadius: 4,
                   tooltipPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                  tooltipBottomMargin: ((-curves.length.toDouble()))* 20 + 8,
+                  tooltipBottomMargin: ((-1.toDouble()))* 20 - 8,
                   getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+
+                    int count=0;
 
                     return touchedBarSpots.map((barSpot){
 
+                      count++;
+
                       return LineTooltipItem(
-                          barSpot.y.toInt().toString(),
+                          barSpot.y.toInt().toString() + (count != curves.length ? '' : '\n' + daysAgoToDate(currentDate, globals.chartPastSpanDays - barSpot.x.toInt())),
                           TextStyle(
                             color: barSpot.bar.colors[0],
                             fontWeight: FontWeight.bold
@@ -183,7 +187,7 @@ class TagMasterState extends State<TagMaster>{
 
   Future<List<LineChartBarData>> getMasterCurve() async {
 
-    List<FlSpot> spots = await manager.masterChartSpots(currentDate.subtract(Duration(days: 30)));
+    List<FlSpot> spots = await manager.masterChartSpots(currentDate.subtract(Duration(days: globals.chartPastSpanDays)));
 
     highest_y=null;
     lowest_y=null;
@@ -194,8 +198,7 @@ class TagMasterState extends State<TagMaster>{
 
     return [LineChartBarData(
         spots: spots,
-        isCurved: true,
-        preventCurveOverShooting: true,
+        isCurved: false,
         colors: gradientColors,
         barWidth: 5,
         isStrokeCapRound: true,
@@ -243,12 +246,16 @@ class TagMasterState extends State<TagMaster>{
 
           if( snapshot.connectionState == ConnectionState.done ){
 
+            if(snapshot.hasError) print(snapshot.error);
+
+            List<LineChartBarData> curves = snapshot.data;
+
             return SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: Padding(
                 padding: EdgeInsets.fromLTRB(27.0, 10.0, 27.0, 10.0),
-                child: getLineChart(snapshot.data)
+                child: getLineChart(curves)
               )
             );
           }

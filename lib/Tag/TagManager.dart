@@ -378,7 +378,7 @@ class TagManager extends Controller {
 
     points.sort((greater, smaller) => DateTime.parse(greater['created_at']).isAfter(DateTime.parse(smaller['created_at'])) ? 1:-1);
 
-    List<FlSpot> spots = [FlSpot(0, points.length > 0 ? points.first['points'].toDouble() : 0)];
+    List<FlSpot> spots = [FlSpot(0, points.length > 1 ? points.first['points'].toDouble() : 0)];
 
     for(int i=1; i < points.length; i++){
 
@@ -397,7 +397,7 @@ class TagManager extends Controller {
     //get all tags
     List<Tag> tags = await list();
 
-    List<FlSpot> spots = List.generate(globals.chartPastSpanDays, (index) => null);
+    List<FlSpot> spots = List.generate(globals.chartPastSpanDays+1, (index) => null);
 
     //get tag spots and add them to list
     for(int i=0; i < tags.length; i++){
@@ -408,15 +408,21 @@ class TagManager extends Controller {
       //iterate through tagSpots
       for(int j=0; j < tagSpots.length; j++){
 
-        //add to indexes in spots
-        if( spots[tagSpots[j].x.toInt()] == null ) spots[tagSpots[j].x.toInt()] = FlSpot(0,0);
+        int index = tagSpots[j].x.toInt();
 
-        spots[tagSpots[j].x.toInt()] = FlSpot(tagSpots[j].x, tagSpots[j].y.toInt() + spots[tagSpots[j].x.toInt()].y);
+        if(spots[index] == null) spots[index] = FlSpot(0, 0);
+
+        spots[index] = FlSpot(index.toDouble(), tagSpots[j].y.toInt() + spots[index].y);
       }
     }
 
     //return list with valid spots
-    spots = spots.where((spot) => spot.y != null).toList();
+    spots = spots.where((spot) => spot != null).toList();
+
+    if( spots.length == 0 ){
+
+      spots=[FlSpot(0,0), FlSpot(30,0)];
+    }
 
     if( spots.length == 1 ){
 
@@ -424,11 +430,6 @@ class TagManager extends Controller {
       spots.add(FlSpot(30, spots[1].y));
     }
 
-    if( spots.length == 0 ){
-
-      spots=[FlSpot(0,0), FlSpot(30,0)];
-    }
-
-    return List.unmodifiable(spots);
+    return spots;
   }
 }

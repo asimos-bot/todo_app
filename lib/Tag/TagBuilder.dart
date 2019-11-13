@@ -21,7 +21,7 @@ class TagBuilderState extends State<TagBuilder> {
   TagManager list;
 
   Color pickerColor = globals.thirdForegroundColor;
-  Color choosenColor = globals.backgroundColor;
+  Color choosenColor = globals.thirdForegroundColor;
 
   double currentSliderValue=1;
 

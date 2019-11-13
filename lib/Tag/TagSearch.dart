@@ -78,6 +78,15 @@ class TagSearchDialogState extends State<TagSearchDialog> {
   }
 
   @override
+  @mustCallSuper
+  void dispose(){
+
+    super.dispose();
+
+    searchController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
       List<Widget> widgetTags = tags.where((tag) {

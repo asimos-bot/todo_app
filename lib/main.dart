@@ -213,6 +213,8 @@ class TodoListState extends State<TodoList> {
     tags.dispose();
     tasks.dispose();
 
+    taskSearchController.dispose();
+
     super.dispose();
   }
 

@@ -55,6 +55,13 @@ class TagViewState extends State<TagView> {
 
           return Scaffold(
             appBar: AppBar(
+                leading: IconButton(
+                    icon: Icon(
+                        Icons.home,
+                        color: globals.secondaryForegroundColor
+                    ),
+                    onPressed: () => Navigator.of(context).pop()
+                ),
                 title: Center(
                   child: searchMode ?
                   TextField(
