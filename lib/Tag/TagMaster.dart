@@ -163,7 +163,7 @@ class TagMasterState extends State<TagMaster>{
                   tooltipBgColor: globals.secondaryForegroundColor,
                   tooltipRoundedRadius: 4,
                   tooltipPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                  tooltipBottomMargin: ((-1.toDouble()))* 20 - 8,
+                  tooltipBottomMargin: ((-curves.length.toDouble()))* 20 - 8,
                   getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
 
                     int count=0;

@@ -189,9 +189,6 @@ class TodoListState extends State<TodoList> {
       }
     });
 
-    //TODO: for debugging only, comment it later
-    Sqflite.devSetDebugModeOn(true);
-
     taskBuilder = new TaskBuilder(tasks);
     tagBuilder = new TagBuilder(tags);
 
