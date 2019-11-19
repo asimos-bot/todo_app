@@ -53,6 +53,9 @@ class TagViewState extends State<TagView> {
 
           Tag tag = snapshot.data;
 
+          DateTime now = DateTime.now();
+          DateTime date = DateTime(now.year, now.month, now.day);
+          
           return Scaffold(
             appBar: AppBar(
                 leading: IconButton(
@@ -118,7 +121,6 @@ class TagViewState extends State<TagView> {
                 ]
             ),
             body: PageView(
-                physics: BouncingScrollPhysics(),
                 children: <Widget> [
                   CustomScrollView(
                   slivers: <Widget>[

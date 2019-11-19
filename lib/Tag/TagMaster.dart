@@ -101,7 +101,7 @@ class TagMasterState extends State<TagMaster>{
           minX: 0,
           minY: lowest_y >= 0 ? 0 : lowest_y * 1.2,
           maxX: globals.chartPastSpanDays + globals.chartFutureSpanDays.toDouble(),
-          maxY: highest_y.abs() + (highest_y.abs() + lowest_y.abs())*0.2,
+          maxY: lowest_y == 0 && highest_y == 0 ? 1 : highest_y.abs() + (highest_y.abs() + lowest_y.abs())*0.2,
           clipToBorder: false,
           gridData: FlGridData(
               show: false,
@@ -163,7 +163,7 @@ class TagMasterState extends State<TagMaster>{
                   tooltipBgColor: globals.secondaryForegroundColor,
                   tooltipRoundedRadius: 4,
                   tooltipPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                  tooltipBottomMargin: ((-1.toDouble()))* 20 - 8,
+                  tooltipBottomMargin: ((-curves.length.toDouble()))* 20 - 8,
                   getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
 
                     int count=0;

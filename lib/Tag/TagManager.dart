@@ -86,8 +86,6 @@ class TagManager extends Controller {
   Future<void> add(Tag tag) async {
 
     //put this task in highest priority
-
-
     await (await db).insert('tags', {
       'title': tag.title,
       'description': tag.description,
@@ -97,6 +95,12 @@ class TagManager extends Controller {
       'total_points': tag.total_points,
       'priority': ++highestPriority
     });
+
+    DateTime now = DateTime.now();
+    DateTime currentDate = DateTime(now.year, now.month, now.day);
+
+    //create point 0
+    createPointEntry(tag.id, tag.total_points, currentDate);
   }
 
   Future<void> delete(Tag tag, bool deleteTasks) async {
@@ -378,7 +382,7 @@ class TagManager extends Controller {
 
     points.sort((greater, smaller) => DateTime.parse(greater['created_at']).isAfter(DateTime.parse(smaller['created_at'])) ? 1:-1);
 
-    List<FlSpot> spots = [FlSpot(0, points.length > 1 ? points.first['points'].toDouble() : 0)];
+    List<FlSpot> spots = [FlSpot(0, points.length > 0 ? points.first['points'].toDouble() : 0)];
 
     for(int i=1; i < points.length; i++){
 
@@ -387,7 +391,8 @@ class TagManager extends Controller {
       spots.add(FlSpot(diff.inDays.toDouble(), points[i]['points'].toDouble()));
     }
 
-    spots.add(FlSpot(globals.chartPastSpanDays.toDouble(), points.length > 0 ? points.last['points'].toDouble() : 0));
+    if( spots.last.x != 30 )
+      spots.add(FlSpot(globals.chartPastSpanDays.toDouble(), points.length > 0 ? points.last['points'].toDouble() : 0));
 
     return List.unmodifiable(spots);
   }
