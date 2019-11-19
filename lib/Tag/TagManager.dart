@@ -394,11 +394,6 @@ class TagManager extends Controller {
     if( spots.last.x != 30 )
       spots.add(FlSpot(globals.chartPastSpanDays.toDouble(), points.length > 0 ? points.last['points'].toDouble() : 0));
 
-    for(int i=0; i<spots.length; i++){
-      print('${spots[i].x},${spots[i].y}');
-    }
-    print('');
-
     return List.unmodifiable(spots);
   }
 

@@ -194,8 +194,6 @@ class TaskManager extends Controller {
     'SELECT * FROM tasks WHERE title LIKE \'%$queryStr%\' ORDER BY priority DESC' :
     'SELECT * FROM tasks WHERE title LIKE \'%$queryStr%\' AND tag = ${tag.toString()} ORDER BY priority DESC';
 
-    print("search string: $searchStr");
-
     List<Map> queryResult = await (await db).rawQuery(searchStr);
 
     for(int i=0; i < queryResult.length; i++){
